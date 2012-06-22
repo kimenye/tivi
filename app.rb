@@ -31,6 +31,10 @@ get '/' do
   haml :home, :layout => :index
 end
 
+before '/api/*' do
+  content_type :json
+end
+
 
 post '/api/channel' do
   data = JSON.parse(request.body.string)
@@ -79,7 +83,7 @@ get '/api/shows' do
 end
 
 get '/api/show/:id' do
-  show = Show.find(params[:id])
+  show = TvShow.find(params[:id])
   body(show.to_json)
 end
 
