@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'sinatra'
 require 'sinatra/json'
+require 'sinatra/advanced_routes'
 require 'sinatra/reloader' if development?
 require 'dm-core'
 require 'mongo_mapper'
@@ -35,6 +36,10 @@ before '/api/*' do
   content_type :json
 end
 
+
+get '/api/describe' do
+  body({ version: "1.0 "}.to_json)
+end
 
 post '/api/channel' do
   data = JSON.parse(request.body.string)
