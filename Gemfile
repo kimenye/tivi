@@ -12,6 +12,7 @@ gem "mongo"
 gem "pry"
 gem "bson_ext"
 gem "rspec"
+gem "thin"
 
 group :test do
   gem 'rack-test', :git => "https://github.com/brynary/rack-test.git"

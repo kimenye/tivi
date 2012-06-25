@@ -37,16 +37,12 @@ class ApiApplication < Sinatra::Base
     enable :sessions
   end
 
-  get '/' do
-    haml :home, :layout => :index
-  end
-
   before '/*' do
     content_type :json
   end
 
   collection :describe do
-    description "What is this API capable of"
+    description "What is this API capable of?"
 
     operation :index do
       description "For developers use only"
@@ -154,5 +150,5 @@ class ApiApplication < Sinatra::Base
   end
 
   # start the server if ruby file executed directly
-  run! if app_file == $0
+  #run! if app_file == $0
 end
