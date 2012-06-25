@@ -18,7 +18,7 @@ describe 'The Tivi App' do
   end
 
   it "returns the correct version of the api" do
-    get '/api/describe'
+    get '/describe'
     last_response.should be_ok
     last_response.body.should == "{\"version\":\"1.0 \"}"
   end
@@ -27,7 +27,7 @@ describe 'The Tivi App' do
     before = Channel.find_by_code("TC")
     Channel.delete_all
 
-    post "/api/channel", channel_json
+    post "/channels", channel_json
     last_response.should be_ok
     created_id = last_response.body
     Channel.find_by_id!(created_id)
@@ -41,7 +41,7 @@ describe 'The Tivi App' do
     c.save!
 
     to_delete_id = c.id
-    delete "/api/channel/#{to_delete_id.to_s}"
+    delete "/channels/#{to_delete_id.to_s}"
 
     last_response.should be_ok
     c = Channel.find_by_id(c.id)
@@ -55,7 +55,7 @@ describe 'The Tivi App' do
     c.name = "Test Channel"
     c.save!
 
-    put "/api/channel/#{c.id}", modified_json
+    patch "/channels/#{c.id}", modified_json
 
     last_response.should be_ok
     c = Channel.find_by_id(c.id)
@@ -64,7 +64,7 @@ describe 'The Tivi App' do
   end
 
   it "returns tv channels" do
-    get '/api/channels'
+    get '/channels'
     channels = Channel.all
     last_response.should be_ok
     last_response.body.should == channels.to_json
@@ -73,10 +73,15 @@ describe 'The Tivi App' do
   it "returns a tv channel" do
     channel = Channel.first()
     if !channel.nil?
-      get "/api/channel/#{channel.id}"
+      get "/channels/#{channel.id}"
       last_response.should be_ok
       last_response.body.should == channel.to_json
     end
+  end
+
+  it "does not return a tv channel when there is no id" do
+    get "/channels/"
+    last_response.should_not be_ok
   end
 
   it "returns tv shows" do

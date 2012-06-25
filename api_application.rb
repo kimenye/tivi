@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'sinatra'
 require 'sinatra/json'
+require 'sinatra/rabbit'
 require 'sinatra/reloader' if development?
 require 'dm-core'
 require 'mongo_mapper'
@@ -22,8 +23,12 @@ class TvShow
 end
 
 class ApiApplication < Sinatra::Base
+  include Sinatra::Rabbit
+
+
   configure :development do
     register Sinatra::Reloader
+    enable :logging
   end
 
   configure do
@@ -36,58 +41,91 @@ class ApiApplication < Sinatra::Base
     haml :home, :layout => :index
   end
 
-  before '/api/*' do
+  before '/*' do
     content_type :json
   end
 
-  get '/api/describe' do
-    body({ version: "1.0 "}.to_json)
-  end
+  collection :describe do
+    description "What is this API capable of"
 
-  #creates a new channel
-  post '/api/channel' do
-    data = JSON.parse(request.body.string)
-    if data.nil? or !data.has_key?('name') or !data.has_key?('code')
-      status 400
-    else
-      channel = Channel.new
-      channel.name = data['name']
-      channel.code = data['code']
-      channel.save!
-      status 200
-      body(channel.id.to_s)
+    operation :index do
+      description "For developers use only"
+
+      control do
+        status 200
+        body({ version: "1.0 "}.to_json)
+      end
     end
   end
 
+  collection :channels do
+    description "API operations for a TV channel"
 
-  get '/api/channel/:id' do
-    channel = Channel.find(params[:id])
-    body(channel.to_json)
-  end
+    operation :index do
+      description "Return a list of all the channels"
+      control do
+        channels = Channel.all
+        body(channels.to_json)
+      end
+    end
 
-  get '/api/channels' do
-    channels = Channel.all
-    body(channels.to_json)
-  end
 
-  delete '/api/channel/:id' do
-    Channel.delete([ params[:id] ])
-    body(params[:id])
-  end
+    operation :show do
+      description "Show a specific channel"
+      param :id,  :string, :required
+      control do
+        channel = Channel.find(params[:id])
+        body(channel.to_json)
+      end
+    end
 
-  put '/api/channel/:id' do
-    channel = Channel.find(params[:id])
-    data = JSON.parse(request.body.string)
-    if data.nil? or !data.has_key?('code') or !data.has_key?('name') then
-      status 404
-    else
-      channel.code = data['code']
-      channel.name = data['name']
-      channel.save!
-      status 200
-      body(channel.id.to_s)
+    operation :destroy do
+      description "Delete a specific channel"
+      param :id, :string, :required
+      control do
+        Channel.delete([ params[:id] ])
+        body(params[:id])
+      end
+    end
+
+    operation :create do
+      description "Create a new channel"
+      control do
+        data = JSON.parse(request.body.string)
+        if data.nil? or !data.has_key?('name') or !data.has_key?('code')
+          status 400
+        else
+          channel = Channel.new
+          channel.name = data['name']
+          channel.code = data['code']
+          channel.save!
+          status 200
+          body(channel.id.to_s)
+        end
+      end
+    end
+
+    operation :update do
+      description "Updates an existing channel"
+      control do
+        puts ">> Called the patch operation"
+        channel = Channel.find(params[:id])
+
+        puts ">>> updating #{channel}"
+        data = JSON.parse(request.body.string)
+        if data.nil? or !data.has_key?('code') or !data.has_key?('name') then
+          status 404
+        else
+          channel.code = data['code']
+          channel.name = data['name']
+          channel.save!
+          status 200
+          body(channel.id.to_s)
+        end
+      end
     end
   end
+
 
   #create a tv show
   post '/api/show' do
