@@ -1,0 +1,27 @@
+.container#channels-div
+  .row
+    %h1 Channels
+  .row
+    .container.span3
+      %form.well-large{'data-bind' => 'submit: createOrUpdate'}
+        %fieldset
+          %legend Edit Channels
+          .control-group
+            %label.control-label{ 'for' => 'code' } Code
+            .controls
+              %input.input-mini#code{'name' => 'code', 'type' => 'text', 'data-bind' => 'value: code'}
+          .control-group
+            %label.control-label{ 'for' => 'name' } Name
+            .controls
+              %input.input-medium#code{'name' => 'name', 'type' => 'text', 'data-bind' => 'value: name'}
+          %input.btn{'type' => 'submit', 'data-bind' => 'value: buttonState'}
+    .container.span3
+      %table.table.table-bordered
+        %thead
+          %th Code
+          %th Name
+        %tbody
+          %tr{ 'data-bind' => 'foreach: channels'}
+            %td
+              %a{ 'data-bind' => 'text: code, click: $parent.edit', 'href' => '#'}
+            %td{ 'data-bind' => 'text: name'}
