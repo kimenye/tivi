@@ -6,6 +6,23 @@ require 'sinatra/reloader' if development?
 require 'dm-core'
 require 'mongo_mapper'
 
+module Sinatra
+  class Base
+    private
+
+    def self.request_method(*meth)
+      condition do
+        this_method = request.request_method.downcase.to_sym
+        if meth.respond_to?(:include?) then
+          meth.include?(this_method)
+        else
+          meth == this_method
+        end
+      end
+    end
+  end
+end
+
 class Channel
   include MongoMapper::Document
 
@@ -37,7 +54,7 @@ class ApiApplication < Sinatra::Base
     enable :sessions
   end
 
-  before '/*' do
+  before  '/*', :request_method => [ :get ] do
     content_type :json
   end
 
@@ -87,6 +104,7 @@ class ApiApplication < Sinatra::Base
     operation :create do
       description "Create a new channel"
       control do
+        puts ">>>>> #{request.body.string}"
         data = JSON.parse(request.body.string)
         if data.nil? or !data.has_key?('name') or !data.has_key?('code')
           status 400

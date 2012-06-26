@@ -3,7 +3,7 @@
     %h1 Channels
   .row
     .container.span3
-      %form.well-large{'data-bind' => 'submit: createOrUpdate'}
+      .well-large.form-vertical
         %fieldset
           %legend Edit Channels
           .control-group
@@ -14,14 +14,14 @@
             %label.control-label{ 'for' => 'name' } Name
             .controls
               %input.input-medium#code{'name' => 'name', 'type' => 'text', 'data-bind' => 'value: name'}
-          %input.btn{'type' => 'submit', 'data-bind' => 'value: buttonState'}
+          %input.btn{'type' => 'button', 'data-bind' => 'value: buttonState, click: createOrUpdate' }
     .container.span3
       %table.table.table-bordered
         %thead
           %th Code
           %th Name
-        %tbody
-          %tr{ 'data-bind' => 'foreach: channels'}
+        %tbody{'data-bind' => 'foreach: channels'}
+          %tr
             %td
               %a{ 'data-bind' => 'text: code, click: $parent.edit', 'href' => '#'}
             %td{ 'data-bind' => 'text: name'}
