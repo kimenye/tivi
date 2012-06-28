@@ -42,5 +42,7 @@
         %tbody{'data-bind' => 'foreach: channels'}
           %tr
             %td
-              %a{ 'data-bind' => 'text: code, click: $parent.edit', 'href' => '#'}
+              %a{ 'data-bind' => 'click: $parent.edit', 'href' => '#'}
+                %i.icon-edit{'data-bind' => ''}
+              %span{ 'data-bind' => 'text: code'}
             %td{ 'data-bind' => 'text: name'}

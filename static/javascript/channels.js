@@ -90,7 +90,6 @@ $(document).ready(function() {
                 type:"GET",
                 url:"/api/channels",
                 success:function (data) {
-                    console.log("Success" + data);
                     if (_.isArray(data)) {
                         var models = [];
                         _.each(data, function (item) {

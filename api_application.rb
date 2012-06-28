@@ -29,14 +29,16 @@ class Channel
   key :name, String, :required => true
   key :code, String, :required => true
   key :created_at, Time, :default => Time.now
+  many :shows
 end
 
-class TvShow
+class Show
   include MongoMapper::Document
 
   key :name, String
   key :description, String
   key :created_at, Time, :default => Time.now
+  belongs_to :channel
 end
 
 class ApiApplication < Sinatra::Base
@@ -71,11 +73,14 @@ class ApiApplication < Sinatra::Base
     end
   end
 
+
+
   collection :channels do
     description "API operations for a TV channel"
 
     operation :index do
       description "Return a list of all the channels"
+      param :limit, :string
       control do
         channels = Channel.all
         body(channels.to_json)
@@ -92,6 +97,18 @@ class ApiApplication < Sinatra::Base
       end
     end
 
+    collection :shows do
+      operation :show do
+        description "Return only the shows for this channel"
+
+        param :id,  :string, :required
+        control do
+          channel = Channel.find(params[:id])
+          body(channel.shows.to_json)
+        end
+      end
+    end
+
     operation :destroy do
       description "Delete a specific channel"
       param :id, :string, :required
@@ -104,7 +121,6 @@ class ApiApplication < Sinatra::Base
     operation :create do
       description "Create a new channel"
       control do
-        puts ">>>>> #{request.body.string}"
         data = JSON.parse(request.body.string)
         if data.nil? or !data.has_key?('name') or !data.has_key?('code')
           status 400
@@ -122,10 +138,7 @@ class ApiApplication < Sinatra::Base
     operation :update do
       description "Updates an existing channel"
       control do
-        puts ">> Called the patch operation"
         channel = Channel.find(params[:id])
-
-        puts ">>> updating #{channel}"
         data = JSON.parse(request.body.string)
         if data.nil? or !data.has_key?('code') or !data.has_key?('name') then
           status 404
@@ -141,30 +154,87 @@ class ApiApplication < Sinatra::Base
   end
 
 
-  #create a tv show
-  post '/api/show' do
-    data = JSON.parse(request.body.string)
-    if data.nil?  or !data.has_key?('name') or !data.has_key?('description') then
-      status 400
-    else
-      show = TvShow.new
-      show.description = data['description']
-      show.name = data['name']
-      show.save!
-      status 200
-      body(show.id.to_s)
+  collection :shows do
+    description "API operations for a TV Show"
+
+    operation :index do
+      description  "Return all TV Shows"
+      control do
+        shows = Show.all
+        status 200
+        body(shows.to_json)
+      end
     end
-  end
 
+    operation :show do
+      description "Get a specific TV Show"
 
-  get '/api/shows' do
-    shows = TvShow.all
-    body(shows.to_json)
-  end
+      param :id, :string, :required
+      control do
+        show = Show.find_by_id(params[:id])
+        if show.nil?
+          status 404
+        else
+          status 200
+          body(show.to_json)
+        end
+      end
+    end
 
-  get '/api/show/:id' do
-    show = TvShow.find(params[:id])
-    body(show.to_json)
+    operation :destroy do
+      description "Delete a specific show"
+      param :id, :string, :required
+      control do
+        Show.delete([ params[:id] ])
+        body(params[:id])
+      end
+    end
+
+    operation :create do
+      description "Create a TV show"
+
+      control do
+        data = JSON.parse(request.body.string)
+        if data.nil? or !data.has_key?('description') or !data.has_key?('name') or !data.has_key?('channel') then
+          status 404
+          body({error: "Invalid data"}.to_json)
+        else
+          channel = Channel.find(data['channel'])
+          if !channel.nil? then
+            show = Show.new
+            show.name = data['name']
+            show.description = data['description']
+            show.channel = channel
+            show.save!
+            status 200
+            body(show.id)
+          else
+            puts ">>Channel doesnt exist"
+            status 400
+            body({error: "That channel does not exist"})
+          end
+        end
+      end
+    end
+
+    operation :update do
+      description "Updates an existing show"
+      control do
+        show = Show.find(params[:id])
+        data = JSON.parse(request.body.string)
+        if data.nil? or !data.has_key?('description') or !data.has_key?('name') then
+          status 404
+        else
+          channel = Channel.find(data['channel'])
+          show.name = data['name']
+          show.description = data['description']
+          show.channel = channel if !channel.nil?
+          show.save!
+          status 200
+          body(show.id.to_s)
+        end
+      end
+    end
   end
 
   # start the server if ruby file executed directly
