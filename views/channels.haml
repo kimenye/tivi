@@ -1,21 +1,40 @@
 .container#channels-div
-  .row
-    %h1 Channels
-  .row
-    .container.span3
-      .well-large.form-vertical
+  #edit-modal.modal.hide
+    .modal-header
+      %button.close{'type' => 'button', 'data-dismiss' => 'modal'}
+        x
+      %h3 Channel
+    %form.modal-form.form-horizontal{'data-bind' => 'submit: createOrUpdate'}
+      .modal-body
         %fieldset
-          %legend Edit Channels
           .control-group
             %label.control-label{ 'for' => 'code' } Code
             .controls
-              %input.input-mini#code{'name' => 'code', 'type' => 'text', 'data-bind' => 'value: code'}
+              %input.input-mini#code{'name' => 'code', 'type' => 'text', 'data-bind' => 'value: code', 'required' => 'required'}
           .control-group
             %label.control-label{ 'for' => 'name' } Name
             .controls
-              %input.input-medium#code{'name' => 'name', 'type' => 'text', 'data-bind' => 'value: name'}
-          %input.btn{'type' => 'button', 'data-bind' => 'value: buttonState, click: createOrUpdate' }
-    .container.span3
+              %input.input-medium#code{'name' => 'name', 'type' => 'text', 'data-bind' => 'value: name', 'required' => 'required'}
+      .modal-footer
+        %a.btn{'data-dismiss' => 'modal', 'href' => '#'} Close
+        %input.btn.btn-success{ 'type' => 'submit', 'value' => 'Save'}
+  .row
+    .span3
+      %h1 Channels
+    .span9
+      #status.alert.alert-success{'data-bind' => 'visible: msg() != null'}
+        %span{'data-bind' => 'text: msg'}
+  .row
+    .span3.sidebar
+      .well{'role' => 'navigation'}
+        %ul.nav.nav-list
+          %li.nav-header
+            Options
+          %li
+            %a.home{'data-toggle' => 'modal', 'href' => '#edit-modal'}
+              %i.icon-file
+              New Channel
+    .container.span9
       %table.table.table-bordered
         %thead
           %th Code

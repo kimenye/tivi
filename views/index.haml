@@ -1,22 +1,31 @@
 !!! 5
 %html
   %head
+    %link{'rel' => 'shortcut icon', 'href' => 'images/favicon.ico'}
     %link{'rel' => 'stylesheet', 'href' => 'css/bootstrap.min.css'}
     %link{'rel' => 'stylesheet', 'href' => 'css/style.css'}
     %link{'rel' => 'stylesheet', 'href' => 'css/bootstrap-responsive.min.css'}
 
     %title TiVi
   %body
-    /! start of top navbar
-    .navbar.navbar-fixed-top
-      .navbar-inner
-        .container
-          %a.brand TiVi
-          %ul.nav.pull-right
-            %li
-              %a{ 'href' =>'/channels'} Channels
-            %li
-              %a{ 'href' =>'/login'} Log-in
+    .container
+      .page-header.logo
+        %h1
+          %a{ 'href' => '/' }
+            %img{ 'src' => 'images/logo.png' }
+          %small
+            Your Free TV Guide
+
+    -#/! start of top navbar
+    -#.navbar.navbar-fixed-top
+    -#  .navbar-inner
+    -#    .container
+    -#      %a.brand TiVi
+    -#      %ul.nav.pull-right
+    -#        %li
+    -#          %a{ 'href' =>'/channels'} Channels
+    -#        %li
+    -#          %a{ 'href' =>'/login'} Log-in
 
     /! end of top navbar
 
@@ -43,4 +52,5 @@
     %script{ 'type' => 'text/javascript', 'src' => 'javascript/underscore-min.js'}
     %script{ 'type' => 'text/javascript', 'src' => 'javascript/sammy.js'}
     %script{ 'type' => 'text/javascript', 'src' => 'javascript/app.js'}
+    %script{ 'type' => 'text/javascript', 'src' => 'javascript/channels.js'}
     -#%script{ 'type' => 'text/javascript', 'src' => 'http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php/en_US'}

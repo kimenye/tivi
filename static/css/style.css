@@ -1,6 +1,6 @@
-body {
-    padding-top: 60px;
-}
+/*body {*/
+    /*padding-top: 60px;*/
+/*}*/
 
 .input-xlarge {
     /*height: 40px;*/
@@ -31,4 +31,12 @@ body {
 }
 .navbar-fixed-top .brand:hover {
     text-decoration: none;
+}
+
+h1 small {
+    font-size: 14px;
+}
+
+.logo h1 small {
+    display: block;
 }
