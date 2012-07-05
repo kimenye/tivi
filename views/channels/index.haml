@@ -18,13 +18,13 @@
       .modal-footer
         %a.btn{'data-dismiss' => 'modal', 'href' => '#'} Close
         %input.btn.btn-success{ 'type' => 'submit', 'value' => 'Save'}
-  .row
+  .row{ 'data-bind' => 'visible: selected() == null'}
     .span3
       %h1 Channels
     .span9
       #status.alert.alert-success{'data-bind' => 'visible: msg() != null'}
         %span{'data-bind' => 'text: msg'}
-  .row
+  .row{ 'data-bind' => 'visible: selected() == null'}
     .span3.sidebar
       .well{'role' => 'navigation'}
         %ul.nav.nav-list
@@ -46,3 +46,20 @@
                 %i.icon-edit{'data-bind' => ''}
               %span{ 'data-bind' => 'text: code'}
             %td{ 'data-bind' => 'text: name'}
+            %td
+              -#%a.btn.btn-success{ 'data-bind' => "attr: {href: '#' + id} "  }
+              %a.btn.btn-success{ 'data-bind' => "click: $parent.selectChannel"  }
+                View Shows
+  %section{'data-bind' => 'if: selected() != null'}
+    .row{'data-bind' => 'with: selected'}
+      .span3
+        %h2{ 'data-bind' => 'text: name' }
+    .row{'data-bind' => 'with: selected'}
+      .span3.sidebar
+        .well{'role' => 'navigation'}
+          %ul.nav.nav-list
+            %li.nav-header
+              Options
+      .span9.container
+        .row
+

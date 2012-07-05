@@ -31,6 +31,7 @@ $(document).ready(function() {
         self.id = ko.observable(null);
         self.msg = ko.observable();
         self.editable = ko.observable(null);
+        self.selected = ko.observable(null);
 
         self.edit = function(channel) {
             console.log("In edit");
@@ -97,11 +98,29 @@ $(document).ready(function() {
                         });
                         self.channels(models);
                     }
+                    self.selectChannel(_.first(self.channels()));
                 }
             });
         }
 
+        self.selectChannel = function(channel) {
+            self.selected(channel);
+        }
+
         self.loadChannels();
+//        Sammy(function() {
+//
+//            this.get('', function() {
+////                self.selectedView(null);
+//                self.loadChannels();
+//            });
+//
+//            this.get('#:channel', function() {
+//                console.log("Params: ", this.params.channel);
+//                self.selectChannel
+//            })
+//
+//        }).run();
     }
 
     if ($('#channels-div').length > 0)

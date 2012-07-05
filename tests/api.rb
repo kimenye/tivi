@@ -1,4 +1,4 @@
-require_relative '../api_application'  # <-- your sinatra app
+require_relative '../api_application'
 require 'spec/mocks'
 require 'rspec-expectations'
 require 'rack/test'

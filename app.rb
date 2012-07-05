@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'sinatra'
+require_relative 'api_application'
 
 class TiviApp < Sinatra::Base
 
@@ -8,7 +9,12 @@ class TiviApp < Sinatra::Base
   end
 
   get '/channels' do
-    haml :channels, :layout => :index
+    haml :"channels/index", :layout => :index
+  end
+
+  get '/channels/:id' do
+    channel = Channel.find(params[:id])
+    haml :"channels/view", :layout => :index, :locals => {:channel => channel}
   end
 
   configure do
