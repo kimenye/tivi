@@ -172,15 +172,14 @@ describe 'The Tivi App' do
     kbc = Channel.create!(kbc)
 
     Show.create(briefcase_inc.update({ channel: kbc }))
-    Show.create({ channel: ktn })
+    Show.create(hostel.update({ channel: ktn }))
+    Show.create({ channel: ktn, name: "KTN Today", description: "KTN News in the morning" })
 
     all_ctr = Show.count
-    all_ctr.should == 2
-
-
+    all_ctr.should == 3
 
     get "/channels/shows/#{ktn.id.to_s}"
     last_response.should be_ok
-    JSON.parse(last_response.body).length.should == 1
+    JSON.parse(last_response.body).length.should == 2
   end
 end

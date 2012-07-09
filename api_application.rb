@@ -207,7 +207,7 @@ class ApiApplication < Sinatra::Base
             show.channel = channel
             show.save!
             status 200
-            body(show.id)
+            body(show.id.to_s)
           else
             puts ">>Channel doesnt exist"
             status 400

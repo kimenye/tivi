@@ -1,9 +1,9 @@
 .container#channels-div
-  #edit-modal.modal.hide
+  #channel-edit-modal.modal.hide
     .modal-header
       %button.close{'type' => 'button', 'data-dismiss' => 'modal'}
         x
-      %h3 Channel
+      %h3 Create or Edit Channel
     %form.modal-form.form-horizontal{'data-bind' => 'submit: createOrUpdate'}
       .modal-body
         %fieldset
@@ -18,10 +18,37 @@
       .modal-footer
         %a.btn{'data-dismiss' => 'modal', 'href' => '#'} Close
         %input.btn.btn-success{ 'type' => 'submit', 'value' => 'Save'}
+  #show-edit-modal.modal.hide
+    .modal-header
+      %button.close{'type' => 'button', 'data-dismiss' => 'modal'}
+        x
+      %h3 Create or Edit Show
+    %form.modal-form.form-horizontal{'data-bind' => 'submit: createOrUpdateShow'}
+      .modal-body
+        %fieldset
+          .control-group
+            %label.control-label{'for' => 'showName'} Name
+            .controls
+              %input.input-medium#showName{'name' => 'showName', 'type' => 'text', 'data-bind' => 'value: showName', 'required' => 'required'}
+          .control-group
+            %label.control-label{'for' => 'channel'} Channel
+            .controls
+              %select#channel{'name' => 'channel', 'data-bind' => "options: channels, optionsText: 'name', value: showChannel,optionsCaption: 'Please Choose...'"}
+          .control-group
+            %label.control-label{'for' => 'description'} Description
+            .controls
+              %textarea.input-xlarge#description{'name' => 'description', 'data-bind' => 'value: showDescription'}
+      .modal-footer
+        %a.btn{'data-dismiss' => 'modal', 'href' => '#close'} Close
+        %input.btn.btn-success{'type' => 'submit', 'value' => 'Save'}
   .row{ 'data-bind' => 'visible: selected() == null'}
     .span3
       %h1 Channels
     .span9
+      -##status.alert.alert-success{'data-bind' => 'visible: msg() != null'}
+      -#  %span{'data-bind' => 'text: msg'}
+  .row
+    .span9.offset3
       #status.alert.alert-success{'data-bind' => 'visible: msg() != null'}
         %span{'data-bind' => 'text: msg'}
   .row{ 'data-bind' => 'visible: selected() == null'}
@@ -31,7 +58,7 @@
           %li.nav-header
             Options
           %li
-            %a.home{'data-toggle' => 'modal', 'href' => '#edit-modal'}
+            %a.home{'data-toggle' => 'modal', 'href' => '#channel-edit-modal'}
               %i.icon-file
               New Channel
     .container.span9
@@ -42,13 +69,12 @@
         %tbody{'data-bind' => 'foreach: channels'}
           %tr
             %td
-              %a{ 'data-bind' => 'click: $parent.edit', 'href' => '#'}
-                %i.icon-edit{'data-bind' => ''}
+              %a{ 'data-bind' => 'click: $parent.edit', 'href' => '#channel-edit-modal'}
+                %i.icon-edit
               %span{ 'data-bind' => 'text: code'}
             %td{ 'data-bind' => 'text: name'}
             %td
-              -#%a.btn.btn-success{ 'data-bind' => "attr: {href: '#' + id} "  }
-              %a.btn.btn-success{ 'data-bind' => "click: $parent.selectChannel"  }
+              %a.btn.btn-success{ 'data-bind' => "click: $parent.selectChannel" }
                 View Shows
   %section{'data-bind' => 'if: selected() != null'}
     .row{'data-bind' => 'with: selected'}
@@ -60,6 +86,26 @@
           %ul.nav.nav-list
             %li.nav-header
               Options
+            %li
+              %a.home{'data-toggle' => 'modal', 'href' => '#show-edit-modal'}
+                New Show
       .span9.container
         .row
+          .span9
+            %h3 Shows
+        .row
+          .span9
+            %table.table.table-bordered
+              %thead
+                %th Name
+                %th Description
+              %tbody{'data-bind' => 'foreach: shows'}
+                %tr
+                  %td
+                    %a{'href' => '#'}
+                      %i.icon-edit
+                    %span{ 'data-bind' => 'text: name'}
+                  %td{ 'data-bind' => 'text: description'}
+                  %td
+  -#%section{'data-bind' => 'if: show() != null'}
 
