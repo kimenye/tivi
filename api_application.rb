@@ -41,6 +41,32 @@ class Show
   belongs_to :channel
 end
 
+class User
+  include MongoMapper::Document
+
+  key :username, String
+  key :refresh_token, String
+  key :access_token, String
+  key :expires_in, Integer
+  key :issued_at, Integer
+
+  def update_token!(object)
+    self.refresh_token = object.refresh_token
+    self.access_token = object.access_token
+    self.expires_in = object.expires_in
+    self.issued_at = object.issued_at
+  end
+
+  def to_hash
+    return {
+        :refresh_token => refresh_token,
+        :access_token => access_token,
+        :expires_in => expires_in,
+        :issued_at => Time.at(issued_at)
+    }
+  end
+end
+
 class ApiApplication < Sinatra::Base
   include Sinatra::Rabbit
 

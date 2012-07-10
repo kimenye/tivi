@@ -58,14 +58,24 @@ $(document).ready(function() {
         self.showChannel = ko.observable(null);
         self.showDescription = ko.observable(null);
         self.showId = ko.observable(null);
+        self.editableShow = ko.observable(null);
 
+
+        //TODO: We can make this common between the different things we are editing
         self.edit = function(channel) {
-            console.log("In edit");
             self.code(channel.code());
             self.name(channel.name());
             self.id(channel.id);
             self.editable(channel);
-            $('#edit-modal').modal('show');
+            $('#channel-edit-modal').modal('show');
+        };
+
+        self.editShow = function(show) {
+            self.showName(show.name());
+            self.showDescription(show.description());
+            self.showId(show.id);
+            self.editableShow(show);
+            $('#show-edit-modal').modal('show');
         };
 
         self.buttonState = ko.computed(function() {
@@ -79,19 +89,28 @@ $(document).ready(function() {
             var _show = new Show({ name: self.showName(), description: self.showDescription(), channel: self.showChannel().id });
             var _str = JSON.stringify(_show.toJSON());
 
-            console.log("Str is ", _str)
-
             if (self.showId() == null) {
-                debugger;
                 $.post('/api/shows', _str,
                     function(data) {
                         _.extend(_show, {id: data});
-                        self.selected().shows.push(_show);
+                        if (self.selected().id == self.showId())
+                            self.selected().shows.push(_show);
                         self.closeModal("#show-edit-modal", "Successfully added new show " + self.showName());
                     });
             }
             else {
-                var url = "/api/shows";
+                var url = "/api/shows/" + self.showId();
+                $.ajax({
+                    url: url,
+                    type: 'PATCH',
+                    data: _str
+                })
+                    .success(function(data) {
+                        self.editableShow().name(self.showName());
+                        self.editableShow().description(self.showDescription());
+                        self.editableShow(null);
+                        self.closeModal("#show-edit-modal", "Successfully updated show " + self.showName());
+                    });
             }
         };
 

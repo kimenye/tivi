@@ -33,7 +33,7 @@
           .control-group
             %label.control-label{'for' => 'channel'} Channel
             .controls
-              %select#channel{'name' => 'channel', 'data-bind' => "options: channels, optionsText: 'name', value: showChannel,optionsCaption: 'Please Choose...'"}
+              %select#channel{'name' => 'channel', 'data-bind' => "enable: false, options: channels, optionsText: 'name', value: showChannel,optionsCaption: 'Please Choose...'"}
           .control-group
             %label.control-label{'for' => 'description'} Description
             .controls
@@ -102,10 +102,8 @@
               %tbody{'data-bind' => 'foreach: shows'}
                 %tr
                   %td
-                    %a{'href' => '#'}
+                    %a{ 'data-bind' => 'click: $root.editShow'}
                       %i.icon-edit
                     %span{ 'data-bind' => 'text: name'}
                   %td{ 'data-bind' => 'text: description'}
                   %td
-  -#%section{'data-bind' => 'if: show() != null'}
-
