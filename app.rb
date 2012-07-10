@@ -20,7 +20,7 @@ class TiviApp < Sinatra::Base
     @client.authorization.client_id = '857226781923.apps.googleusercontent.com'
     @client.authorization.client_secret = 'o_pT7P7g698ZZDih_dJMbKeh'
 
-    @client.authorization.scope = 'https://www.googleapis.com/auth/buzz'
+    @client.authorization.scope = 'https://www.googleapis.com/auth/calendar'
     #@client.authorization.scope = 'https://www.googleapis.com/auth/calendar'
     @client.authorization.redirect_uri = to('/oauthcallback')
     @client.authorization.code = params[:code] if params[:code]
@@ -36,7 +36,7 @@ class TiviApp < Sinatra::Base
       @client.authorization.fetch_access_token!
     end
 
-    @cal = @client.discovered_api('buzz')
+    @cal = @client.discovered_api('calendar', 'v3')
     unless @client.authorization.access_token || request.path_info =~ /^\/oauth/
       puts ">>>> Redirecting to oauth authorization"
       redirect to('/oauthauthorize')
