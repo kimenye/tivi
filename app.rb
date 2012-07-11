@@ -10,7 +10,7 @@ class TiviApp < Sinatra::Base
   end
 
   get '/' do
-    haml :home, :layout => :index
+    haml :home, :layout => :layout
   end
 
   configure do

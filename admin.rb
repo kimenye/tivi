@@ -22,7 +22,7 @@ class AdminApp < Sinatra::Base
 
   get '/' do
     protected!
-    haml :"admin/index"
+    haml :"admin/index", :layout => :admin
   end
 
 end

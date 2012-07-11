@@ -4,6 +4,7 @@
     %link{'rel' => 'shortcut icon', 'href' => '../images/favicon.ico'}
     %link{'rel' => 'stylesheet', 'href' => '../css/bootstrap.min.css'}
     %link{'rel' => 'stylesheet', 'href' => '../css/style.css'}
+    %link{'rel' => 'stylesheet', 'href' => '../css/admin.css'}
     %link{'rel' => 'stylesheet', 'href' => '../css/bootstrap-responsive.min.css'}
 
     %title TiVi
@@ -16,16 +17,16 @@
           %small
             Your Free TV Guide
 
-    -#/! start of top navbar
-    -#.navbar.navbar-fixed-top
-    -#  .navbar-inner
-    -#    .container
-    -#      %a.brand TiVi
-    -#      %ul.nav.pull-right
-    -#        %li
-    -#          %a{ 'href' =>'/channels'} Channels
-    -#        %li
-    -#          %a{ 'href' =>'/login'} Log-in
+    /! start of top navbar
+    .navbar.navbar-fixed-top
+      .navbar-inner
+        .container
+          %a.brand TiVi
+          %ul.nav.pull-right
+            %li
+              %a{ 'href' =>'/channels'} Channels
+            %li
+              %a{ 'href' =>'/log-out'} Log-out
 
     /! end of top navbar
 
