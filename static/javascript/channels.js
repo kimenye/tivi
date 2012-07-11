@@ -163,7 +163,7 @@ $(document).ready(function() {
                         });
                         self.channels(models);
                     }
-                    self.selectChannel(_.first(self.channels()));
+//                    self.selectChannel(_.first(self.channels()));
                 }
             });
         }
@@ -192,19 +192,6 @@ $(document).ready(function() {
         }
 
         self.loadChannels();
-//        Sammy(function() {
-//
-//            this.get('', function() {
-////                self.selectedView(null);
-//                self.loadChannels();
-//            });
-//
-//            this.get('#:channel', function() {
-//                console.log("Params: ", this.params.channel);
-//                self.selectChannel
-//            })
-//
-//        }).run();
     }
 
     if ($('#channels-div').length > 0)

@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'sinatra'
+require 'pry'
 require_relative 'api_application'
 
 class AdminApp < Sinatra::Base
@@ -23,6 +24,12 @@ class AdminApp < Sinatra::Base
   get '/' do
     protected!
     haml :"admin/index", :layout => :admin
+  end
+
+  get '/schedule/:id' do
+    protected!
+    channel = Channel.find_by_id(params[:id])
+    haml :"admin/channel", :layout => :guide, :locals => { :channel => channel }
   end
 
 end

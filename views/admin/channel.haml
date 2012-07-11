@@ -1,0 +1,12 @@
+.container
+  .row
+    .span3
+      %h1= channel.name
+      %small= channel.code
+
+      %form#channel-form
+        %input#channel-id{ :type => 'hidden', :value => channel.id }
+        %input#channel-name{ :type => 'hidden', :value => channel.name }
+        %input#channel-code{ :type => "hidden", :value => channel.code }
+    .span9
+      #timetable

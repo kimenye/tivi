@@ -1,4 +1,5 @@
 require_relative '../admin'
+require_relative '../api_application'
 require 'spec/mocks'
 require 'rspec-expectations'
 require 'rack/test'
@@ -14,6 +15,13 @@ describe 'The Tivi Administration App' do
     AdminApp
   end
 
+  def login
+
+  end
+
+  username = 'guide@tivi.co.ke'
+  password = 'sproutt1v!'
+
   it "should not be able to access the admin area without login credentials" do
     get '/'
     last_response.status.should == 401
@@ -26,8 +34,18 @@ describe 'The Tivi Administration App' do
   end
 
   it "should authenticate the user with the correct login details" do
-    authorize 'guide@tivi.co.ke', 'sproutt1v!'
+    authorize username, password
     get '/'
     last_response.should be_ok
+  end
+
+  it "should show the name of channel when viewing the schedule for a channel" do
+
+    channel = Channel.first
+
+    authorize username, password
+    get "/schedule/#{channel.id.to_s}"
+    last_response.should be_ok
+    last_response.body.should =~ /#{channel.name}/
   end
 end

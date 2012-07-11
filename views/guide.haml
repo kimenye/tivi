@@ -1,0 +1,34 @@
+!!! 5
+%html
+  %head
+    %link{'rel' => 'shortcut icon', 'href' => '/images/favicon.ico'}
+    %link{'rel' => 'stylesheet', 'href' => '/css/bootstrap.min.css'}
+    %link{'rel' => 'stylesheet', 'href' => '/css/bootstrap-responsive.min.css'}
+    %link{'rel' => 'stylesheet', 'href' => '/css/style.css'}
+    %link{'rel' => 'stylesheet', 'href' => '/css/admin.css'}
+    %link{'rel' => 'stylesheet', 'href' => '/javascript/glow/widgets/widgets.debug.css'}
+    %title TiVi
+  %body
+    -#TODO: Make this a partial
+    .navbar.navbar-fixed-top
+      .navbar-inner
+        .container
+          %a.brand TiVi
+          %ul.nav.pull-right
+            -#%li
+            -#  %a{ 'href' =>'/channels'} Channels
+            %li
+              %a{ 'href' =>'/log-out'} Log-out
+
+    = yield
+
+    .container
+      %br
+      %hr
+      %footer
+        %span Fancy copyright stuff and privacy policies
+
+    %script{ 'type' => 'text/javascript', 'src' => '/javascript/glow/core/core.js'}
+    %script{ 'type' => 'text/javascript', 'src' => '/javascript/glow/widgets/widgets.js'}
+    %script{ 'type' => 'text/javascript', 'src' => '/javascript/jquery.1.7.2.js'}
+    %script{ 'type' => 'text/javascript', 'src' => '/javascript/guide.js'}
