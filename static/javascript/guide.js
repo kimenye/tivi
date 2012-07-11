@@ -1,7 +1,30 @@
 glow.ready(function() {
     console.log("Glow is ready");
 
-    var channelId = $('')
+    var channelId = $('#channel-id').val();
+
+    var startOfWeek = Date.parse("last sunday");
+    var endOfWeek = Date.parse("next saturday");
+
+
+    function Week() {
+        var self = this;
+
+        self.startDate = Date.parse("last sunday"); //week starts on sunday
+        self.today = new Date();
+        self.days = [];
+        self.days.push(self.startDate);
+        _.each(_.range(1, 7), function(d) {
+            dt = new Date(self.startDate).addDays(d);
+            self.days.push(dt);
+        });
+    }
+
+    var wk = new Week();
+//    var dt = new Date();
+
+
+//    console.log("Channel id is ", channelId);
 
 
 //    function _dFormat(d) {
