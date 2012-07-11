@@ -14,7 +14,6 @@ gem "pry-nav"
 gem "bson_ext"
 gem "rspec"
 gem "thin"
-gem "google-api-client"
 
 group :test do
   gem 'rack-test', :git => "https://github.com/brynary/rack-test.git"
