@@ -199,8 +199,13 @@ describe 'The Tivi App' do
 
   it "accepts a message from SMS Sync and responds correctly" do
 
-    post "/sms_sync"
+    post "/sms_sync", { "from" => "+254727550098".encode, "message" => "TIVI Briefcase Inc".encode, "sent_timestamp" => "07-12-12+12:31".encode }
     last_response.should be_ok
     last_response.body.should == sms_response.to_json
   end
+
+  it "accepts a subscription that does not belong to a show and marks it as in active" do
+
+  end
+
 end

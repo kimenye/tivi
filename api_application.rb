@@ -5,6 +5,8 @@ require 'sinatra/rabbit'
 require 'sinatra/reloader' if development?
 require 'dm-core'
 require 'mongo_mapper'
+require 'rufus/scheduler'
+require 'gcal4ruby'
 
 module Sinatra
   class Base
@@ -28,6 +30,7 @@ class Channel
 
   key :name, String, :required => true
   key :code, String, :required => true
+  key :calendar_id, String
   key :created_at, Time, :default => Time.now
   many :shows
 end
@@ -41,10 +44,12 @@ class Show
   belongs_to :channel
 end
 
-class Reminder
+class Subscription
   include MongoMapper::Document
 
-  key :subscription_text, String
+  key :show_name, String
+  key :active, Boolean
+  key :cancelled, Boolean, :default => false
   key :from, Time, :default => Time.now
   belongs_to :subscriber
   belongs_to :show
@@ -56,12 +61,12 @@ class SubscriptionLog
   key :message, String
 end
 
-class Message
-  include MongoMapper::Document
-
-  belongs_to :subscriber
-  key :message, String
-end
+#class Message
+#  include MongoMapper::Document
+#
+#  belongs_to :subscriber
+#  key :message, String
+#end
 
 class Subscriber
   include MongoMapper::Document
@@ -72,11 +77,37 @@ end
 class ApiApplication < Sinatra::Base
   include Sinatra::Rabbit
 
+  helpers do
+    def get_shows_starting_in_next_five_min
+      #events = GCal4Ruby::Event.find serv, {
+      #
+      #  }
+
+      Channel.all.each { |channel|
+        puts ">> programs starting the next 5 min on #{channel.code}"
+      }
+    end
+  end
 
   configure :development do
     register Sinatra::Reloader
     enable :logging
+
+    scheduler = Rufus::Scheduler.start_new
+    @service = GCal4Ruby::Service.new
+    @service.authenticate "guide@tivi.co.ke", "sproutt1v!"
+
+    scheduler.every '5s' do
+
+      #shows = get_shows_starting_in_next_five_min
+
+      Channel.all.each { |channel|
+        puts ">> programs starting the next 5 min on #{channel.code}"
+      }
+
+    end
   end
+
 
   configure do
     set :public_folder, Proc.new { File.join(root, "static") }
@@ -98,15 +129,40 @@ class ApiApplication < Sinatra::Base
   end
 
   post "/sms_sync" do
-
-    puts ">> body: #{request.body.string}"
-
     s = SubscriptionLog.new
     s.message = request.body.string
 
     s.save!
 
+    from = params[:from]
+    msg = params[:message]
 
+    #check to see if the subscriber exists
+    existing_subscriber = Subscriber.first(:phone_number => from)
+
+    if existing_subscriber.nil?
+      existing_subscriber = Subscriber.new
+      existing_subscriber.phone_number = from
+      existing_subscriber.save!
+    end
+
+    show_name = msg.split(/TIVI/).join.lstrip.rstrip if msg =~ /TIVI/
+    if show_name.nil?
+      show_name = msg
+    end
+
+    subscription = Subscription.new
+    subscription.subscriber = existing_subscriber
+
+    existing_show = Show.first(:name => show_name)
+    if not existing_show.nil?
+      subscription.active = true
+      subscription.show = existing_show
+    else
+      subscription.show_name = show_name
+    end
+
+    subscription.save!
     content_type :json
     status(200)
     body({
@@ -126,6 +182,17 @@ class ApiApplication < Sinatra::Base
       control do
         status 200
         body({ version: "1.0 "}.to_json)
+      end
+    end
+  end
+
+  collection :subscriptions do
+    description "API for managing subscriptions"
+
+    operation :index do
+      control do
+        status(200)
+        body(Subscription.all.to_json)
       end
     end
   end
