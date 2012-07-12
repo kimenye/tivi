@@ -30,6 +30,12 @@ describe 'The Tivi App' do
       description: "Follow the campus students"
   }
 
+  sms_response = {
+      :payload => {
+          :success => "true"
+      }
+  }
+
   def app
     ApiApplication
   end
@@ -181,5 +187,20 @@ describe 'The Tivi App' do
     get "/channels/shows/#{ktn.id.to_s}"
     last_response.should be_ok
     JSON.parse(last_response.body).length.should == 2
+  end
+
+  it "returns the subscribers saved" do
+    get "/subscribers"
+    last_response.should be_ok
+    last_response.body.should == Subscriber.all.to_json
+  end
+
+  #it "it does not accept a subscription that does not have a  "
+
+  it "accepts a message from SMS Sync and responds correctly" do
+
+    post "/sms_sync"
+    last_response.should be_ok
+    last_response.body.should == sms_response.to_json
   end
 end

@@ -41,30 +41,26 @@ class Show
   belongs_to :channel
 end
 
-class User
+class Reminder
   include MongoMapper::Document
 
-  key :username, String
-  key :refresh_token, String
-  key :access_token, String
-  key :expires_in, Integer
-  key :issued_at, Integer
+  key :subscription_text, String
+  key :from, Time, :default => Time.now
+  belongs_to :subscriber
+  belongs_to :show
+end
 
-  def update_token!(object)
-    self.refresh_token = object.refresh_token
-    self.access_token = object.access_token
-    self.expires_in = object.expires_in
-    self.issued_at = object.issued_at
-  end
+class Message
+  include MongoMapper::Document
 
-  def to_hash
-    return {
-        :refresh_token => refresh_token,
-        :access_token => access_token,
-        :expires_in => expires_in,
-        :issued_at => Time.at(issued_at)
-    }
-  end
+  belongs_to :subscriber
+  key :message, String
+end
+
+class Subscriber
+  include MongoMapper::Document
+
+  key :phone_number, String
 end
 
 class ApiApplication < Sinatra::Base
@@ -86,6 +82,20 @@ class ApiApplication < Sinatra::Base
     content_type :json
   end
 
+  post "/sms_sync" do
+
+    puts ">> body: #{request.body.string}"
+
+    content_type :json
+    status(200)
+    body({
+        :payload => {
+            :success => "true"
+        }
+    }.to_json)
+
+  end
+
   collection :describe do
     description "What is this API capable of?"
 
@@ -99,6 +109,16 @@ class ApiApplication < Sinatra::Base
     end
   end
 
+  collection :subscribers do
+    description "API operatiosn for adding subscribers"
+
+    operation :index do
+      control do
+        subscribers = Subscriber.all
+        body(subscribers.to_json)
+      end
+    end
+  end
 
 
   collection :channels do
