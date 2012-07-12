@@ -80,16 +80,10 @@ class ApiApplication < Sinatra::Base
 
   configure do
     set :public_folder, Proc.new { File.join(root, "static") }
-    #MongoMapper.database = 'tivi'
-
-    url = ENV['MONGOHQ_URL'] || 'mongodb://localhost/tivi'
-
-    puts ">> url #{url}"
 
     if ENV['MONGOHQ_URL']
-    #if url
       uri = URI.parse(ENV['MONGOHQ_URL'])
-      MongoMapper.connection = Mongo::Connection.from_uri(ENV['MONGOHQ_URL'], :logger => logger)
+      MongoMapper.connection = Mongo::Connection.from_uri(ENV['MONGOHQ_URL'])
       MongoMapper.database = uri.path.gsub(/^\//, '')
       puts ">> db is #{uri.path.gsub(/^\//, '')}"
     else
