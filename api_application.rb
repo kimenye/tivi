@@ -50,6 +50,12 @@ class Reminder
   belongs_to :show
 end
 
+class SubscriptionLog
+  include MongoMapper::Document
+
+  key :message, String
+end
+
 class Message
   include MongoMapper::Document
 
@@ -86,6 +92,12 @@ class ApiApplication < Sinatra::Base
 
     puts ">> body: #{request.body.string}"
 
+    s = SubscriptionLog.new
+    s.message = request.body.string
+
+    s.save!
+
+
     content_type :json
     status(200)
     body({
@@ -116,6 +128,16 @@ class ApiApplication < Sinatra::Base
       control do
         subscribers = Subscriber.all
         body(subscribers.to_json)
+      end
+    end
+  end
+
+  collection :log do
+
+    operation :index do
+      control do
+        l = SubscriptionLog.all
+        body(l.to_json)
       end
     end
   end
