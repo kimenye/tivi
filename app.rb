@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'sinatra'
 require_relative 'api_application'
-require 'google/api_client'
 
 class TiviApp < Sinatra::Base
 
