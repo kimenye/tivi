@@ -5,7 +5,7 @@ require 'sinatra/rabbit'
 require 'sinatra/reloader' if development?
 require 'dm-core'
 require 'mongo_mapper'
-require 'rufus/scheduler'
+#require 'rufus/scheduler'
 require 'gcal4ruby'
 
 module Sinatra
@@ -137,7 +137,19 @@ module SchedulerHelper
   end
 
   def get_reminders (duration=5, from=Time.now)
-
+    shows = get_shows_starting_in_duration(duration,from)
+    reminders = []
+    shows.each { |show|
+      #find any subscriptions for these shows
+      subscriptions = Subscription.find_all_by_show_id(show.id)
+      reminders.append(subscriptions.collect { |sub|
+        {
+          :to => sub.subscriber.phone_number,
+          :message => "Your show #{sub.show.name} starts in 5 min"
+        }
+      })
+    }
+    reminders
   end
 end
 
@@ -149,20 +161,6 @@ class ApiApplication < Sinatra::Base
   configure :development do
     register Sinatra::Reloader
     enable :logging
-
-    #scheduler = Rufus::Scheduler.start_new
-    #@service = GCal4Ruby::Service.new
-    #@service.authenticate "guide@tivi.co.ke", "sproutt1v!"
-    #
-    #scheduler.every '5s' do
-    #
-    #  #shows = get_shows_starting_in_next_five_min
-    #
-    #  Channel.all.each { |channel|
-    #    puts ">> programs starting the next 5 min on #{channel.code}"
-    #  }
-    #
-    #end
   end
 
 
@@ -183,6 +181,27 @@ class ApiApplication < Sinatra::Base
 
   before  '/*', :request_method => [ :get ] do
     content_type :json
+  end
+
+  get "/sms_sync" do
+    task = params[:task]
+    dbg = params[:debug]
+
+    #check for messages
+    start_time = Time.now
+
+    if dgb == "true"
+      start_time = Time.local(now.year,now.month,now.day,9,55)
+    end
+
+    messages = get_reminders(5,start_time)
+    status(200)
+    body({
+      :payload => {
+        :task => "send"
+
+      }
+     })
   end
 
   post "/sms_sync" do
@@ -255,7 +274,7 @@ class ApiApplication < Sinatra::Base
   end
 
   collection :subscribers do
-    description "API operatiosn for adding subscribers"
+    description "API operations for adding subscribers"
 
     operation :index do
       control do

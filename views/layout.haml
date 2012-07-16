@@ -6,7 +6,7 @@
     %link{'rel' => 'stylesheet', 'href' => '../css/style.css'}
     %link{'rel' => 'stylesheet', 'href' => '../css/bootstrap-responsive.min.css'}
 
-    %title TiVi
+    %title TiVi :: Kenya Free TV Guide
   %body
     .container
       .page-header.logo
@@ -41,19 +41,23 @@
       %hr
       .row
         .span4
-          %h6 ADMIN
-          %ul.nav.nav-list
-            %li
-              %a{'href' => '/admin'} Administration
+          %h6 ABOUT US
+          -#%ul.nav.nav-list
+          -#  %li
+          -#    %a{'href' => '/admin'} Administration
+          %p TiVi&reg; is a product of Sprout Consulting Kenya.
+          %p Copyright &copy; 2012.
+          %a{:href=>"http://www.sprout.co.ke"} Sprout Consulting
         .span4
           %h6 CONTACT US
           %ul.nav.nav-list
             %li
               %a{'href' => 'mailto:guide@tivi.co.ke'} Email us
+              %a{'href' => '/admin'} Admin
         .span4
-          %h6 PRIVACY POLICY
-      %footer
-        %span Fancy copyright stuff and privacy policies
+          %h6 TERMS OF USE
+          %p While we do our best to ensure that the listing information presented here is accurate, schedule changes may mean this information is out of date.
+
 
     /! end the footer
 

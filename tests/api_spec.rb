@@ -204,7 +204,7 @@ describe 'The Tivi App' do
   end
 
   it "accepts a subscription that does not belong to a show and marks it as in active" do
-
+  #  TODO:
   end
 
 end

@@ -16,6 +16,8 @@ describe 'Sinatra helpers' do
 
   before(:all) do
     #puts ">> At the beginning of time"
+    Subscriber.delete_all
+    Subscription.delete_all
     Schedule.delete_all
     Show.delete_all
     Channel.delete_all
@@ -27,9 +29,8 @@ describe 'Sinatra helpers' do
     ten_show = Show.create(:channel => test, :name=> "10.00 AM Show", :description => "30 min show starting at 10.00 AM")
     ten_thirty_show = Show.create(:channel => test, :name=> "10.30 AM Show", :description => "30 min show starting at 10.30 AM")
 
-    #post "/sms_sync", { "from" => "+254727550098".encode, "message" => "TIVI Briefcase Inc".encode, "sent_timestamp" => "07-12-12+12:31".encode }
-    #trev = Show.
-
+    trev = Subscriber.create(:phone_number => "+254705866564")
+    ten_reminder = Subscription.create(:subscriber => trev, :show => ten_show, :active => true)
 
     service.authenticate "guide@tivi.co.ke", "sproutt1v!"
   end
@@ -68,6 +69,14 @@ describe 'Sinatra helpers' do
   it "should not return a show from a time which a show isnt starting exist" do
     shows = helpers.get_shows_starting_in_duration(5, Time.local(2012,7,16,8,25))
     shows.length.should eq(0)
+  end
+
+  it "should return a reminder for a show starting in 5 minutes" do
+    now = Time.now
+    five_to_ten = Time.local(now.year,now.month,now.day,9,55)
+    reminders = helpers.get_reminders(5, five_to_ten)
+
+    reminders.length.should eq(1)
   end
 
 end
