@@ -44,6 +44,14 @@ class Show
   belongs_to :channel
 end
 
+class Schedule
+  include MongoMapper::Document
+
+  key :start_time, Time
+  key :end_time, Time
+  belongs_to :show
+end
+
 class Subscription
   include MongoMapper::Document
 
@@ -74,38 +82,87 @@ class Subscriber
   key :phone_number, String
 end
 
+module SchedulerHelper
+  def get_seconds_from_min min
+    return min * 60
+  end
+
+  def _get_start_of_day(time)
+    Time.local(time.year, time.month, time.day, 0, 0, 0)
+  end
+
+  def _get_end_of_day(time)
+    Time.local(time.year, time.month, time.day, 23,59,59)
+  end
+
+  def sync_shows (service, calendar, day=Time.now)
+    start_of_day = _get_start_of_day(day)
+    end_of_day = _get_end_of_day(day)
+
+    events = GCal4Ruby::Event.find service, {}, {
+        :calendar => calendar,
+        'start-min'=> start_of_day.utc.xmlschema,
+        'start-max' => end_of_day.utc.xmlschema }
+
+
+    shows = events.collect { |event|
+      {
+        :name =>  event.title,
+        :start_time => event.start_time,
+        :end_time => event.end_time
+      }
+    }
+    shows
+  end
+
+  def create_schedule(service, channel)
+    shows = sync_shows(service, channel.calendar_id)
+    shows.each{ |_show|
+      show = Show.find_by_name_and_channel_id(_show[:name], channel.id)
+      if show.nil?
+        puts ">> Creating show with name #{_show[:name]} for channel #{channel.code}"
+        show = Show.create(:name => _show[:name], :channel => channel)
+      end
+
+      schedule = Show.find_by_show_id_and_start_time(show.id, _show[:start_time])
+      if schedule.nil?
+        schedule = Schedule.create!(:start_time => _show[:start_time], :end_time => _show[:end_time], :show => show)
+      end
+    }
+  end
+
+  def get_shows_starting_in_duration (duration=5, from=Time.now)
+    start_time = from + get_seconds_from_min(duration)
+    Schedule.find_all_by_start_time(start_time.utc)
+  end
+
+  def get_reminders (duration=5, from=Time.now)
+
+  end
+end
+
 class ApiApplication < Sinatra::Base
   include Sinatra::Rabbit
 
-  helpers do
-    def get_shows_starting_in_next_five_min
-      #events = GCal4Ruby::Event.find serv, {
-      #
-      #  }
-
-      Channel.all.each { |channel|
-        puts ">> programs starting the next 5 min on #{channel.code}"
-      }
-    end
-  end
+  helpers SchedulerHelper
 
   configure :development do
     register Sinatra::Reloader
     enable :logging
 
-    scheduler = Rufus::Scheduler.start_new
-    @service = GCal4Ruby::Service.new
-    @service.authenticate "guide@tivi.co.ke", "sproutt1v!"
-
-    scheduler.every '5s' do
-
-      #shows = get_shows_starting_in_next_five_min
-
-      Channel.all.each { |channel|
-        puts ">> programs starting the next 5 min on #{channel.code}"
-      }
-
-    end
+    #scheduler = Rufus::Scheduler.start_new
+    #@service = GCal4Ruby::Service.new
+    #@service.authenticate "guide@tivi.co.ke", "sproutt1v!"
+    #
+    #scheduler.every '5s' do
+    #
+    #  #shows = get_shows_starting_in_next_five_min
+    #
+    #  Channel.all.each { |channel|
+    #    puts ">> programs starting the next 5 min on #{channel.code}"
+    #  }
+    #
+    #end
   end
 
 

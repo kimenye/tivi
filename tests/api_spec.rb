@@ -1,5 +1,4 @@
 require_relative '../api_application'
-require 'spec/mocks'
 require 'rspec-expectations'
 require 'rack/test'
 require 'pry'
