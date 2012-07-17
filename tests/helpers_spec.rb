@@ -86,4 +86,15 @@ describe 'Sinatra helpers' do
     reminders = helpers.get_reminders(5, helpers.today_at_time(9,55))
     reminders.length.should eq(1)
   end
+
+  it "should return the scheduled shows for only the specified day" do
+    Schedule.delete_all
+    ten_show = Show.find_by_name!('10 AM Show')
+
+    Schedule.create(:show => ten_show, :start_time => (helpers.today_at_time(10,30) + (24 * 3600)).utc, :end_time => (helpers.today_at_time(10,30) + (24 * 3600)).utc)
+    Schedule.create(:show => ten_show, :start_time => helpers.today_at_time(10,30).utc, :end_time => helpers.today_at_time(10,30).utc)
+
+    Schedule.all.length.should eq(2)
+    helpers.get_schedule_for_day(helpers.today_at_time(10,30)).length.should eq(1)
+  end
 end

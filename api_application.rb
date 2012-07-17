@@ -100,6 +100,12 @@ module SchedulerHelper
     Time.local(time.year, time.month, time.day, 23,59,59)
   end
 
+  def get_schedule_for_day(time)
+    start_of_day = _get_start_of_day(time)
+    end_of_day = _get_end_of_day(time)
+    Schedule.all(:start_time => { '$gte' => start_of_day.utc }, :end_time => { '$lte' => end_of_day.utc })
+  end
+
   def sync_shows (service, calendar, day=Time.now)
     start_of_day = _get_start_of_day(day)
     end_of_day = _get_end_of_day(day)
@@ -118,6 +124,16 @@ module SchedulerHelper
       }
     }
     shows
+  end
+
+  def create_debug_shows (channel)
+    nine_thirty_am_show = Show.create(:channel => channel, :name=> "9.30 AM Show", :description => "30 min show starting at 9.30 AM")
+    ten_show = Show.create(:channel => channel, :name=> "10 AM Show", :description => "30 min show starting at 10.00 AM")
+    ten_thirty_show = Show.create(:channel => channel, :name=> "10.30 AM Show", :description => "30 min show starting at 10.30 AM")
+
+    Schedule.create!(:start_time => today_at_time(9,30), :end_time => today_at_time(10,00), :show => nine_thirty_am_show)
+    Schedule.create!(:start_time => today_at_time(10,00), :end_time => today_at_time(10,30), :show => ten_show)
+    Schedule.create!(:start_time => today_at_time(10,30), :end_time => today_at_time(11,00), :show => ten_thirty_show)
   end
 
   def create_schedule(service, channel)
@@ -182,12 +198,16 @@ class ApiApplication < Sinatra::Base
     enable :sessions
   end
 
+  configure :production do
+    @service = GCal4Ruby::Service.new
+    @service.authenticate "guide@tivi.co.ke", "sproutt1v!"
+  end
+
   before  '/*', :request_method => [ :get ] do
     content_type :json
   end
 
   get "/sms_sync" do
-    task = params[:task]
     dbg = params[:debug]
 
     #check for messages
@@ -249,6 +269,21 @@ class ApiApplication < Sinatra::Base
         }
     }.to_json)
 
+  end
+
+  get "/sync/:id" do
+    debug = params[:debug].nil? || development? ? false: true
+    channel_id = params[:id]
+    channel = Channel.find_by_id(channel_id)
+
+    if debug
+      create_debug_shows(channel)
+    else
+      sync_shows(@service, channel.calendar_id)
+    end
+
+    status 200
+    body({ success: true}.to_json)
   end
 
   collection :describe do
@@ -327,6 +362,18 @@ class ApiApplication < Sinatra::Base
         control do
           channel = Channel.find(params[:id])
           body(channel.shows.to_json)
+        end
+      end
+    end
+
+    collection :schedule do
+      operation :show do
+        description "Returns the scheduled shows for this channel for the current day"
+
+        param :id, :string, :required
+        control do
+          channel = Channel.find(params[:id])
+          #schedule = Schedule.find
         end
       end
     end

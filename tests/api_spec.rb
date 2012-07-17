@@ -45,6 +45,15 @@ describe 'The Tivi App' do
     ApiApplication
   end
 
+
+  before(:each) do
+    Subscriber.delete_all
+    Subscription.delete_all
+    Schedule.delete_all
+    Show.delete_all
+    Channel.delete_all
+  end
+
   let(:helpers) { TestHelper.new }
 
   it "returns the correct version of the api" do
@@ -150,7 +159,6 @@ describe 'The Tivi App' do
   end
 
   it "deletes a tv show" do
-    Show.delete_all
     first_or_ktn = Channel.first_or_create(ktn)
     briefcase_inc_with_channel = briefcase_inc.update({ channel: first_or_ktn.id.to_s })
 
@@ -165,7 +173,6 @@ describe 'The Tivi App' do
   end
 
   it "updates a tv show" do
-    Show.delete_all
     first_or_ktn = Channel.first_or_create(ktn)
     briefcase_inc_with_channel = briefcase_inc.update({ channel: first_or_ktn.id.to_s })
     briefcase_inc_with_channel.update({ description: "Short desc"})
@@ -181,8 +188,6 @@ describe 'The Tivi App' do
   end
 
   it "returns only the shows for a specific channel" do
-    Show.delete_all
-    Channel.delete_all
     ktn = Channel.create!(ktn)
     kbc = Channel.create!(kbc)
 
@@ -214,8 +219,6 @@ describe 'The Tivi App' do
   end
 
   it "accepts a subscription that does not belong to a show and marks it as in active" do
-    Subscription.delete_all
-    Subscriber.delete_all
     post "/sms_sync", { "from" => "+254727550098".encode, "message" => "Show doesnt exists".encode, "sent_timestamp" => "07-12-12+12:31".encode }
     last_response.should be_ok
     last_response.body.should == sms_response.to_json
@@ -224,12 +227,6 @@ describe 'The Tivi App' do
   end
 
   it "should return sms sync reminders" do
-    Subscriber.delete_all
-    Subscription.delete_all
-    Schedule.delete_all
-    Show.delete_all
-    Channel.delete_all
-
     test = Channel.create(:name => 'Test', :code => 'Tst', :calendar_id => 'tivi.co.ke_a0pt1qvujhtbre4u8b3s5jl25k@group.calendar.google.com')
     ten_show = Show.create(:channel => test, :name=> "10.00 AM Show", :description => "30 min show starting at 10.00 AM")
 
@@ -255,4 +252,10 @@ describe 'The Tivi App' do
     last_response.body.should == expected.to_json
   end
 
+  it "should sync a shows schedule if it has not been done" do
+    test = Channel.create(:name => 'Test', :code => 'Tst', :calendar_id => 'tivi.co.ke_a0pt1qvujhtbre4u8b3s5jl25k@group.calendar.google.com')
+    get "/sync/#{test.id}?debug=true"
+    last_response.should be_ok
+    Schedule.all.length.should eq(3)
+  end
 end
