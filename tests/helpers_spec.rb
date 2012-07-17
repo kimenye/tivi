@@ -32,6 +32,8 @@ describe 'Sinatra helpers' do
     trev = Subscriber.create(:phone_number => "+254705866564")
     ten_reminder = Subscription.create(:subscriber => trev, :show => ten_show, :active => true)
 
+    inactive_reminder_for_ten_o_clock_show = Subscription.create(:subscriber => trev, :show=> nil, :active => false, :show_name => 'Does not exist')
+
     service.authenticate "guide@tivi.co.ke", "sproutt1v!"
   end
 
@@ -41,6 +43,16 @@ describe 'Sinatra helpers' do
 
   it "should return seconds for mins" do
     helpers.get_seconds_from_min(5).should eql(300)
+  end
+
+  it "should return the right time of the day" do
+    t = helpers.today_at_time(9,30)
+    now = Time.now
+    t.year.should eq(now.year)
+    t.month.should eq(now.month)
+    t.day.should eq(now.day)
+    t.hour.should eq(9)
+    t.min.should eq(30)
   end
 
   it "should return all the shows in the day" do
@@ -62,20 +74,22 @@ describe 'Sinatra helpers' do
   end
 
   it "should return the show starting in the next five minutes" do
-    shows = helpers.get_shows_starting_in_duration(5, Time.local(2012,7,16,9,25))
+    shows = helpers.get_shows_starting_in_duration(5, helpers.today_at_time(9,25))
     shows.length.should eq(1)
   end
 
   it "should not return a show from a time which a show isnt starting exist" do
-    shows = helpers.get_shows_starting_in_duration(5, Time.local(2012,7,16,8,25))
+    shows = helpers.get_shows_starting_in_duration(5, helpers.today_at_time(8,25))
     shows.length.should eq(0)
   end
 
   it "should return a reminder for a show starting in 5 minutes" do
-    now = Time.now
-    five_to_ten = Time.local(now.year,now.month,now.day,9,55)
-    reminders = helpers.get_reminders(5, five_to_ten)
+    reminders = helpers.get_reminders(5, helpers.today_at_time(9,55))
+    reminders.length.should eq(1)
+  end
 
+  it "should not return a reminder for a subscription that is not active" do
+    reminders = helpers.get_reminders(5, helpers.today_at_time(9,55))
     reminders.length.should eq(1)
   end
 

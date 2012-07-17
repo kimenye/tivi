@@ -91,6 +91,11 @@ module SchedulerHelper
     Time.local(time.year, time.month, time.day, 0, 0, 0)
   end
 
+  def today_at_time(hour,min)
+    today = _get_start_of_day(Time.now)
+    return Time.local(today.year, today.month, today.day, hour, min, 0)
+  end
+
   def _get_end_of_day(time)
     Time.local(time.year, time.month, time.day, 23,59,59)
   end
