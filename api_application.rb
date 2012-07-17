@@ -7,6 +7,7 @@ require 'dm-core'
 require 'mongo_mapper'
 #require 'rufus/scheduler'
 require 'gcal4ruby'
+require 'time'
 
 module Sinatra
   class Base
@@ -373,7 +374,8 @@ class ApiApplication < Sinatra::Base
         param :id, :string, :required
         control do
           channel = Channel.find(params[:id])
-          schedule = get_schedule_for_day(Time.now, channel)
+          day = params[:when] ? Time.parse(params[:when]) : Time.now
+          schedule = get_schedule_for_day(day, channel)
           status(200)
           body(schedule.to_json)
         end

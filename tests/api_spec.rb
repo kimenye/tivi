@@ -272,5 +272,9 @@ describe 'The Tivi App' do
     last_response.should be_ok
 
     last_response.body.should == [today].to_json
+
+    get "/channels/schedule/#{test.id}?when=#{CGI::escape(tomorrow.start_time.to_s)}"
+    last_response.should be_ok
+    last_response.body.should == [tomorrow].to_json
   end
 end
