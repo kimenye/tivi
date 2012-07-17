@@ -56,7 +56,7 @@ class Subscription
   include MongoMapper::Document
 
   key :show_name, String
-  key :active, Boolean
+  key :active, Boolean, :default => false
   key :cancelled, Boolean, :default => false
   key :from, Time, :default => Time.now
   belongs_to :subscriber

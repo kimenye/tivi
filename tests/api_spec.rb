@@ -204,7 +204,13 @@ describe 'The Tivi App' do
   end
 
   it "accepts a subscription that does not belong to a show and marks it as in active" do
-  #  TODO:
+    Subscription.delete_all
+    Subscriber.delete_all
+    post "/sms_sync", { "from" => "+254727550098".encode, "message" => "Show doesnt exists".encode, "sent_timestamp" => "07-12-12+12:31".encode }
+    last_response.should be_ok
+    last_response.body.should == sms_response.to_json
+    subs = Subscription.all.first
+    subs.active.should eq(false)
   end
 
 end
