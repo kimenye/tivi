@@ -23,10 +23,12 @@ describe 'Sinatra helpers' do
 
 
     test = Channel.create(:name => 'Test', :code => 'Tst', :calendar_id => 'tivi.co.ke_a0pt1qvujhtbre4u8b3s5jl25k@group.calendar.google.com')
+    tst = Channel.create(:name => 'Other Test', :code => 'Tst2', :calendar_id => 'tivi.co.ke_a0pt1qvujhtbre4u8b3s5jl25k@group.calendar.google.com')
 
     nine_thirty_am_show = Show.create(:channel => test, :name=> "9.30 AM Show", :description => "30 min show starting at 9.30 AM")
     ten_show = Show.create(:channel => test, :name=> "10 AM Show", :description => "30 min show starting at 10.00 AM")
     ten_thirty_show = Show.create(:channel => test, :name=> "10.30 AM Show", :description => "30 min show starting at 10.30 AM")
+    channel_2_show = Show.create(:channel => tst, :name => "10 AM Show", :description => "30 min show starting at 10.00 AM on different channel")
 
     trev = Subscriber.create(:phone_number => "+254705866564")
     ten_reminder = Subscription.create(:subscriber => trev, :show => ten_show, :active => true)
@@ -87,14 +89,19 @@ describe 'Sinatra helpers' do
     reminders.length.should eq(1)
   end
 
-  it "should return the scheduled shows for only the specified day" do
+  it "should return the scheduled shows for only the specified day and channel" do
     Schedule.delete_all
-    ten_show = Show.find_by_name!('10 AM Show')
+    test = Channel.find_by_code!('Tst')
+    test2 = Channel.find_by_code!('Tst2')
+
+    ten_show = Show.find_by_name_and_channel_id!('10 AM Show',test.id)
+    ten_show2 = Show.find_by_name_and_channel_id!('10 AM Show',test2.id)
 
     Schedule.create(:show => ten_show, :start_time => (helpers.today_at_time(10,30) + (24 * 3600)).utc, :end_time => (helpers.today_at_time(10,30) + (24 * 3600)).utc)
     Schedule.create(:show => ten_show, :start_time => helpers.today_at_time(10,30).utc, :end_time => helpers.today_at_time(10,30).utc)
+    Schedule.create(:show => ten_show2, :start_time => helpers.today_at_time(10,30).utc, :end_time => helpers.today_at_time(10,30).utc)
 
-    Schedule.all.length.should eq(2)
-    helpers.get_schedule_for_day(helpers.today_at_time(10,30)).length.should eq(1)
+    Schedule.all.length.should eq(3)
+    helpers.get_schedule_for_day(helpers.today_at_time(10,30), test).length.should eq(1)
   end
 end

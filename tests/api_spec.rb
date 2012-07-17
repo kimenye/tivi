@@ -258,4 +258,19 @@ describe 'The Tivi App' do
     last_response.should be_ok
     Schedule.all.length.should eq(3)
   end
+
+  it "should return only the scheduled shows for the specified date" do
+    test = Channel.create(:name => 'Test', :code => 'Tst', :calendar_id => 'tivi.co.ke_a0pt1qvujhtbre4u8b3s5jl25k@group.calendar.google.com')
+    ten_show = Show.create(:channel => test, :name=> "10 AM Show", :description => "30 min show starting at 10.00 AM")
+
+    tomorrow = Schedule.create(:show => ten_show, :start_time => (helpers.today_at_time(10,30) + (24 * 3600)).utc, :end_time => (helpers.today_at_time(10,30) + (24 * 3600)).utc)
+    today = Schedule.create(:show => ten_show, :start_time => helpers.today_at_time(10,30).utc, :end_time => helpers.today_at_time(10,30).utc)
+
+    Schedule.all.length.should eq(2)
+
+    get "/channels/schedule/#{test.id}"
+    last_response.should be_ok
+
+    last_response.body.should == [today].to_json
+  end
 end
