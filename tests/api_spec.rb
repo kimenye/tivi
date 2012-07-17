@@ -254,7 +254,8 @@ describe 'The Tivi App' do
 
   it "should sync a shows schedule if it has not been done" do
     test = Channel.create(:name => 'Test', :code => 'Tst', :calendar_id => 'tivi.co.ke_a0pt1qvujhtbre4u8b3s5jl25k@group.calendar.google.com')
-    get "/sync/#{test.id}?debug=true"
+    post "/channels/sync/#{test.id}"
+
     last_response.should be_ok
     Schedule.all.length.should eq(3)
   end

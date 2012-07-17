@@ -117,14 +117,13 @@ module SchedulerHelper
         'start-max' => end_of_day.utc.xmlschema }
 
 
-    shows = events.collect { |event|
+    events.collect { |event|
       {
         :name =>  event.title,
         :start_time => event.start_time,
         :end_time => event.end_time
       }
     }
-    shows
   end
 
   def create_debug_shows (channel)
@@ -197,11 +196,7 @@ class ApiApplication < Sinatra::Base
     end
 
     enable :sessions
-  end
 
-  configure :production do
-    @service = GCal4Ruby::Service.new
-    @service.authenticate "guide@tivi.co.ke", "sproutt1v!"
   end
 
   before  '/*', :request_method => [ :get ] do
@@ -272,15 +267,15 @@ class ApiApplication < Sinatra::Base
 
   end
 
-  get "/sync/:id" do
-    debug = params[:debug].nil? || development? ? false: true
+  post "/channels/sync/:id" do
     channel_id = params[:id]
     channel = Channel.find_by_id(channel_id)
-
-    if debug
+    if development? || test?
       create_debug_shows(channel)
     else
-      sync_shows(@service, channel.calendar_id)
+      service = GCal4Ruby::Service.new
+      service.authenticate "guide@tivi.co.ke", "sproutt1v!"
+      create_schedule(service,channel)
     end
 
     status 200
