@@ -93,6 +93,9 @@
             %li.nav-header
               Options
             %li
+              %a.home{'data-bind' => 'click: $root.backHome' }
+                Back
+            %li
               %a.home{'data-toggle' => 'modal', 'href' => '#show-edit-modal'}
                 New Show
       .span9.container

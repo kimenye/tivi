@@ -89,6 +89,10 @@ $(document).ready(function() {
                 return "Update";
         });
 
+        self.backHome = function() {
+            self.selected(null);
+        }
+
         self.createOrUpdateShow = function() {
             var _show = new Show({ name: self.showName(), description: self.showDescription(), channel: self.showChannel().id });
             var _str = JSON.stringify(_show.toJSON());
