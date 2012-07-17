@@ -6,6 +6,10 @@ require 'json'
 
 set :environment, :test
 
+class TestHelper
+  include SchedulerHelper
+end
+
 describe 'The Tivi App' do
   include Rack::Test::Methods
 
@@ -40,6 +44,8 @@ describe 'The Tivi App' do
   def app
     ApiApplication
   end
+
+  let(:helpers) { TestHelper.new }
 
   it "returns the correct version of the api" do
     get '/describe'
@@ -215,6 +221,38 @@ describe 'The Tivi App' do
     last_response.body.should == sms_response.to_json
     subs = Subscription.all.first
     subs.active.should eq(false)
+  end
+
+  it "should return sms sync reminders" do
+    Subscriber.delete_all
+    Subscription.delete_all
+    Schedule.delete_all
+    Show.delete_all
+    Channel.delete_all
+
+    test = Channel.create(:name => 'Test', :code => 'Tst', :calendar_id => 'tivi.co.ke_a0pt1qvujhtbre4u8b3s5jl25k@group.calendar.google.com')
+    ten_show = Show.create(:channel => test, :name=> "10.00 AM Show", :description => "30 min show starting at 10.00 AM")
+
+    post "/sms_sync", { "from" => "+254705866564".encode, "message" => "TIVI #{ten_show.name}".encode, "sent_timestamp" => "07-12-12+12:31".encode }
+    last_response.should be_ok
+
+    schedule = Schedule.create!(:start_time => helpers.today_at_time(10,00).utc, :end_time => helpers.today_at_time(10,30).utc, :show => ten_show)
+
+    get "/sms_sync?task=send&debug=true"
+    last_response.should be_ok
+
+    expected = {
+        :payload => {
+            :task => "send",
+            :messages => [
+              {
+                  :to => "+254705866564",
+                  :message => "Your show 10.00 AM Show starts in 5 min"
+              }
+            ]
+        }
+    }
+    last_response.body.should == expected.to_json
   end
 
 end

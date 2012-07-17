@@ -125,7 +125,6 @@ module SchedulerHelper
     shows.each{ |_show|
       show = Show.find_by_name_and_channel_id(_show[:name], channel.id)
       if show.nil?
-        puts ">> Creating show with name #{_show[:name]} for channel #{channel.code}"
         show = Show.create(:name => _show[:name], :channel => channel)
       end
 
@@ -146,8 +145,8 @@ module SchedulerHelper
     reminders = []
     shows.each { |show|
       #find any subscriptions for these shows
-      subscriptions = Subscription.find_all_by_show_id(show.id)
-      reminders.append(subscriptions.collect { |sub|
+      subscriptions = Subscription.find_all_by_show_id(show.show.id)
+      reminders.concat(subscriptions.collect { |sub|
         {
           :to => sub.subscriber.phone_number,
           :message => "Your show #{sub.show.name} starts in 5 min"
@@ -176,7 +175,6 @@ class ApiApplication < Sinatra::Base
       uri = URI.parse(ENV['MONGOHQ_URL'])
       MongoMapper.connection = Mongo::Connection.from_uri(ENV['MONGOHQ_URL'])
       MongoMapper.database = uri.path.gsub(/^\//, '')
-      puts ">> db is #{uri.path.gsub(/^\//, '')}"
     else
       MongoMapper.database = "tivi"
     end
@@ -195,18 +193,17 @@ class ApiApplication < Sinatra::Base
     #check for messages
     start_time = Time.now
 
-    if dgb == "true"
-      start_time = Time.local(now.year,now.month,now.day,9,55)
+    if dbg == 'true'
+      start_time = today_at_time(9,55)
     end
-
     messages = get_reminders(5,start_time)
     status(200)
     body({
       :payload => {
-        :task => "send"
-
+        :task => "send",
+        :messages => messages
       }
-     })
+     }.to_json)
   end
 
   post "/sms_sync" do
@@ -436,7 +433,6 @@ class ApiApplication < Sinatra::Base
             status 200
             body(show.id.to_s)
           else
-            puts ">>Channel doesnt exist"
             status 400
             body({error: "That channel does not exist"})
           end

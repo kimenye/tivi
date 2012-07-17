@@ -15,7 +15,6 @@ describe 'Sinatra helpers' do
   let(:service) { GCal4Ruby::Service.new }
 
   before(:all) do
-    #puts ">> At the beginning of time"
     Subscriber.delete_all
     Subscription.delete_all
     Schedule.delete_all
@@ -26,7 +25,7 @@ describe 'Sinatra helpers' do
     test = Channel.create(:name => 'Test', :code => 'Tst', :calendar_id => 'tivi.co.ke_a0pt1qvujhtbre4u8b3s5jl25k@group.calendar.google.com')
 
     nine_thirty_am_show = Show.create(:channel => test, :name=> "9.30 AM Show", :description => "30 min show starting at 9.30 AM")
-    ten_show = Show.create(:channel => test, :name=> "10.00 AM Show", :description => "30 min show starting at 10.00 AM")
+    ten_show = Show.create(:channel => test, :name=> "10 AM Show", :description => "30 min show starting at 10.00 AM")
     ten_thirty_show = Show.create(:channel => test, :name=> "10.30 AM Show", :description => "30 min show starting at 10.30 AM")
 
     trev = Subscriber.create(:phone_number => "+254705866564")
@@ -87,10 +86,4 @@ describe 'Sinatra helpers' do
     reminders = helpers.get_reminders(5, helpers.today_at_time(9,55))
     reminders.length.should eq(1)
   end
-
-  it "should not return a reminder for a subscription that is not active" do
-    reminders = helpers.get_reminders(5, helpers.today_at_time(9,55))
-    reminders.length.should eq(1)
-  end
-
 end
