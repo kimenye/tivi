@@ -11,12 +11,14 @@ describe 'The Tivi App' do
 
   ktn = {
       name: "Kenya Television Network",
-      code: "KTN"
+      code: "KTN",
+      calendar_id: "tivi.co.ke_1aku43rv679bbnj9r02coema98@group.calendar.google.com"
   }
 
   kbc = {
       name: "Kenya Broadcasting Corporation",
-      code: "KBC"
+      code: "KBC",
+      calendar_id: "tivi.co.ke_5akei4jnt1hrjdmvb8vvvn6pis@group.calendar.google.com"
   }
 
   briefcase_inc = {
@@ -59,6 +61,7 @@ describe 'The Tivi App' do
     c = Channel.new
     c.code = "TC"
     c.name = "Test Channel"
+    c.calendar_id = "fsdfdsf"
     c.save!
 
     to_delete_id = c.id
@@ -74,6 +77,7 @@ describe 'The Tivi App' do
     c = Channel.new
     c.code = ktn[:code]
     c.name = ktn[:name]
+    c.calendar_id = ktn[:calendar_id]
     c.save!
 
     patch "/channels/#{c.id}", kbc.to_json

@@ -342,12 +342,13 @@ class ApiApplication < Sinatra::Base
       description "Create a new channel"
       control do
         data = JSON.parse(request.body.string)
-        if data.nil? or !data.has_key?('name') or !data.has_key?('code')
+        if data.nil? or !data.has_key?('name') or !data.has_key?('code') or !data.has_key?('calendar_id')
           status 400
         else
           channel = Channel.new
           channel.name = data['name']
           channel.code = data['code']
+          channel.calendar_id = data['calendar_id']
           channel.save!
           status 200
           body(channel.id.to_s)
@@ -360,11 +361,12 @@ class ApiApplication < Sinatra::Base
       control do
         channel = Channel.find(params[:id])
         data = JSON.parse(request.body.string)
-        if data.nil? or !data.has_key?('code') or !data.has_key?('name') then
+        if data.nil? or !data.has_key?('code') or !data.has_key?('name') or !data.has_key?('calendar_id') then
           status 404
         else
           channel.code = data['code']
           channel.name = data['name']
+          channel.calendar_id = data['calendar_id']
           channel.save!
           status 200
           body(channel.id.to_s)

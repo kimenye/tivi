@@ -6,13 +6,15 @@ $(document).ready(function() {
             self.id = data.id;
             self.code = ko.observable(data.code);
             self.name = ko.observable(data.name);
+            self.calendar_id = ko.observable(data.calendar_id);
             self.shows = ko.observableArray([]);
         },
 
         toJSON: function() {
             var _struct = {
                 "code" : this.code(),
-                "name" : this.name()
+                "name" : this.name(),
+                "calendar_id" : this.calendar_id()
             };
             if (this.id != null) {
                 _.extend(_struct, { "id" : this.id })
@@ -50,6 +52,7 @@ $(document).ready(function() {
         self.channels = ko.observableArray([]);
         self.code = ko.observable();
         self.name = ko.observable();
+        self.calendar_id = ko.observable();
         self.id = ko.observable(null);
         self.msg = ko.observable();
         self.editable = ko.observable(null);
@@ -65,6 +68,7 @@ $(document).ready(function() {
         self.edit = function(channel) {
             self.code(channel.code());
             self.name(channel.name());
+            self.calendar_id(channel.calendar_id());
             self.id(channel.id);
             self.editable(channel);
             $('#channel-edit-modal').modal('show');
@@ -115,7 +119,7 @@ $(document).ready(function() {
         };
 
         self.createOrUpdate = function() {
-            var _chan = new Channel({ code : self.code(), name: self.name()});
+            var _chan = new Channel({ code : self.code(), name: self.name(), calendar_id: self.calendar_id()});
             var _str = JSON.stringify(_chan.toJSON());
             if (self.id() == null) {
                 $.post('/api/channels', _str,
@@ -135,8 +139,9 @@ $(document).ready(function() {
                     .success(function (data) {
                         self.editable().code(self.code());
                         self.editable().name(self.name());
+                        self.editable().calendar_id(self.calendar_id());
                         self.editable(null);
-                        self.closeModal("Successfully updated channel " + self.name());
+                        self.closeModal("#channel-edit-modal", "Successfully updated channel " + self.name());
                     });
             }
 
