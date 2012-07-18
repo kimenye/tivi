@@ -84,7 +84,7 @@
             %td
               %a.btn.btn-success{ 'data-bind' => "click: $parent.selectChannel" }
                 View Shows
-              %a.btn.btn-success{ 'data-bind' => "attr: { href: '/admin/schedule/' + id }" }
+              %a.btn.btn-success{ 'data-bind' => "click: $parent.syncSchedule" }
                 Sync Schedule
   %section{'data-bind' => 'if: selected() != null'}
     .row{'data-bind' => 'with: selected'}

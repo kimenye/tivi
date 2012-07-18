@@ -192,6 +192,16 @@ $(document).ready(function() {
             })
         }
 
+        self.syncSchedule = function(channel) {
+            $.ajax({
+                type: "POST",
+                url: "/api/channels/sync/" + channel.id,
+                success: function(data) {
+                    self.showMsg("Synced the schedule for channel ", channel.code());
+                }
+            })
+        }
+
         self.selectChannel = function(channel) {
             self.selected(channel);
 

@@ -80,7 +80,7 @@ class ApiApplication < Sinatra::Base
   post "/channels/sync/:id" do
     channel_id = params[:id]
     channel = Channel.find_by_id(channel_id)
-    if !production?
+    if test?
       create_debug_shows(channel)
     else
       service = GCal4Ruby::Service.new
