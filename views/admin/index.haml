@@ -65,6 +65,10 @@
             %a.home{'data-toggle' => 'modal', 'href' => '#channel-edit-modal'}
               %i.icon-file
               New Channel
+          %li
+            %a.home{'data-bind' => 'click: $root.reset' }
+              %i.icon-off
+              Reset
     .container.span9
       %table.table.table-bordered
         %thead

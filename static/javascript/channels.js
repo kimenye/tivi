@@ -153,11 +153,15 @@ $(document).ready(function() {
 
         self.closeModal = function(modal, msg) {
             $(modal).modal('hide');
+
+            self.showMsg(msg);
+        };
+
+        self.showMsg = function(msg) {
             self.msg(msg);
             setTimeout(function(){
                 self.msg(null);
             }, 2000 );
-
         };
 
         self.loadChannels = function() {
@@ -175,6 +179,17 @@ $(document).ready(function() {
 //                    self.selectChannel(_.first(self.channels()));
                 }
             });
+        }
+
+        self.reset = function() {
+            $.ajax({
+                type: "GET",
+                url: "/api/reset?username=guide@tivi.co.ke&password=sproutt1v!&create=true",
+                success: function(data) {
+                    self.loadChannels();
+                    self.showMsg("Reset the application");
+                }
+            })
         }
 
         self.selectChannel = function(channel) {
