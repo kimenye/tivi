@@ -45,15 +45,35 @@ describe 'Sinatra helpers' do
     #at the end of all the methods being run
   end
 
+  it "should return 385 as the latest SMS is there is no further sms" do
+    SMSLog.delete_all
+    helpers.get_latest_received_message_id.should eq(385)
+
+    SMSLog.create(:external_id => 2)
+    SMSLog.create(:external_id => 45)
+    SMSLog.create(:external_id => 3)
+
+    helpers.get_latest_received_message_id.should eq(45)
+
+    SMSLog.delete_all
+  end
+
   it "should return only the sms that match the TIVI filter" do
-    messages = helpers.fetch_messages(api, 385)
-    puts ">> messages #{messages.to_json}"
+    messages = helpers.fetch_messages(api)
     messages.should_not be_nil
 
     msg = messages.first
     if !msg.nil?
       msg.text.downcase.match(/tivi/).should_not be_nil
     end
+  end
+
+  it "should return only the sms that have not been already saved" do
+    SMSLog.delete_all
+    SMSLog.create(:external_id => 397)
+
+    messages = helpers.fetch_messages(api)
+    messages.should be_nil or messages.detect { |msg| msg.id.to_i == 397 }.should be_nil
   end
 
   it "should return all the shows in the day" do

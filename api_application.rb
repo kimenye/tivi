@@ -68,7 +68,7 @@ end
 class SMSLog
   include MongoMapper::Document
 
-  key :external_id, String
+  key :external_id, Integer
   key :from, String
   key :msg, String
   key :date, Time
@@ -169,13 +169,15 @@ module SchedulerHelper
     reminders
   end
 
-  def fetch_messages (service, last_received_message_id=0)
-    msgs = service.fetch_messages(last_received_message_id).reject! { |msg| msg.text.downcase.match(/tivi/).nil? }
+  def get_latest_received_message_id
+    last_sms = SMSLog.empty? ? nil : SMSLog.last(:order => :external_id)
+    last_sms.nil? ? 385 : last_sms.external_id
+  end
 
-    #check to see if we have already saved these messages
-    #msgs.each { |msg|
-    #
-    #}
+  def fetch_messages (service, last_received_message_id=get_latest_received_message_id)
+    msgs = service.fetch_messages(last_received_message_id).reject! { |msg|
+      msg.text.downcase.match(/tivi/).nil? or !SMSLog.find_by_external_id(msg.id.to_i).nil?
+    }
   end
 end
 
