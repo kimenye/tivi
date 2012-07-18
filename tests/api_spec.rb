@@ -52,9 +52,34 @@ describe 'The Tivi App' do
     Schedule.delete_all
     Show.delete_all
     Channel.delete_all
+    SMSLog.delete_all
   end
 
   let(:helpers) { TestHelper.new }
+
+  it "resets the data to a meaningful state" do
+    get '/reset'
+    last_response.should_not be_ok
+    last_response.body.should == { :error => "Invalid credentials to reset"}.to_json
+
+    c = Channel.create(:code => "NTV", :name=> "Nation TV")
+    Show.create(:name => "News", :channel=> c)
+    Channel.empty?.should be_false
+    Show.empty?.should be_false
+
+    get "/reset?username=#{CGI::escape("guide@tivi.co.ke")}&password=#{CGI::escape("sproutt1v!")}&create=false"
+    last_response.should be_ok
+    last_response.body.should == { :success => true}.to_json
+
+    Channel.empty?.should be_true
+    Show.empty?.should be_true
+
+    get "/reset?username=#{CGI::escape("guide@tivi.co.ke")}&password=#{CGI::escape("sproutt1v!")}&create=true"
+    last_response.should be_ok
+    last_response.body.should == { :success => true}.to_json
+
+    Channel.empty?.should be_false
+  end
 
   it "returns the correct version of the api" do
     get '/describe'
@@ -208,47 +233,6 @@ describe 'The Tivi App' do
     last_response.should be_ok
     last_response.body.should == Subscriber.all.to_json
   end
-
-  #it "accepts a message from SMS Sync and responds correctly" do
-  #
-  #  post "/sms_sync", { "from" => "+254727550098".encode, "message" => "TIVI Briefcase Inc".encode, "sent_timestamp" => "07-12-12+12:31".encode }
-  #  last_response.should be_ok
-  #  last_response.body.should == sms_response.to_json
-  #end
-  #
-  #it "accepts a subscription that does not belong to a show and marks it as in active" do
-  #  post "/sms_sync", { "from" => "+254727550098".encode, "message" => "Show doesnt exists".encode, "sent_timestamp" => "07-12-12+12:31".encode }
-  #  last_response.should be_ok
-  #  last_response.body.should == sms_response.to_json
-  #  subs = Subscription.all.first
-  #  subs.active.should eq(false)
-  #end
-  #
-  #it "should return sms sync reminders" do
-  #  test = Channel.create(:name => 'Test', :code => 'Tst', :calendar_id => 'tivi.co.ke_a0pt1qvujhtbre4u8b3s5jl25k@group.calendar.google.com')
-  #  ten_show = Show.create(:channel => test, :name=> "10.00 AM Show", :description => "30 min show starting at 10.00 AM")
-  #
-  #  post "/sms_sync", { "from" => "+254705866564".encode, "message" => "TIVI #{ten_show.name}".encode, "sent_timestamp" => "07-12-12+12:31".encode }
-  #  last_response.should be_ok
-  #
-  #  schedule = Schedule.create!(:start_time => helpers.today_at_time(10,00).utc, :end_time => helpers.today_at_time(10,30).utc, :show => ten_show)
-  #
-  #  get "/sms_sync?task=send&debug=true"
-  #  last_response.should be_ok
-  #
-  #  expected = {
-  #      :payload => {
-  #          :task => "send",
-  #          :messages => [
-  #            {
-  #                :to => "+254705866564",
-  #                :message => "Your show 10.00 AM Show starts in 5 min"
-  #            }
-  #          ]
-  #      }
-  #  }
-  #  last_response.body.should == expected.to_json
-  #end
 
   it "should sync a shows schedule if it has not been done" do
     test = Channel.create(:name => 'Test', :code => 'Tst', :calendar_id => 'tivi.co.ke_a0pt1qvujhtbre4u8b3s5jl25k@group.calendar.google.com')

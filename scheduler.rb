@@ -95,7 +95,7 @@ module SchedulerHelper
 
   def get_latest_received_message_id
     last_sms = SMSLog.empty? ? nil : SMSLog.last(:order => :external_id)
-    last_sms.nil? ? 385 : last_sms.external_id
+    last_sms.nil? ? 410 : last_sms.external_id
   end
 
   def fetch_messages (service, last_received_message_id=get_latest_received_message_id)
@@ -166,6 +166,4 @@ end
 
 class Scheduler
   include SchedulerHelper
-
-
 end

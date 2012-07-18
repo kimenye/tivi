@@ -43,11 +43,18 @@ describe 'Sinatra helpers' do
 
   after(:all) do
     #at the end of all the methods being run
+    Subscriber.delete_all
+    Subscription.delete_all
+    Schedule.delete_all
+    Show.delete_all
+    Channel.delete_all
+    SMSLog.delete_all
+
   end
 
-  it "should return 385 as the latest SMS is there is no further sms" do
+  it "should return 410 as the latest SMS is there is no further sms" do
     SMSLog.delete_all
-    helpers.get_latest_received_message_id.should eq(385)
+    helpers.get_latest_received_message_id.should eq(410)
 
     SMSLog.create(:external_id => 2)
     SMSLog.create(:external_id => 45)
@@ -68,13 +75,13 @@ describe 'Sinatra helpers' do
     end
   end
 
-  #it "should return only the sms that have not been already saved" do
-  #  SMSLog.delete_all
-  #  SMSLog.create(:external_id => 397)
-  #
-  #  messages = helpers.fetch_messages(api)
-  #  messages.should be_nil or messages.detect { |msg| msg.id.to_i == 397 }.should be_nil
-  #end
+  it "should return only the sms that have not been already saved" do
+    SMSLog.delete_all
+    SMSLog.create(:external_id => 411)
+
+    messages = helpers.fetch_messages(api)
+    messages.empty?.should be_true or messages.detect { |msg| msg.id.to_i == 411 }.should be_nil
+  end
 
   it "should return all the shows in the day" do
     test = Channel.find_by_code!('Tst')

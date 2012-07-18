@@ -56,25 +56,19 @@ class ApiApplication < Sinatra::Base
     end
 
     enable :sessions
-    puts ">>> Are we in production #{production?}"
-    if production?
 
+    if production?
       scheduler = Rufus::Scheduler.start_new
       valid_api = AfricasTalkingGateway.new("kimenye", "4f116c64a3087ae6d302b6961279fa46c7e1f2640a5a14a040d1303b2d98e560")
 
+      schedule = Scheduler.new
 
-      #scheduler.every '5s' do
-        ##puts ">> About to call the africas talking service"
-        #puts ">> Polling messages from Gateway"
-        #SchedulerHelper.poll_subscribers(valid_api)
-        #puts ">> Finished polling messages"
-        #
-        #puts ">>Sending reminders"
-        #send_reminders(valid_api)
-        #puts ">> Finished seding reminders"
+      #scheduler.every '10s' do
+      #  schedule.poll_subscribers valid_api
+      #end
 
-      binding.pry
-        hello_world("Scott")
+      #scheduler.every '5m' do
+
       #end
     end
   end
@@ -83,74 +77,10 @@ class ApiApplication < Sinatra::Base
     content_type :json
   end
 
-  get "/sms_sync" do
-    dbg = params[:debug]
-
-    #check for messages
-    start_time = Time.now
-
-    if dbg == 'true'
-      start_time = today_at_time(9,55)
-    end
-    messages = get_reminders(5,start_time)
-    status(200)
-    body({
-      :payload => {
-        :task => "send",
-        :messages => messages
-      }
-     }.to_json)
-  end
-
-  post "/sms_sync" do
-    s = SubscriptionLog.new
-    s.message = request.body.string
-
-    s.save!
-
-    from = params[:from]
-    msg = params[:message]
-
-    #check to see if the subscriber exists
-    existing_subscriber = Subscriber.first(:phone_number => from)
-
-    if existing_subscriber.nil?
-      existing_subscriber = Subscriber.new
-      existing_subscriber.phone_number = from
-      existing_subscriber.save!
-    end
-
-    show_name = msg.split(/TIVI/).join.lstrip.rstrip if msg =~ /TIVI/
-    if show_name.nil?
-      show_name = msg
-    end
-
-    subscription = Subscription.new
-    subscription.subscriber = existing_subscriber
-
-    existing_show = Show.first(:name => show_name)
-    if not existing_show.nil?
-      subscription.active = true
-      subscription.show = existing_show
-    else
-      subscription.show_name = show_name
-    end
-
-    subscription.save!
-    content_type :json
-    status(200)
-    body({
-        :payload => {
-            :success => "true"
-        }
-    }.to_json)
-
-  end
-
   post "/channels/sync/:id" do
     channel_id = params[:id]
     channel = Channel.find_by_id(channel_id)
-    if development? || test?
+    if !production?
       create_debug_shows(channel)
     else
       service = GCal4Ruby::Service.new
@@ -171,6 +101,38 @@ class ApiApplication < Sinatra::Base
       control do
         status 200
         body({ version: "1.0 "}.to_json)
+      end
+    end
+  end
+
+  collection :reset do
+    description "Resets the database to a reasonable state"
+
+    operation :index do
+      control do
+        user_name = params[:username]
+        password = params[:password]
+        create = params[:create]
+
+        if user_name == "guide@tivi.co.ke" and password == "sproutt1v!"
+          status 200
+
+          Subscriber.delete_all
+          Subscription.delete_all
+          Schedule.delete_all
+          Show.delete_all
+          Channel.delete_all
+          SMSLog.delete_all
+
+          if create == "true"
+            ktn = Channel.create(:code => "KTN", :name => "Kenya Television Network", :calendar_id => "tivi.co.ke_1aku43rv679bbnj9r02coema98@group.calendar.google.com")
+          end
+
+          body({:success => true }.to_json)
+        else
+          status 401
+          body({:error => "Invalid credentials to reset"}.to_json)
+        end
       end
     end
   end
