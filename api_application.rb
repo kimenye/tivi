@@ -184,6 +184,13 @@ module SchedulerHelper
     }
   end
 
+  def poll_subscribers (service)
+    messages = fetch_messages(service)
+    messages.each { |message|
+      sub = create_subscription(message)
+      puts ">> Created subscription #{sub.to_json}"
+    }
+  end
 
   def create_subscription(sms)
     show_name = _get_show_name_from_text(sms.text)
@@ -207,6 +214,33 @@ module SchedulerHelper
       subscription.save!
     end
     subscription
+  end
+
+  def send_reminders(api,duration=5,from=Time.now)
+    reminders = get_reminders(duration, from)
+    status_messages = []
+    if production?
+      status_messages = reminders.each { |reminder|
+        puts ">> sending message to #{reminder.to_json}"
+        api.send_message(reminder[:to], reminder[:message])
+      }
+    else
+      status_messages = reminders.collect { |reminder|
+        MessageStatusReport.new({
+            :SMSMessageData => {
+                :Message => "Sent to 1\/1 Total Cost: KES 1.50",
+                :Recipients => [
+                    {
+                        :number => reminder[:to],
+                        :status => "Success",
+                        :cost => "KES 1.50"
+                    }
+                ]
+            }
+        }.to_json)
+      }
+    end
+    status_messages
   end
 end
 
@@ -233,14 +267,21 @@ class ApiApplication < Sinatra::Base
     end
 
     enable :sessions
-    if !development?
-      puts ">> we are not in the test environment"
+    if production?
+
       scheduler = Rufus::Scheduler.start_new
       valid_api = AfricasTalkingGateway.new("kimenye", "4f116c64a3087ae6d302b6961279fa46c7e1f2640a5a14a040d1303b2d98e560")
 
 
-      scheduler.every '5s' do
-        puts ">> About to call the africas talking service"
+      scheduler.every '5m' do
+        #puts ">> About to call the africas talking service"
+        puts ">> Polling messages from Gateway"
+        poll_subscribers(valid_api)
+        puts ">> Finished polling messages"
+
+        puts ">>Sending reminders"
+        send_reminders(valid_api)
+        puts ">> Finished seding reminders"
       end
     end
   end

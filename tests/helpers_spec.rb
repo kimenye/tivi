@@ -126,6 +126,11 @@ describe 'Sinatra helpers' do
     reminders.length.should eq(1)
   end
 
+  it "should send sms reminders to the subscribers" do
+    messages = helpers.send_reminders(api, 5, helpers.today_at_time(9,55))
+    messages.length.should eq(1)
+  end
+
   it "should return the scheduled shows for only the specified day and channel" do
     Schedule.delete_all
     test = Channel.find_by_code!('Tst')
