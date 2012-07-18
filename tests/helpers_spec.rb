@@ -82,6 +82,23 @@ describe 'Sinatra helpers' do
     shows.length.should eq(3)
   end
 
+  it "should get the correct show name regardless of case" do
+    helpers._get_show_name_from_text("tivi machachari").should eq("machachari")
+    helpers._get_show_name_from_text("tiVi Machachari").should eq("machachari")
+  end
+
+  it "should create an active subscription if it does not already exist" do
+    mach = Show.create(:name => "Machachari")
+
+    sms = SMSMessage.new("390","TIVI Machachari", "+254d705866564", "5259", "2012-07-18 07:49:01")
+    subscription = helpers.create_subscription(sms)
+    subscription.should_not be_nil
+    subscription.show.id.should eq(mach.id)
+    subscription.active.should be_true
+
+    SMSLog.delete_all
+  end
+
 
   it "should schedule all the shows in the day" do
     s = Schedule.all

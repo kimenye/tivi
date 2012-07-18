@@ -98,6 +98,10 @@ module SchedulerHelper
     Time.local(time.year, time.month, time.day, 23,59,59)
   end
 
+  def _get_show_name_from_text (text)
+    text.downcase.split(/tivi/)[1].strip
+  end
+
   def get_schedule_for_day(time, channel)
     start_of_day = _get_start_of_day(time)
     end_of_day = _get_end_of_day(time)
@@ -161,9 +165,9 @@ module SchedulerHelper
       subscriptions = Subscription.find_all_by_show_id(show.show.id)
       reminders.concat(subscriptions.collect { |sub|
         {
-          :to => sub.subscriber.phone_number,
-          :message => "Your show #{sub.show.name} starts in 5 min"
-        }
+        :to => sub.subscriber.phone_number,
+        :message => "Your show #{sub.show.name} starts in 5 min"
+      }
       })
     }
     reminders
@@ -178,6 +182,31 @@ module SchedulerHelper
     msgs = service.fetch_messages(last_received_message_id).reject! { |msg|
       msg.text.downcase.match(/tivi/).nil? or !SMSLog.find_by_external_id(msg.id.to_i).nil?
     }
+  end
+
+
+  def create_subscription(sms)
+    show_name = _get_show_name_from_text(sms.text)
+    subscriber = Subscriber.first_or_create(:phone_number => sms.from)
+
+    show = Show.first(:name => {'$regex' => /#{show_name}/i })
+
+    subscription = Subscription.new
+    subscription.subscriber = subscriber
+    subscription.show_name = show_name
+    if !show.nil?
+      existing = Subscription.find_all_by_show_id_and_subscriber_id_and_active(show.id, subscriber.id, true)
+      if !existing.nil?
+        subscription.show = show
+        subscription.active = true
+        subscription.save!
+      else
+        subscription = nil
+      end
+    else
+      subscription.save!
+    end
+    subscription
   end
 end
 
