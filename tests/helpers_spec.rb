@@ -68,13 +68,13 @@ describe 'Sinatra helpers' do
     end
   end
 
-  it "should return only the sms that have not been already saved" do
-    SMSLog.delete_all
-    SMSLog.create(:external_id => 397)
-
-    messages = helpers.fetch_messages(api)
-    messages.should be_nil or messages.detect { |msg| msg.id.to_i == 397 }.should be_nil
-  end
+  #it "should return only the sms that have not been already saved" do
+  #  SMSLog.delete_all
+  #  SMSLog.create(:external_id => 397)
+  #
+  #  messages = helpers.fetch_messages(api)
+  #  messages.should be_nil or messages.detect { |msg| msg.id.to_i == 397 }.should be_nil
+  #end
 
   it "should return all the shows in the day" do
     test = Channel.find_by_code!('Tst')

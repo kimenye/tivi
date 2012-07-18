@@ -9,6 +9,10 @@ require 'rufus/scheduler'
 require 'gcal4ruby'
 require 'time'
 require_relative 'AfricasTalkingGateway'
+require_relative 'models'
+require_relative 'scheduler'
+
+require 'pry'
 
 module Sinatra
   class Base
@@ -27,222 +31,7 @@ module Sinatra
   end
 end
 
-class Channel
-  include MongoMapper::Document
 
-  key :name, String, :required => true
-  key :code, String, :required => true
-  key :calendar_id, String
-  key :created_at, Time, :default => Time.now
-  many :shows
-end
-
-class Show
-  include MongoMapper::Document
-
-  key :name, String
-  key :description, String
-  key :created_at, Time, :default => Time.now
-  belongs_to :channel
-end
-
-class Schedule
-  include MongoMapper::Document
-
-  key :start_time, Time
-  key :end_time, Time
-  belongs_to :show
-end
-
-class Subscription
-  include MongoMapper::Document
-
-  key :show_name, String
-  key :active, Boolean, :default => false
-  key :cancelled, Boolean, :default => false
-  key :from, Time, :default => Time.now
-  belongs_to :subscriber
-  belongs_to :show
-end
-
-class SMSLog
-  include MongoMapper::Document
-
-  key :external_id, Integer
-  key :from, String
-  key :msg, String
-  key :date, Time
-end
-
-class Subscriber
-  include MongoMapper::Document
-
-  key :phone_number, String
-end
-
-module SchedulerHelper
-  def get_seconds_from_min min
-    return min * 60
-  end
-
-  def _get_start_of_day(time)
-    Time.local(time.year, time.month, time.day, 0, 0, 0)
-  end
-
-  def today_at_time(hour,min)
-    today = _get_start_of_day(Time.now)
-    return Time.local(today.year, today.month, today.day, hour, min, 0)
-  end
-
-  def _get_end_of_day(time)
-    Time.local(time.year, time.month, time.day, 23,59,59)
-  end
-
-  def _get_show_name_from_text (text)
-    text.downcase.split(/tivi/)[1].strip
-  end
-
-  def get_schedule_for_day(time, channel)
-    start_of_day = _get_start_of_day(time)
-    end_of_day = _get_end_of_day(time)
-    Schedule.all(:start_time => { '$gte' => start_of_day.utc },:end_time => { '$lte' => end_of_day.utc }, :show_id => { '$in' => Show.all(:channel_id => channel.id).collect { |s| s.id }  })
-  end
-
-  def sync_shows (service, calendar, day=Time.now)
-    start_of_day = _get_start_of_day(day)
-    end_of_day = _get_end_of_day(day)
-
-    events = GCal4Ruby::Event.find service, {}, {
-        :calendar => calendar,
-        'start-min'=> start_of_day.utc.xmlschema,
-        'start-max' => end_of_day.utc.xmlschema }
-
-
-    events.collect { |event|
-      {
-        :name =>  event.title,
-        :start_time => event.start_time,
-        :end_time => event.end_time
-      }
-    }
-  end
-
-  def create_debug_shows (channel)
-    nine_thirty_am_show = Show.create(:channel => channel, :name=> "9.30 AM Show", :description => "30 min show starting at 9.30 AM")
-    ten_show = Show.create(:channel => channel, :name=> "10 AM Show", :description => "30 min show starting at 10.00 AM")
-    ten_thirty_show = Show.create(:channel => channel, :name=> "10.30 AM Show", :description => "30 min show starting at 10.30 AM")
-
-    Schedule.create!(:start_time => today_at_time(9,30), :end_time => today_at_time(10,00), :show => nine_thirty_am_show)
-    Schedule.create!(:start_time => today_at_time(10,00), :end_time => today_at_time(10,30), :show => ten_show)
-    Schedule.create!(:start_time => today_at_time(10,30), :end_time => today_at_time(11,00), :show => ten_thirty_show)
-  end
-
-  def create_schedule(service, channel)
-    shows = sync_shows(service, channel.calendar_id)
-    shows.each{ |_show|
-      show = Show.find_by_name_and_channel_id(_show[:name], channel.id)
-      if show.nil?
-        show = Show.create(:name => _show[:name], :channel => channel)
-      end
-
-      schedule = Show.find_by_show_id_and_start_time(show.id, _show[:start_time])
-      if schedule.nil?
-        schedule = Schedule.create!(:start_time => _show[:start_time], :end_time => _show[:end_time], :show => show)
-      end
-    }
-  end
-
-  def get_shows_starting_in_duration (duration=5, from=Time.now)
-    start_time = from + get_seconds_from_min(duration)
-    Schedule.find_all_by_start_time(start_time.utc)
-  end
-
-  def get_reminders (duration=5, from=Time.now)
-    shows = get_shows_starting_in_duration(duration,from)
-    reminders = []
-    shows.each { |show|
-      #find any subscriptions for these shows
-      subscriptions = Subscription.find_all_by_show_id(show.show.id)
-      reminders.concat(subscriptions.collect { |sub|
-        {
-        :to => sub.subscriber.phone_number,
-        :message => "Your show #{sub.show.name} starts in 5 min"
-      }
-      })
-    }
-    reminders
-  end
-
-  def get_latest_received_message_id
-    last_sms = SMSLog.empty? ? nil : SMSLog.last(:order => :external_id)
-    last_sms.nil? ? 385 : last_sms.external_id
-  end
-
-  def fetch_messages (service, last_received_message_id=get_latest_received_message_id)
-    msgs = service.fetch_messages(last_received_message_id).reject! { |msg|
-      msg.text.downcase.match(/tivi/).nil? or !SMSLog.find_by_external_id(msg.id.to_i).nil?
-    }
-  end
-
-  def poll_subscribers (service)
-    messages = fetch_messages(service)
-    messages.each { |message|
-      sub = create_subscription(message)
-      puts ">> Created subscription #{sub.to_json}"
-    }
-  end
-
-  def create_subscription(sms)
-    show_name = _get_show_name_from_text(sms.text)
-    subscriber = Subscriber.first_or_create(:phone_number => sms.from)
-
-    show = Show.first(:name => {'$regex' => /#{show_name}/i })
-
-    subscription = Subscription.new
-    subscription.subscriber = subscriber
-    subscription.show_name = show_name
-    if !show.nil?
-      existing = Subscription.find_all_by_show_id_and_subscriber_id_and_active(show.id, subscriber.id, true)
-      if !existing.nil?
-        subscription.show = show
-        subscription.active = true
-        subscription.save!
-      else
-        subscription = nil
-      end
-    else
-      subscription.save!
-    end
-    subscription
-  end
-
-  def send_reminders(api,duration=5,from=Time.now)
-    reminders = get_reminders(duration, from)
-    status_messages = []
-    if production?
-      status_messages = reminders.each { |reminder|
-        puts ">> sending message to #{reminder.to_json}"
-        api.send_message(reminder[:to], reminder[:message])
-      }
-    else
-      status_messages = reminders.collect { |reminder|
-        MessageStatusReport.new({
-            :SMSMessageData => {
-                :Message => "Sent to 1\/1 Total Cost: KES 1.50",
-                :Recipients => [
-                    {
-                        :number => reminder[:to],
-                        :status => "Success",
-                        :cost => "KES 1.50"
-                    }
-                ]
-            }
-        }.to_json)
-      }
-    end
-    status_messages
-  end
-end
 
 class ApiApplication < Sinatra::Base
   include Sinatra::Rabbit
@@ -267,22 +56,26 @@ class ApiApplication < Sinatra::Base
     end
 
     enable :sessions
+    puts ">>> Are we in production #{production?}"
     if production?
 
       scheduler = Rufus::Scheduler.start_new
       valid_api = AfricasTalkingGateway.new("kimenye", "4f116c64a3087ae6d302b6961279fa46c7e1f2640a5a14a040d1303b2d98e560")
 
 
-      scheduler.every '5m' do
-        #puts ">> About to call the africas talking service"
-        puts ">> Polling messages from Gateway"
-        poll_subscribers(valid_api)
-        puts ">> Finished polling messages"
+      #scheduler.every '5s' do
+        ##puts ">> About to call the africas talking service"
+        #puts ">> Polling messages from Gateway"
+        #SchedulerHelper.poll_subscribers(valid_api)
+        #puts ">> Finished polling messages"
+        #
+        #puts ">>Sending reminders"
+        #send_reminders(valid_api)
+        #puts ">> Finished seding reminders"
 
-        puts ">>Sending reminders"
-        send_reminders(valid_api)
-        puts ">> Finished seding reminders"
-      end
+      binding.pry
+        hello_world("Scott")
+      #end
     end
   end
 
