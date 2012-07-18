@@ -1,9 +1,9 @@
 require_relative '../api_application'
+require_relative '../AfricasTalkingGateway'
 require 'rspec-expectations'
 require 'rack/test'
 require 'pry'
 require 'json'
-
 
 class TestHelper
   include SchedulerHelper
@@ -14,12 +14,15 @@ describe 'Sinatra helpers' do
 
   let(:service) { GCal4Ruby::Service.new }
 
+  let(:api) { AfricasTalkingGateway.new("kimenye", "4f116c64a3087ae6d302b6961279fa46c7e1f2640a5a14a040d1303b2d98e560") }
+
   before(:all) do
     Subscriber.delete_all
     Subscription.delete_all
     Schedule.delete_all
     Show.delete_all
     Channel.delete_all
+    SMSLog.delete_all
 
 
     test = Channel.create(:name => 'Test', :code => 'Tst', :calendar_id => 'tivi.co.ke_a0pt1qvujhtbre4u8b3s5jl25k@group.calendar.google.com')
@@ -42,18 +45,15 @@ describe 'Sinatra helpers' do
     #at the end of all the methods being run
   end
 
-  it "should return seconds for mins" do
-    helpers.get_seconds_from_min(5).should eql(300)
-  end
+  it "should return only the sms that match the TIVI filter" do
+    messages = helpers.fetch_messages(api, 385)
+    puts ">> messages #{messages.to_json}"
+    messages.should_not be_nil
 
-  it "should return the right time of the day" do
-    t = helpers.today_at_time(9,30)
-    now = Time.now
-    t.year.should eq(now.year)
-    t.month.should eq(now.month)
-    t.day.should eq(now.day)
-    t.hour.should eq(9)
-    t.min.should eq(30)
+    msg = messages.first
+    if !msg.nil?
+      msg.text.downcase.match(/tivi/).should_not be_nil
+    end
   end
 
   it "should return all the shows in the day" do

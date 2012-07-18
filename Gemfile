@@ -16,6 +16,7 @@ gem "rspec"
 gem "thin"
 gem "rufus-scheduler"
 gem "gcal4ruby"
+gem "curb"
 
 group :test do
   gem 'rack-test', :git => "https://github.com/brynary/rack-test.git"

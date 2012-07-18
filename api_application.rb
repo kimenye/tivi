@@ -5,9 +5,10 @@ require 'sinatra/rabbit'
 require 'sinatra/reloader' if development?
 require 'dm-core'
 require 'mongo_mapper'
-#require 'rufus/scheduler'
+require 'rufus/scheduler'
 require 'gcal4ruby'
 require 'time'
+require_relative 'AfricasTalkingGateway'
 
 module Sinatra
   class Base
@@ -64,18 +65,14 @@ class Subscription
   belongs_to :show
 end
 
-class SubscriptionLog
+class SMSLog
   include MongoMapper::Document
 
-  key :message, String
+  key :external_id, String
+  key :from, String
+  key :msg, String
+  key :date, Time
 end
-
-#class Message
-#  include MongoMapper::Document
-#
-#  belongs_to :subscriber
-#  key :message, String
-#end
 
 class Subscriber
   include MongoMapper::Document
@@ -171,6 +168,15 @@ module SchedulerHelper
     }
     reminders
   end
+
+  def fetch_messages (service, last_received_message_id=0)
+    msgs = service.fetch_messages(last_received_message_id).reject! { |msg| msg.text.downcase.match(/tivi/).nil? }
+
+    #check to see if we have already saved these messages
+    #msgs.each { |msg|
+    #
+    #}
+  end
 end
 
 class ApiApplication < Sinatra::Base
@@ -196,7 +202,16 @@ class ApiApplication < Sinatra::Base
     end
 
     enable :sessions
+    if !development?
+      puts ">> we are not in the test environment"
+      scheduler = Rufus::Scheduler.start_new
+      valid_api = AfricasTalkingGateway.new("kimenye", "4f116c64a3087ae6d302b6961279fa46c7e1f2640a5a14a040d1303b2d98e560")
 
+
+      scheduler.every '5s' do
+        puts ">> About to call the africas talking service"
+      end
+    end
   end
 
   before  '/*', :request_method => [ :get ] do
