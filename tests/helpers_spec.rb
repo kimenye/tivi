@@ -117,7 +117,6 @@ describe 'Sinatra helpers' do
     Subscription.count.should eq(num_subscriptions)
   end
 
-
   it "should schedule all the shows in the day" do
     s = Schedule.all
     s.length.should eq(0)
@@ -163,5 +162,25 @@ describe 'Sinatra helpers' do
 
     Schedule.all.length.should eq(3)
     helpers.get_schedule_for_day(helpers.today_at_time(10,30), test).length.should eq(1)
+  end
+
+  it "should get the correct start of the week" do
+    a_sunday = Time.local(2012,7,15,0,0,0)
+    helpers._get_start_of_the_week(a_sunday).should eq(a_sunday)
+
+    a_tuesday = Time.local(2012,7,17,0,0,0)
+    helpers._get_start_of_the_week(a_tuesday).should eq(a_sunday)
+
+    next_sunday = Time.local(2012,7,22,0,0,0)
+    helpers._get_start_of_the_week(next_sunday).should eq(next_sunday)
+  end
+
+  it "should sync shows for a whole week from the start of the week" do
+    Schedule.delete_all
+
+    test = Channel.find_by_code!('Tst')
+    shows_for_week = helpers.sync_shows_for_week(service, test.calendar_id)
+
+    shows_for_week.length.should eq(21)
   end
 end

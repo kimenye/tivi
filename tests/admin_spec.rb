@@ -41,7 +41,7 @@ describe 'The Tivi Administration App' do
 
   it "should show the name of channel when viewing the schedule for a channel" do
 
-    channel = Channel.first
+    channel = Channel.first_or_create(:code => "KTN", :name => "Kenya TV Network")
 
     authorize username, password
     get "/schedule/#{channel.id.to_s}"

@@ -22,6 +22,17 @@ module SchedulerHelper
     text.downcase.split(/tivi/)[1].strip
   end
 
+  def _get_start_of_the_week (day)
+    start_of_week = day if day.sunday?
+
+    while start_of_week.nil?
+      day = day - (24 * 3600)
+      start_of_week = day if day.sunday?
+    end
+
+    return start_of_week
+  end
+
   def get_schedule_for_day(time, channel)
     start_of_day = _get_start_of_day(time)
     end_of_day = _get_end_of_day(time)
@@ -47,6 +58,16 @@ module SchedulerHelper
     }
   end
 
+  def sync_shows_for_week (service, calendar, from=_get_start_of_the_week(Time.now))
+    shows = []
+    (1..7).each { |idx|
+       sync_shows(service, calendar, from + (idx * 24 * 3600)).each { |show|
+          shows << show
+       }
+    }
+    shows
+  end
+
   def create_debug_shows (channel)
     nine_thirty_am_show = Show.create(:channel => channel, :name=> "9.30 AM Show", :description => "30 min show starting at 9.30 AM")
     ten_show = Show.create(:channel => channel, :name=> "10 AM Show", :description => "30 min show starting at 10.00 AM")
@@ -57,8 +78,13 @@ module SchedulerHelper
     Schedule.create!(:start_time => today_at_time(10,30), :end_time => today_at_time(11,00), :show => ten_thirty_show)
   end
 
-  def create_schedule(service, channel)
-    shows = sync_shows(service, channel.calendar_id)
+  def create_schedule(service, channel, weekly=false)
+    if weekly
+      shows = sync_shows_for_week(service, channel.calendar_id)
+    else
+      shows = sync_shows(service, channel.calendar_id)
+    end
+
     shows.each{ |_show|
       show = Show.find_by_name_and_channel_id(_show[:name], channel.id)
       if show.nil?
