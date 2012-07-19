@@ -84,7 +84,7 @@
             %td
               %a.btn.btn-success{ 'data-bind' => "click: $parent.selectChannel" }
                 View Shows
-              %a.btn.btn-success{ 'data-bind' => "click: $parent.syncSchedule" }
+              %a#btn-sync.btn.btn-success{ 'data-bind' => "click: $parent.syncSchedule", 'data-loading-text' => 'Sync in Progress...' }
                 Sync Schedule
   %section{'data-bind' => 'if: selected() != null'}
     .row{'data-bind' => 'with: selected'}
@@ -119,4 +119,3 @@
                       %i.icon-edit
                     %span{ 'data-bind' => 'text: name'}
                   %td{ 'data-bind' => 'text: description'}
-                  %td

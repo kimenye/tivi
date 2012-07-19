@@ -62,7 +62,7 @@ module SchedulerHelper
     shows.each{ |_show|
       show = Show.find_by_name_and_channel_id(_show[:name], channel.id)
       if show.nil?
-        show = Show.create(:name => _show[:name], :channel => channel)
+        show = Show.create(:name => _show[:name], :description => _show[:name], :channel => channel)
       end
 
       schedule = Show.find_by_show_id_and_start_time(show.id, _show[:start_time])
