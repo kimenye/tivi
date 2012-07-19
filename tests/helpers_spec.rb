@@ -1,5 +1,6 @@
 require_relative '../api_application'
 require_relative '../AfricasTalkingGateway'
+require_relative 'spec_helper'
 require 'rspec-expectations'
 require 'rack/test'
 require 'pry'
@@ -10,6 +11,8 @@ class TestHelper
 end
 
 describe 'Sinatra helpers' do
+  include TestHelpers
+
   let(:helpers) { TestHelper.new }
 
   let(:service) { GCal4Ruby::Service.new }
@@ -17,39 +20,18 @@ describe 'Sinatra helpers' do
   let(:api) { AfricasTalkingGateway.new("kimenye", "4f116c64a3087ae6d302b6961279fa46c7e1f2640a5a14a040d1303b2d98e560") }
 
   before(:all) do
-    Subscriber.delete_all
-    Subscription.delete_all
-    Schedule.delete_all
-    Show.delete_all
-    Channel.delete_all
-    SMSLog.delete_all
+    common_setup
 
-
-    test = Channel.create(:name => 'Test', :code => 'Tst', :calendar_id => 'tivi.co.ke_a0pt1qvujhtbre4u8b3s5jl25k@group.calendar.google.com')
     tst = Channel.create(:name => 'Other Test', :code => 'Tst2', :calendar_id => 'tivi.co.ke_a0pt1qvujhtbre4u8b3s5jl25k@group.calendar.google.com')
-
-    nine_thirty_am_show = Show.create(:channel => test, :name=> "9.30 AM Show", :description => "30 min show starting at 9.30 AM")
-    ten_show = Show.create(:channel => test, :name=> "10 AM Show", :description => "30 min show starting at 10.00 AM")
-    ten_thirty_show = Show.create(:channel => test, :name=> "10.30 AM Show", :description => "30 min show starting at 10.30 AM")
     channel_2_show = Show.create(:channel => tst, :name => "10 AM Show", :description => "30 min show starting at 10.00 AM on different channel")
-
-    trev = Subscriber.create(:phone_number => "+254705866564")
-    ten_reminder = Subscription.create(:subscriber => trev, :show => ten_show, :active => true)
-
-    inactive_reminder_for_ten_o_clock_show = Subscription.create(:subscriber => trev, :show=> nil, :active => false, :show_name => 'Does not exist')
+    ten_reminder = Subscription.create(:subscriber => get_test_subscriber, :show => get_test_show, :active => true)
+    inactive_reminder_for_ten_o_clock_show = Subscription.create(:subscriber => get_test_subscriber, :show=> nil, :active => false, :show_name => 'Does not exist')
 
     service.authenticate "guide@tivi.co.ke", "sproutt1v!"
   end
 
   after(:all) do
-    #at the end of all the methods being run
-    Subscriber.delete_all
-    Subscription.delete_all
-    Schedule.delete_all
-    Show.delete_all
-    Channel.delete_all
-    SMSLog.delete_all
-
+    common_delete
   end
 
   it "should return 410 as the latest SMS is there is no further sms" do
@@ -213,5 +195,9 @@ describe 'Sinatra helpers' do
     helpers.get_next_time_scheduled(test_show).should be_nil
 
     Schedule.delete_all(:show_id => test_show.id)
+  end
+
+  it "should inform the subscriber on how to opt out" do
+
   end
 end
