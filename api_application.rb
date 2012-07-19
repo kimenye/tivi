@@ -62,7 +62,7 @@ class ApiApplication < Sinatra::Base
       gateway = AfricasTalkingGateway.new("kimenye", "4f116c64a3087ae6d302b6961279fa46c7e1f2640a5a14a040d1303b2d98e560")
       schedule = Scheduler.new
 
-      scheduler.every '10s' do
+      scheduler.every '10m' do
         puts "Polling subscribers @ #{Time.now}"
         num_subscriptions = schedule.poll_subscribers gateway
         puts "Created #{num_subscriptions}"
