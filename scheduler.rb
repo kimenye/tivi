@@ -106,10 +106,10 @@ module SchedulerHelper
 
   def poll_subscribers (service)
     messages = fetch_messages(service)
-    messages.each { |message|
+    subscriptions = messages.collect { |message|
       sub = create_subscription(message)
-      puts ">> Created subscription #{sub.to_json}"
     }
+    subscriptions.reject { |sub| sub.nil? }.length
   end
 
   def create_subscription(sms)
@@ -122,8 +122,8 @@ module SchedulerHelper
     subscription.subscriber = subscriber
     subscription.show_name = show_name
     if !show.nil?
-      existing = Subscription.find_all_by_show_id_and_subscriber_id_and_active(show.id, subscriber.id, true)
-      if !existing.nil?
+      existing = Subscription.find_by_show_id_and_subscriber_id_and_active(show.id, subscriber.id, true)
+      if existing.nil?
         subscription.show = show
         subscription.active = true
         subscription.save!
@@ -131,7 +131,12 @@ module SchedulerHelper
         subscription = nil
       end
     else
-      subscription.save!
+      existing_in_active = Subscription.find_by_subscriber_id_and_show_name_and_active(subscriber.id, {'$regex' => /#{show_name}/i}, false)
+      if existing_in_active.nil?
+        subscription.save!
+      else
+        subscription = nil
+      end
     end
     subscription
   end
@@ -141,7 +146,6 @@ module SchedulerHelper
     status_messages = []
     if production?
       status_messages = reminders.each { |reminder|
-        puts ">> sending message to #{reminder.to_json}"
         api.send_message(reminder[:to], reminder[:message])
       }
     else

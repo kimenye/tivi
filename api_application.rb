@@ -40,11 +40,11 @@ class ApiApplication < Sinatra::Base
 
   configure :development do
     register Sinatra::Reloader
-    enable :logging
   end
 
 
   configure do
+    enable :logging
     set :public_folder, Proc.new { File.join(root, "static") }
 
     if ENV['MONGOHQ_URL']
@@ -59,17 +59,14 @@ class ApiApplication < Sinatra::Base
 
     if production?
       scheduler = Rufus::Scheduler.start_new
-      valid_api = AfricasTalkingGateway.new("kimenye", "4f116c64a3087ae6d302b6961279fa46c7e1f2640a5a14a040d1303b2d98e560")
-
+      gateway = AfricasTalkingGateway.new("kimenye", "4f116c64a3087ae6d302b6961279fa46c7e1f2640a5a14a040d1303b2d98e560")
       schedule = Scheduler.new
 
-      #scheduler.every '10s' do
-      #  schedule.poll_subscribers valid_api
-      #end
-
-      #scheduler.every '5m' do
-
-      #end
+      scheduler.every '10s' do
+        puts "Polling subscribers @ #{Time.now}"
+        num_subscriptions = schedule.poll_subscribers gateway
+        puts "Created #{num_subscriptions}"
+      end
     end
   end
 

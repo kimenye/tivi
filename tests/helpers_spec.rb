@@ -106,6 +106,17 @@ describe 'Sinatra helpers' do
     SMSLog.delete_all
   end
 
+  it "should not create multiple in-active subscriptions" do
+    person = Subscriber.first_or_create(:phone_number => "+254705866564")
+    subscription = Subscription.create(:subscriber => person, :show_name => "blahBlah", :active => false)
+
+    num_subscriptions = Subscription.count
+
+    sub = helpers.create_subscription(SMSMessage.new("390", "TIVI BLAHBLAH", "+254705866564", "5259", "2012-07-18 07:49:01"))
+    sub.should be_nil
+    Subscription.count.should eq(num_subscriptions)
+  end
+
 
   it "should schedule all the shows in the day" do
     s = Schedule.all
