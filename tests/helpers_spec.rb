@@ -183,4 +183,35 @@ describe 'Sinatra helpers' do
 
     shows_for_week.length.should eq(21)
   end
+
+  it "should return the earliest next air date for a show " do
+    test_show = Show.find_by_name!("10 AM Show")
+
+    Schedule.create(:show => test_show, :start_time => helpers.today_at_time(22,30).utc, :end_time => helpers.today_at_time(23,00).utc)
+    Schedule.create(:show => test_show, :start_time => (helpers.today_at_time(22,30) + 24 * 3600).utc, :end_time => (helpers.today_at_time(23,00) + 24 * 3600).utc)
+
+    helpers.get_next_time_scheduled(test_show).start_time.should eq(helpers.today_at_time(22,30).utc)
+    Schedule.delete_all(:show_id => test_show.id)
+  end
+
+  it "should return the next air date for a show after the current date" do
+    test_show = Show.find_by_name!("10 AM Show")
+
+    Schedule.create(:show => test_show, :start_time => (helpers.today_at_time(22,30) - 24 * 3600).utc, :end_time => (helpers.today_at_time(23,00) - 24 * 3600).utc)
+    Schedule.create(:show => test_show, :start_time => (helpers.today_at_time(22,30) + 24 * 3600).utc, :end_time => (helpers.today_at_time(23,00) + 24 * 3600).utc)
+
+    helpers.get_next_time_scheduled(test_show).start_time.should eq((helpers.today_at_time(22,30) + 24 * 3600).utc)
+
+    Schedule.delete_all(:show_id => test_show.id)
+  end
+
+  it "should return empty for the next air date for a show if it has already aired that week" do
+    test_show = Show.find_by_name!("10 AM Show")
+
+    Schedule.create(:show => test_show, :start_time => (helpers.today_at_time(22,30) - 24 * 3600).utc, :end_time => (helpers.today_at_time(23,00) - 24 * 3600).utc)
+
+    helpers.get_next_time_scheduled(test_show).should be_nil
+
+    Schedule.delete_all(:show_id => test_show.id)
+  end
 end

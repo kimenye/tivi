@@ -39,6 +39,10 @@ module SchedulerHelper
     Schedule.all(:start_time => { '$gte' => start_of_day.utc },:end_time => { '$lte' => end_of_day.utc }, :show_id => { '$in' => Show.all(:channel_id => channel.id).collect { |s| s.id }  })
   end
 
+  def get_next_time_scheduled(show)
+    Schedule.first(:show_id => show.id, :start_time => { '$gte' => Time.now.utc } , :order => :start_time)
+  end
+
   def sync_shows (service, calendar, day=Time.now)
     start_of_day = _get_start_of_day(day)
     end_of_day = _get_end_of_day(day)
