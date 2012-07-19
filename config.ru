@@ -11,6 +11,9 @@ require File.join(File.dirname(__FILE__), 'admin.rb')
 # disable sinatra's auto-application starting
 disable :run
 
+#sync logs
+$stdout.sync = true
+
 # we're in dev mode
 set :environment, :development
 
