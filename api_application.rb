@@ -179,6 +179,16 @@ class ApiApplication < Sinatra::Base
     end
   end
 
+  collection :sms do
+    operation :index do
+      control do
+        l = SMSLog.all
+        status 200
+        body(l.to_json)
+      end
+    end
+  end
+
   collection :channels do
     description "API operations for a TV channel"
 
