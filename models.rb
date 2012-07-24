@@ -42,7 +42,7 @@ class SMSLog
   key :external_id, Integer
   key :from, String
   key :msg, String
-  key :date, Time
+  key :date, Time, :default => Time.now
 end
 
 class Subscriber

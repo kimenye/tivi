@@ -2,3 +2,4 @@
 .idea
 #*.lock
 Procfile
+spect/gateway_spec.rb

@@ -58,15 +58,15 @@ class ApiApplication < Sinatra::Base
     enable :sessions
 
     if production?
-      scheduler = Rufus::Scheduler.start_new
-      gateway = AfricasTalkingGateway.new("kimenye", "4f116c64a3087ae6d302b6961279fa46c7e1f2640a5a14a040d1303b2d98e560")
-      schedule = Scheduler.new
-
-      scheduler.every '10m' do
-        puts "Polling subscribers @ #{Time.now}"
-        num_subscriptions = schedule.poll_subscribers gateway
-        puts "Created #{num_subscriptions}"
-      end
+      #scheduler = Rufus::Scheduler.start_new
+      #gateway = AfricasTalkingGateway.new("kimenye", "4f116c64a3087ae6d302b6961279fa46c7e1f2640a5a14a040d1303b2d98e560")
+      #schedule = Scheduler.new
+      #
+      #scheduler.every '10m' do
+      #  puts "Polling subscribers @ #{Time.now}"
+      #  num_subscriptions = schedule.poll_subscribers gateway
+      #  puts "Created #{num_subscriptions}"
+      #end
     end
   end
 
@@ -84,6 +84,19 @@ class ApiApplication < Sinatra::Base
       service.authenticate "guide@tivi.co.ke", "sproutt1v!"
       create_schedule(service,channel)
     end
+
+    status 200
+    body({ success: true}.to_json)
+  end
+
+  get "/sms_gateway" do
+
+    #SMSLog.create
+    from = params[:message_source]
+    msg = params[:message_text]
+    id = params[:trxID]
+
+    SMSLog.create!(:from => from, :msg => msg, :external_id => id)
 
     status 200
     body({ success: true}.to_json)
@@ -165,7 +178,6 @@ class ApiApplication < Sinatra::Base
       end
     end
   end
-
 
   collection :channels do
     description "API operations for a TV channel"
@@ -261,7 +273,6 @@ class ApiApplication < Sinatra::Base
       end
     end
   end
-
 
   collection :shows do
     description "API operations for a TV Show"

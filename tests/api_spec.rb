@@ -260,4 +260,15 @@ describe 'The Tivi App' do
     last_response.should be_ok
     last_response.body.should == [tomorrow].to_json
   end
+
+  it "should accept http get requests from the roam tech service" do
+
+    get "/sms_gateway?message_source=#{CGI::escape("254714423224")}&message_text=#{CGI::escape("sample sms message")}&message_destination=5566&trxID=3429435034524"
+    last_response.should be_ok
+    last_response.body.should == { :success => true}.to_json
+
+    sms = SMSLog.first
+    sms.should_not be_nil
+    sms.external_id.should eq(3429435034524)
+  end
 end
