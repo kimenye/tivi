@@ -67,7 +67,7 @@ class ApiApplication < Sinatra::Base
       set :scheduler, scheduler
       set :is_prod, true
       scheduler.every '5m' do
-        settings.processor.process_reminders(settings.gateway, production?)
+        settings.processor.process_reminders(settings.gateway, true)
       end
     else
       set :is_prod, false
@@ -100,7 +100,7 @@ class ApiApplication < Sinatra::Base
         subscription = create_subscription(sms)
         if !subscription.nil? and subscription.active == true then
           msg = "Thank you for your subscription. Reminders will be billed at 5KSH each. STOP 'STOP' to quit subscription"
-          settings.gateway.send_message(subscription.subscriber.phone_number, msg, Message::TYPE_ACKNOWLEDGEMENT, subscription, subscription.show, production?)
+          settings.gateway.send_message(subscription.subscriber.phone_number, msg, Message::TYPE_ACKNOWLEDGEMENT, subscription, subscription.show, settings.is_prod)
         end
       elsif is_stop_message(sms.msg) then
         deactivate_subscriptions(sms.from)
