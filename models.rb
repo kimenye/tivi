@@ -1,3 +1,5 @@
+require 'mongo_mapper'
+
 class Channel
   include MongoMapper::Document
 

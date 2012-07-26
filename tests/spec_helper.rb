@@ -1,5 +1,6 @@
 require 'rspec-expectations'
 require 'rack/test'
+require 'dm-core'
 require_relative '../models'
 
 module TestHelpers

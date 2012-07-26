@@ -49,13 +49,7 @@ describe 'The Scheduler Helper various functions' do
   #    SMSLog.delete_all
   #  end
   #
-  #  it "should return only the sms that have not been already saved" do
-  #    SMSLog.delete_all
-  #    SMSLog.create(:external_id => 411)
-  #
-  #    messages = helpers.fetch_messages(api)
-  #    messages.empty?.should be_true or messages.detect { |msg| msg.id.to_i == 411 }.should be_nil
-  #  end
+
 
      #it "should send sms reminders to the subscribers" do
      #  messages = helpers.send_reminders(api, 5, helpers.today_at_time(9,55))
