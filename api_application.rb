@@ -160,9 +160,71 @@ class ApiApplication < Sinatra::Base
     description "API operations for adding subscribers"
 
     operation :index do
+      description "Return all subscribers"
       control do
         subscribers = Subscriber.all
+        status 200
         body(subscribers.to_json)
+      end
+    end
+    
+    operation :show do
+      description "Get a specific subscriber"
+      
+      param :id, :string, :required
+      control do
+        subscriber = Subscriber.find_by_id(params[:id])
+        if subscriber.nil?
+          status 404
+        else
+          status 200
+          body(subscriber.to_json)
+        end
+      end
+    end
+    
+    operation :destroy do
+      description "Delete a specific subscriber"
+      
+      param :id, :string, :required
+      control do
+        Subscriber.delete([ params[:id] ])
+        body(params[:id])
+      end
+    end
+    
+    operation :create do
+      description "Create a subscriber"
+      
+      control do
+        data = JSON.parse(request.body.string)
+        if data.nil? or !data.has_key?('phone_number')
+          status 400
+          body({error: "Invalid data"}.to_json)
+        else
+          subscriber = Subscriber.new
+          subscriber.phone_number = data['phone_number']
+          subscriber.save!
+          status 200
+          body(subscriber.id.to_s)
+        end
+      end
+    end
+    
+    operation :update do
+      description "Update an existing subscriber"
+      
+      control do
+        subscriber = Subscriber.find(params[:id])
+        data = JSON.parse(request.body.string)
+        if data.nil? or !data.has_key?('phone_number')
+          status 404
+        else
+          subscriber.phone_number = data['phone_number']
+          subscriber.save!
+          status 200
+          body(channel.id.to_s)
+        end
       end
     end
   end
