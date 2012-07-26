@@ -145,17 +145,84 @@ class ApiApplication < Sinatra::Base
 
   collection :subscriptions do
     description "API for managing subscriptions"
-
+    
     operation :index do
+      description "Return all subscriptions"
       control do
-        status(200)
-        body(Subscription.all.to_json)
+        subscriptions = Subscription.all
+        status 200
+        body(subscriptions.to_json)
       end
     end
+    
+    operation :show do
+      description "Get a specific subscription"
+      
+      param :id, :string, :required
+      control do
+        subscription = Subscription.find_by_id(params[:id])
+        if subscription.nil?
+          status 404
+        else
+          status 200
+          body(subscription.to_json)
+        end
+      end
+    end
+    
+    operation :destroy do
+      description "Delete a specific subscription"
+      
+      param :id, :string, :required
+      control do
+        Subscription.delete([ params[:id] ])
+        body(params[:id])
+      end
+    end
+    
+    operation :create do
+      description "Create a subscription"
+      
+      control do
+        data = JSON.parse(request.body.string)
+        if data.nil? or !data.has_key?('show_name') or !data.has_key?('active') or !data.has_key?('cancelled')
+          status 400
+          body({error: "Invalid data"}.to_json)
+        else
+          subscription = Subscription.new
+          subscription.show_name = data['show_name']
+          subscription.active = data['active']
+          subscription.cancelled = data['cancelled']
+          subscription.save!
+          status 200
+          body(subscription.id.to_s)
+        end
+      end
+    end
+    
+    operation :update do
+      description "Update an existing subscription"
+      
+      control do
+        subscription = Subscription.find(params[:id])
+        data = JSON.parse(request.body.string)
+        if data.nil? or !data.has_key?('show_name') or !data.has_key?('active') or !data.has_key?('cancelled')
+          status 404
+        else
+          subscription.show_name = data['show_name']
+          subscription.active = data['active']
+          subscription.cancelled = data['cancelled']
+          subscription.save!
+          status 200
+          body(subscription.id.to_s)
+        end
+      end
+    end
+    
   end
 
   collection :subscribers do
-    description "API operations for adding subscribers"
+    description "API operations for managing subscribers"
 
     operation :index do
       description "Return all subscribers"
@@ -238,11 +305,78 @@ class ApiApplication < Sinatra::Base
   end
 
   collection :sms do
+    description "API operations for managing sms logs"
+
     operation :index do
+      description "Return all sms logs"
       control do
         l = SMSLog.all
         status 200
         body(l.to_json)
+      end
+    end
+    
+    operation :show do
+      description "Get a specific sms log"
+      
+      param :id, :string, :required
+      control do
+        l = SMSLog.find_by_id(params[:id])
+        if l.nil?
+          status 404
+        else
+          status 200
+          body(l.to_json)
+        end
+      end
+    end
+    
+    operation :destroy do
+      description "Delete a specific sms log"
+      
+      param :id, :string, :required
+      control do
+        SMSLog.delete([ params[:id] ])
+        body(params[:id])
+      end
+    end
+    
+    operation :create do
+      description "Create an sms log"
+      
+      control do
+        data = JSON.parse(request.body.string)
+        if data.nil? or !data.has_key?('external_id') or !data.has_key?('from') or !data.has_key?('msg')
+          status 400
+          body({error: "Invalid data"}.to_json)
+        else
+          l = SMSLog.new
+          l.external_id = data['external_id']
+          l.from = data['from']
+          l.msg = data['msg']
+          l.save!
+          status 200
+          body(l.id.to_s)
+        end
+      end
+    end
+    
+    operation :update do
+      description "Update an existing sms log"
+      
+      control do
+        l = SMSLog.find(params[:id])
+        data = JSON.parse(request.body.string)
+        if data.nil? or !data.has_key?('external_id') or !data.has_key?('from') or !data.has_key?('msg')
+          status 404
+        else
+          l.external_id = data['external_id']
+          l.from = data['from']
+          l.msg = data['msg']
+          l.save!
+          status 200
+          body(l.id.to_s)
+        end
       end
     end
   end
