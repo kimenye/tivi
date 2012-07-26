@@ -56,4 +56,8 @@ describe 'Gateway methods' do
     rsp = gateway.process_response("DN1701 | 870851")
     rsp.should eq("870851")
   end
+
+  #it "should send a real text" do
+  #  id = gateway.send_message("254705866564", "This is a test message",Message::TYPE_ACKNOWLEDGEMENT,nil,nil,true)
+  #end
 end
