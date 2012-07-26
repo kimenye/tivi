@@ -1,5 +1,5 @@
 require 'curb'
-require 'CGI'
+#require 'CGI'
 
 class RoamTechGateway
 
