@@ -120,13 +120,13 @@ module SchedulerHelper
     Schedule.find_all_by_start_time(start_time.utc)
   end
 
-  def process_reminders (gateway,duration=5,from=Time.now)
+  def process_reminders (gateway,real,duration=5,from=Time.now)
     puts "Polling reminders for #{duration} from @ #{from}"
     reminders = get_reminders(duration,from)
     puts "Got #{reminders.length} to send"
     reminders.each { | reminder|
-      msg = gateway.send_message(reminder[:to], reminder[:message], Message::TYPE_REMINDER, reminder[:subscription].subscriber, reminder[:subscription].show)
-      puts ">> Sent msg to #{reminder[:to]} - ID: #{msg.external_id}"
+      msg = gateway.send_message(reminder[:to], reminder[:message], Message::TYPE_REMINDER, reminder[:subscription].subscriber, reminder[:subscription].show, real)
+      puts ">> Sent #{real} msg to #{reminder[:to]} - ID: #{msg.external_id}"
     }
     puts "Finished sending messages"
   end

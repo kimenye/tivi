@@ -67,7 +67,7 @@ class ApiApplication < Sinatra::Base
       set :scheduler, scheduler
 
       scheduler.every '5m' do
-        settings.processor.process_reminders(settings.gateway)
+        settings.processor.process_reminders(settings.gateway, production?)
       end
     end
   end
@@ -118,7 +118,7 @@ class ApiApplication < Sinatra::Base
       if !production?
          time = today_at_time(9,55)
       end
-      process_reminders(settings.gateway, 5, time)
+      process_reminders(settings.gateway,production?, 5, time)
       status 200
       body({:success => true }.to_json)
     end
