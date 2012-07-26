@@ -66,7 +66,7 @@ class ApiApplication < Sinatra::Base
       scheduler = Rufus::Scheduler.start_new
       set :scheduler, scheduler
 
-      scheduler.every '5s' do
+      scheduler.every '5m' do
         settings.processor.process_reminders(settings.gateway)
       end
     end
@@ -327,6 +327,18 @@ class ApiApplication < Sinatra::Base
       control do
         l = SubscriptionLog.all
         body(l.to_json)
+      end
+    end
+  end
+
+  collection :messages do
+    description "API operations for managing the outgoing messages"
+
+    operation :index do
+      control do
+        m = Message.all
+        status 200
+        body (m.to_json)
       end
     end
   end

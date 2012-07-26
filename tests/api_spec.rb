@@ -262,4 +262,10 @@ describe 'The Tivi App' do
     sms.should_not be_nil
     sms.external_id.should eq(3429435034524)
   end
+
+  it "should return all the sms messages send to subscribers" do
+    get "/messages"
+    last_response.should be_ok
+    last_response.body.should == Message.all.to_json
+  end
 end
