@@ -28,7 +28,7 @@ class RoamTechGateway
       data = nil
       response_code = nil
 
-      http = Curl.get() do |curl|
+      http = Curl.get(send_url) do |curl|
         curl.verbose = false
         curl.on_body { |body|
           data = body
@@ -39,7 +39,7 @@ class RoamTechGateway
 
       if response_code == 200
         id = process_response(data)
-        return Message.create!(:external_id => id.to_id, :message_text => msg, :type => type, :subscriber => subscriber, :show => show)
+        return Message.create!(:external_id => id.to_i, :message_text => msg, :type => type, :subscriber => subscriber, :show => show)
       end
     else
       msg = Message.create!(:external_id => process_response("DN1701 | 870851").to_i, :message_text => msg, :type => type, :subscriber => subscriber, :show => show)
