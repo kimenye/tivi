@@ -5,7 +5,7 @@ require 'rack/test'
 require 'pry'
 require 'json'
 
-#set :environment, :test
+set :environment, :test
 
 class TestHelper
   include SchedulerHelper
@@ -80,7 +80,8 @@ describe 'The Tivi App' do
         :version => "1.0",
         :is_production => false,
         :is_test => true,
-        :is_development => false
+        :is_development => false,
+        :is_prod => false
     }.to_json
   end
 

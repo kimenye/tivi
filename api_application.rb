@@ -65,10 +65,12 @@ class ApiApplication < Sinatra::Base
     if production?
       scheduler = Rufus::Scheduler.start_new
       set :scheduler, scheduler
-
+      set :is_prod, true
       scheduler.every '5m' do
         settings.processor.process_reminders(settings.gateway, production?)
       end
+    else
+      set :is_prod, false
     end
   end
 
@@ -137,6 +139,7 @@ class ApiApplication < Sinatra::Base
                  :is_production => production?,
                  :is_test => test?,
                  :is_development => development?,
+                 :is_prod => settings.is_prod
              }.to_json)
       end
     end
