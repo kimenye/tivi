@@ -32,6 +32,11 @@ describe 'Sinatra helpers' do
     common_delete
   end
 
+  it "should authenticate correctly" do
+    helpers.authenticate("admin","password").should eq(false)
+    helpers.authenticate("guide@tivi.co.ke", "sproutt1v!").should eq(true)
+  end
+
   it "should return 410 as the latest SMS is there is no further sms" do
     SMSLog.delete_all
     helpers.get_latest_received_message_id.should eq(410)

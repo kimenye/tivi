@@ -48,4 +48,17 @@ describe 'The User Experience' do
     subscription = Subscription.find_by_subscriber_id!(subscriber.id)
     subscription.active.should eq(false)
   end
+
+  it "should send an sms reminder when a show is about to begin" do
+    get "/sms_gateway?message_source=#{CGI::escape("254725866564")}&message_text=#{CGI::escape("TIVI 10 AM Show")}&message_destination=5566&trxID=3434437"
+    subscriber = Subscriber.find_by_phone_number!("254725866564")
+    subscription = Subscription.find_by_subscriber_id!(subscriber.id)
+    subscription.active.should eq(true)
+
+    get "/reminders?username=guide@tivi.co.ke&password=sproutt1v!"
+    last_response.should be_ok
+    last_response.body.should == { :success => true }.to_json
+    message = Message.find_by_subscriber_id_and_type!(subscriber.id, Message::TYPE_REMINDER)
+    message.subscriber.should eq(subscriber)
+  end
 end

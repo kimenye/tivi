@@ -67,9 +67,7 @@ class ApiApplication < Sinatra::Base
       set :scheduler, scheduler
 
       scheduler.every '5m' do
-        puts "Polling reminders @ #{Time.now}"
-        reminders = settings.processor.get_reminders
-        puts "Got #{reminders.length}"
+        process_reminders(settings.gateway)
       end
     end
   end
@@ -111,6 +109,21 @@ class ApiApplication < Sinatra::Base
     body({ success: true}.to_json)
   end
 
+  get "/reminders" do
+    user_name = params[:username]
+    password = params[:password]
+
+    if authenticate(user_name, password)
+      time = Time.now
+      if !production?
+         time = today_at_time(9,55)
+      end
+      process_reminders(settings.gateway, 5, time)
+      status 200
+      body({:success => true }.to_json)
+    end
+  end
+
   collection :describe do
     description "What is this API capable of?"
 
@@ -133,7 +146,7 @@ class ApiApplication < Sinatra::Base
         password = params[:password]
         create = params[:create]
 
-        if user_name == "guide@tivi.co.ke" and password == "sproutt1v!"
+        if authenticate(user_name,password)
           status 200
 
           Subscriber.delete_all

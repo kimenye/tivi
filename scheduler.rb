@@ -33,6 +33,10 @@ module SchedulerHelper
     return start_of_week
   end
 
+  def authenticate(username, password)
+    return (username == "guide@tivi.co.ke" && password == "sproutt1v!")
+  end
+
   def get_schedule_for_day(time, channel)
     start_of_day = _get_start_of_day(time)
     end_of_day = _get_end_of_day(time)
@@ -116,6 +120,17 @@ module SchedulerHelper
     Schedule.find_all_by_start_time(start_time.utc)
   end
 
+  def process_reminders (gateway,duration=5,from=Time.now)
+    puts "Polling reminders for #{duration} from @ #{from}"
+    reminders = get_reminders(duration,from)
+    puts "Got #{reminders.length} to send"
+    reminders.each { | reminder|
+      msg = gateway.send_message(reminder[:to], reminder[:message], Message::TYPE_REMINDER, reminder[:subscription].subscriber, reminder[:subscription].show)
+      puts ">> Sent msg to #{reminder[:to]} - ID: #{msg.external_id}"
+    }
+    puts "Finished sending messages"
+  end
+
   def get_reminders (duration=5, from=Time.now)
     shows = get_shows_starting_in_duration(duration,from)
     reminders = []
@@ -125,7 +140,8 @@ module SchedulerHelper
       reminders.concat(subscriptions.collect { |sub|
         {
             :to => sub.subscriber.phone_number,
-            :message => "Your show #{sub.show.name} starts in 5 min"
+            :subscription => sub,
+            :message => sub.show.description.nil? ? "Your show #{sub.show.name} starts in 5 min." : "Your show #{sub.show.name} starts in 5 min. #{sub.show.description}"
         }
       })
     }

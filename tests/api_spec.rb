@@ -37,12 +37,6 @@ describe 'The Tivi App' do
       description: "Follow the campus students"
   }
 
-  sms_response = {
-      :payload => {
-          :success => "true"
-      }
-  }
-
   def app
     ApiApplication
   end
