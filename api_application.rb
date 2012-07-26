@@ -92,6 +92,7 @@ class ApiApplication < Sinatra::Base
   end
 
   get "/sms_gateway" do
+    puts ">> Production #{production?} / Development #{development?} / Test #{test?}"
     sms = settings.gateway.receive_notification(params)
     if !sms.nil?
       if !is_stop_message(sms.msg) and is_subscription(sms.msg) then

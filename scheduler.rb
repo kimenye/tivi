@@ -127,7 +127,7 @@ module SchedulerHelper
   end
 
   def process_reminders (gateway,real,duration=5,from=Time.now)
-    puts "Polling reminders for #{duration} from @ #{from}"
+    puts "Polling reminders for #{duration} from @ #{round_down(from)}"
     reminders = get_reminders(duration,from)
     puts "Got #{reminders.length} to send"
     reminders.each { | reminder|
