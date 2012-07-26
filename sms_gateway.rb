@@ -23,6 +23,7 @@ class RoamTechGateway
 
   def send_message(recipient,msg,type=Message::TYPE_REMINDER,subscriber=nil, show=nil, real=false)
     send_url = "#{URL}username=#{@user_name}&password=#{@password}&sender=#{@sender}&msg=#{CGI::escape(msg)}&recipient=#{recipient}&type=0"
+    puts ">> Called send message #{recipient}, #{msg}, #{real}"
     if real
       data = nil
       response_code = nil
