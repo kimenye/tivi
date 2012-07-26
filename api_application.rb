@@ -90,8 +90,6 @@ class ApiApplication < Sinatra::Base
   end
 
   get "/sms_gateway" do
-
-    #SMSLog.create
     from = params[:message_source]
     msg = params[:message_text]
     id = params[:trxID]

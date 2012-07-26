@@ -103,4 +103,44 @@ class AfricasTalkingGateway
       SMSMessage.new msg["id"], msg["text"], msg["from"] , msg["to"], msg["date"]
     }
   end
+
+  #def fetch_messages (service, last_received_message_id=get_latest_received_message_id)
+  #  msgs = service.fetch_messages(last_received_message_id).reject! { |msg|
+  #    msg.text.downcase.match(/tivi/).nil? or !SMSLog.find_by_external_id(msg.id.to_i).nil?
+  #  }
+  #end
+
+  #def poll_subscribers (service)
+  #  messages = fetch_messages(service)
+  #  subscriptions = messages.collect { |message|
+  #    sub = create_subscription(message)
+  #  }
+  #  subscriptions.reject { |sub| sub.nil? }.length
+  #end
+
+  #def send_reminders(api,duration=5,from=Time.now)
+  #  reminders = get_reminders(duration, from)
+  #  status_messages = []
+  #  if production?
+  #    status_messages = reminders.each { |reminder|
+  #      api.send_message(reminder[:to], reminder[:message])
+  #    }
+  #  else
+  #    status_messages = reminders.collect { |reminder|
+  #      MessageStatusReport.new({
+  #                                  :SMSMessageData => {
+  #                                      :Message => "Sent to 1\/1 Total Cost: KES 1.50",
+  #                                      :Recipients => [
+  #                                          {
+  #                                              :number => reminder[:to],
+  #                                              :status => "Success",
+  #                                              :cost => "KES 1.50"
+  #                                          }
+  #                                      ]
+  #                                  }
+  #                              }.to_json)
+  #    }
+  #  end
+  #  status_messages
+  #end
 end

@@ -56,6 +56,11 @@ describe 'The Scheduler Helper various functions' do
   #    messages = helpers.fetch_messages(api)
   #    messages.empty?.should be_true or messages.detect { |msg| msg.id.to_i == 411 }.should be_nil
   #  end
+
+     #it "should send sms reminders to the subscribers" do
+     #  messages = helpers.send_reminders(api, 5, helpers.today_at_time(9,55))
+     #  messages.length.should eq(1)
+     #end
   end
 end
 

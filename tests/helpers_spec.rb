@@ -17,8 +17,6 @@ describe 'Sinatra helpers' do
 
   let(:service) { GCal4Ruby::Service.new }
 
-  let(:api) { AfricasTalkingGateway.new("kimenye", "4f116c64a3087ae6d302b6961279fa46c7e1f2640a5a14a040d1303b2d98e560") }
-
   before(:all) do
     common_setup
 
@@ -47,24 +45,6 @@ describe 'Sinatra helpers' do
     SMSLog.delete_all
   end
 
-  it "should return only the sms that match the TIVI filter" do
-    messages = helpers.fetch_messages(api)
-    messages.should_not be_nil
-
-    msg = messages.first
-    if !msg.nil?
-      msg.text.downcase.match(/tivi/).should_not be_nil
-    end
-  end
-
-  it "should return only the sms that have not been already saved" do
-    SMSLog.delete_all
-    SMSLog.create(:external_id => 411)
-
-    messages = helpers.fetch_messages(api)
-    messages.empty?.should be_true or messages.detect { |msg| msg.id.to_i == 411 }.should be_nil
-  end
-
   it "should return all the shows in the day" do
     test = Channel.find_by_code!('Tst')
     shows = helpers.sync_shows(service, test.calendar_id)
@@ -79,7 +59,7 @@ describe 'Sinatra helpers' do
   it "should create an active subscription if it does not already exist" do
     mach = Show.create(:name => "Machachari")
 
-    sms = SMSMessage.new("390","TIVI Machachari", "+254d705866564", "5259", "2012-07-18 07:49:01")
+    sms = SMSLog.create!(:from => "+254d705866564", :msg => "TIVI Machachari", :external_id => "390")
     subscription = helpers.create_subscription(sms)
     subscription.should_not be_nil
     subscription.show.id.should eq(mach.id)
@@ -94,7 +74,8 @@ describe 'Sinatra helpers' do
 
     num_subscriptions = Subscription.count
 
-    sub = helpers.create_subscription(SMSMessage.new("390", "TIVI BLAHBLAH", "+254705866564", "5259", "2012-07-18 07:49:01"))
+    sms = SMSLog.create!(:from => "+254705866564", :msg => "TIVI BLAHBLAH", :external_id => "390")
+    sub = helpers.create_subscription(sms)
     sub.should be_nil
     Subscription.count.should eq(num_subscriptions)
   end
@@ -123,11 +104,6 @@ describe 'Sinatra helpers' do
   it "should return a reminder for a show starting in 5 minutes" do
     reminders = helpers.get_reminders(5, helpers.today_at_time(9,55))
     reminders.length.should eq(1)
-  end
-
-  it "should send sms reminders to the subscribers" do
-    messages = helpers.send_reminders(api, 5, helpers.today_at_time(9,55))
-    messages.length.should eq(1)
   end
 
   it "should return the scheduled shows for only the specified day and channel" do
