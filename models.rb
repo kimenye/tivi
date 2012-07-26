@@ -47,6 +47,21 @@ class SMSLog
   key :date, Time, :default => Time.now
 end
 
+class Message
+  include MongoMapper::Document
+
+  TYPE_REMINDER = "REMINDER"
+  TYPE_ACKNOWLEDGEMENT = "ACKNOWLEDGEMENT"
+
+  key :external_id, Integer
+  key :message_text, String
+  key :type, String, :in => [TYPE_REMINDER,TYPE_ACKNOWLEDGEMENT]
+  key :sent, Time, :default => Time.now
+  belongs_to :subscriber
+  belongs_to :show
+
+end
+
 class Subscriber
   include MongoMapper::Document
 
