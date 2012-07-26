@@ -24,7 +24,6 @@ class RoamTechGateway
   def send_message(recipient,msg,type=Message::TYPE_REMINDER,subscription=nil, show=nil)
     send_url = "#{URL}username=#{@user_name}&password=#{@password}&sender=#{@sender}&msg=#{CGI::escape(msg)}&recipient=#{recipient}&type=0"
     if production?
-
       data = nil
       response_code = nil
 
@@ -42,8 +41,8 @@ class RoamTechGateway
         return Message.create!(:external_id => id.to_id, :message_text => msg, :type => type, :subscription => subscription, :show => show)
       end
     else
-      Message.create!(:external_id => process_response("DN1701 | 870851").to_i, :message_text => msg, :type => type)
-      return send_url
+      msg = Message.create!(:external_id => process_response("DN1701 | 870851").to_i, :message_text => msg, :type => type)
+      return msg
     end
   end
 

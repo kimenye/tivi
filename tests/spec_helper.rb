@@ -35,4 +35,8 @@ module TestHelpers
   def get_test_channel
     Channel.find_by_code!('Tst')
   end
+
+  def reset_app
+    get "/reset?username=#{CGI::escape("guide@tivi.co.ke")}&password=#{CGI::escape("sproutt1v!")}&create=true"
+  end
 end

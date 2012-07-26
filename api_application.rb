@@ -31,7 +31,9 @@ module Sinatra
   end
 end
 
-
+class ReminderProcessor
+  include SchedulerHelper
+end
 
 class ApiApplication < Sinatra::Base
   include Sinatra::Rabbit
@@ -48,6 +50,7 @@ class ApiApplication < Sinatra::Base
     set :public_folder, Proc.new { File.join(root, "static") }
 
     set :gateway, RoamTechGateway.new
+    set :processor, ReminderProcessor.new
 
     if ENV['MONGOHQ_URL']
       uri = URI.parse(ENV['MONGOHQ_URL'])
@@ -60,15 +63,14 @@ class ApiApplication < Sinatra::Base
     enable :sessions
 
     if production?
-      #scheduler = Rufus::Scheduler.start_new
-      #gateway = AfricasTalkingGateway.new("kimenye", "4f116c64a3087ae6d302b6961279fa46c7e1f2640a5a14a040d1303b2d98e560")
-      #schedule = Scheduler.new
-      #
-      #scheduler.every '10m' do
-      #  puts "Polling subscribers @ #{Time.now}"
-      #  num_subscriptions = schedule.poll_subscribers gateway
-      #  puts "Created #{num_subscriptions}"
-      #end
+      scheduler = Rufus::Scheduler.start_new
+      set :scheduler, scheduler
+
+      scheduler.every '5m' do
+        puts "Polling reminders @ #{Time.now}"
+        reminders = settings.processor.get_reminders
+        puts "Got #{reminders.length}"
+      end
     end
   end
 
@@ -92,7 +94,17 @@ class ApiApplication < Sinatra::Base
   end
 
   get "/sms_gateway" do
-    settings.gateway.receive_notification(params)
+    sms = settings.gateway.receive_notification(params)
+    if !sms.nil?
+      if !is_stop_message(sms.msg) and is_subscription(sms.msg) then
+        subscription = create_subscription(sms)
+        if !subscription.nil? and subscription.active == true then
+          msg = "Thank you for your subscription. Reminders will be billed at 5KSH each. STOP 'STOP' to quit subscription"
+          settings.gateway.send_message(subscription.subscriber.phone_number, msg, Message::TYPE_ACKNOWLEDGEMENT, subscription, subscription.show)
+        end
+      end
+    end
+
     status 200
     body({ success: true}.to_json)
   end
@@ -128,6 +140,7 @@ class ApiApplication < Sinatra::Base
           Show.delete_all
           Channel.delete_all
           SMSLog.delete_all
+          Message.delete_all
 
           if create == "true"
             ktn = Channel.create(:code => "KTN", :name => "Kenya Television Network", :calendar_id => "tivi.co.ke_1aku43rv679bbnj9r02coema98@group.calendar.google.com")

@@ -43,6 +43,14 @@ module SchedulerHelper
     Schedule.first(:show_id => show.id, :start_time => { '$gte' => Time.now.utc } , :order => :start_time)
   end
 
+  def is_stop_message (text)
+    !text.downcase.match(/stop/).nil?
+  end
+
+  def is_subscription (text)
+    !text.downcase.match(/tivi/).nil?
+  end
+
   def sync_shows (service, calendar, day=Time.now)
     start_of_day = _get_start_of_day(day)
     end_of_day = _get_end_of_day(day)
@@ -57,7 +65,8 @@ module SchedulerHelper
       {
           :name =>  event.title,
           :start_time => event.start_time,
-          :end_time => event.end_time
+          :end_time => event.end_time,
+          :description => event.content
       }
     }
   end
@@ -92,7 +101,7 @@ module SchedulerHelper
     shows.each{ |_show|
       show = Show.find_by_name_and_channel_id(_show[:name], channel.id)
       if show.nil?
-        show = Show.create(:name => _show[:name], :description => _show[:name], :channel => channel)
+        show = Show.create(:name => _show[:name], :description => _show[:description], :channel => channel)
       end
 
       schedule = Show.find_by_show_id_and_start_time(show.id, _show[:start_time])
@@ -130,6 +139,9 @@ module SchedulerHelper
 
   def create_subscription(sms)
     show_name = _get_show_name_from_text(sms.msg)
+    if (show_name.nil?)
+      return nil
+    end
     subscriber = Subscriber.first_or_create(:phone_number => sms.from)
 
     show = Show.first(:name => {'$regex' => /#{show_name}/i })

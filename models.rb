@@ -24,6 +24,7 @@ class Schedule
 
   key :start_time, Time
   key :end_time, Time
+  key :promo_text, String
   belongs_to :show
 end
 

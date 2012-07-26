@@ -48,7 +48,6 @@ describe 'Gateway methods' do
   it "should send a message to a recipient" do
     id = gateway.send_message("254714423224", "response message")
     id.should_not be_nil
-    id.should eq("http://www.roamtech.com/api/mt/?username=trevor&password=12345&sender=5366&msg=response+message&recipient=254714423224&type=0")
     Message.all.length.should eq(1)
     Message.delete_all
   end

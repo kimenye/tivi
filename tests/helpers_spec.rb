@@ -56,6 +56,17 @@ describe 'Sinatra helpers' do
     helpers._get_show_name_from_text("tiVi Machachari").should eq("machachari")
   end
 
+  it "should identify a stop message correctly" do
+    helpers.is_stop_message("stop").should eq(true)
+    helpers.is_stop_message("STOP").should eq(true)
+    helpers.is_stop_message("Stop sendin this texts").should eq(true)
+  end
+
+  it "should identify a subscription correctly" do
+    helpers.is_subscription("tivi machaachari").should eq(true)
+    helpers.is_subscription("dsfsdfdsf").should eq(false)
+  end
+
   it "should create an active subscription if it does not already exist" do
     mach = Show.create(:name => "Machachari")
 
@@ -171,9 +182,5 @@ describe 'Sinatra helpers' do
     helpers.get_next_time_scheduled(test_show).should be_nil
 
     Schedule.delete_all(:show_id => test_show.id)
-  end
-
-  it "should inform the subscriber on how to opt out" do
-
   end
 end
