@@ -92,7 +92,6 @@ class ApiApplication < Sinatra::Base
   end
 
   get "/sms_gateway" do
-    puts ">> Production #{production?} / Development #{development?} / Test #{test?}"
     sms = settings.gateway.receive_notification(params)
     if !sms.nil?
       if !is_stop_message(sms.msg) and is_subscription(sms.msg) then
@@ -133,7 +132,12 @@ class ApiApplication < Sinatra::Base
 
       control do
         status 200
-        body({ version: "1.0 "}.to_json)
+        body({
+                 :version => "1.0",
+                 :is_production => production?,
+                 :is_test => test?,
+                 :is_development => development?,
+             }.to_json)
       end
     end
   end

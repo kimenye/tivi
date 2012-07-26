@@ -5,7 +5,7 @@ require 'rack/test'
 require 'pry'
 require 'json'
 
-set :environment, :test
+#set :environment, :test
 
 class TestHelper
   include SchedulerHelper
@@ -75,7 +75,13 @@ describe 'The Tivi App' do
   it "returns the correct version of the api" do
     get '/describe'
     last_response.should be_ok
-    last_response.body.should == "{\"version\":\"1.0 \"}"
+    #last_response.body.should == "{\"version\":\"1.0 \"}"
+    last_response.body.should == {
+        :version => "1.0",
+        :is_production => false,
+        :is_test => true,
+        :is_development => false
+    }.to_json
   end
 
   it "creates a tv channel" do
