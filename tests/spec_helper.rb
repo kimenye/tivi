@@ -1,5 +1,6 @@
 require 'rspec-expectations'
 require 'rack/test'
+require 'dm-core'
 require_relative '../models'
 
 module TestHelpers
@@ -20,6 +21,7 @@ module TestHelpers
     Show.delete_all
     Channel.delete_all
     SMSLog.delete_all
+    Message.delete_all
   end
 
   def get_test_subscriber

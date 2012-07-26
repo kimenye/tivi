@@ -8,9 +8,10 @@ require 'mongo_mapper'
 require 'rufus/scheduler'
 require 'gcal4ruby'
 require 'time'
-require_relative 'AfricasTalkingGateway'
+#require_relative 'AfricasTalkingGateway'
 require_relative 'models'
 require_relative 'scheduler'
+require_relative 'sms_gateway'
 
 require 'pry'
 
@@ -46,6 +47,8 @@ class ApiApplication < Sinatra::Base
   configure do
     enable :logging
     set :public_folder, Proc.new { File.join(root, "static") }
+
+    set :gateway, RoamTechGateway.new
 
     if ENV['MONGOHQ_URL']
       uri = URI.parse(ENV['MONGOHQ_URL'])
@@ -90,12 +93,7 @@ class ApiApplication < Sinatra::Base
   end
 
   get "/sms_gateway" do
-    from = params[:message_source]
-    msg = params[:message_text]
-    id = params[:trxID]
-
-    SMSLog.create!(:from => from, :msg => msg, :external_id => id)
-
+    settings.gateway.receive_notification(params)
     status 200
     body({ success: true}.to_json)
   end
