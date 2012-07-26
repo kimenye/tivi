@@ -137,6 +137,15 @@ module SchedulerHelper
     last_sms.nil? ? 410 : last_sms.external_id
   end
 
+  def deactivate_subscriptions(phone_number)
+    subscriber = Subscriber.find_by_phone_number(phone_number)
+    subscriptions = Subscription.find_all_by_subscriber_id_and_active(subscriber.id, true)
+    subscriptions.each { |sub|
+      sub.active = false
+      sub.save!
+    }
+  end
+
   def create_subscription(sms)
     show_name = _get_show_name_from_text(sms.msg)
     if (show_name.nil?)

@@ -34,8 +34,18 @@ describe 'The User Experience' do
     incoming_sms = SMSLog.find_by_external_id!(3434434)
     subscriber = Subscriber.find_by_phone_number!("254705866564")
     subscription = Subscription.find_by_subscriber_id!(subscriber.id)
-    subscription.active.should be(true)
+    subscription.active.should eq(true)
     show = Show.find_by_id!(subscription.show_id)
     ack = Message.find_by_type!(Message::TYPE_ACKNOWLEDGEMENT)
+  end
+
+  it "should stop a subscription when a subscriber sends the stop keyword" do
+    get "/sms_gateway?message_source=#{CGI::escape("254715866564")}&message_text=#{CGI::escape("TIVI 10 AM Show")}&message_destination=5566&trxID=3434435"
+    subscriber = Subscriber.find_by_phone_number!("254715866564")
+    subscription = Subscription.find_by_subscriber_id!(subscriber.id)
+    subscription.active.should eq(true)
+    get "/sms_gateway?message_source=#{CGI::escape("254715866564")}&message_text=#{CGI::escape("STOP")}&message_destination=5566&trxID=3434436"
+    subscription = Subscription.find_by_subscriber_id!(subscriber.id)
+    subscription.active.should eq(false)
   end
 end
