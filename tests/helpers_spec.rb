@@ -37,6 +37,19 @@ describe 'Sinatra helpers' do
     helpers.authenticate("guide@tivi.co.ke", "sproutt1v!").should eq(true)
   end
 
+  it "should round down the last 5 minutes" do
+    now = helpers.today_at_time(17,52)
+
+    best_time = helpers.round_down(now)
+    best_time.min.should eq(50)
+    best_time.sec.should eq(0)
+    best_time.hour.should eq(17)
+
+    now = helpers.today_at_time(17,54)
+    best_time = helpers.round_down(now)
+    best_time.min.should eq(50)
+  end
+
   it "should return 410 as the latest SMS is there is no further sms" do
     SMSLog.delete_all
     helpers.get_latest_received_message_id.should eq(410)

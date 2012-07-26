@@ -33,6 +33,12 @@ module SchedulerHelper
     return start_of_week
   end
 
+  def round_down(time, nearest=5)
+    min = time.min
+    min = min % nearest == 0 ? min : min - (min % nearest)
+    Time.local(time.year, time.month, time.day, time.hour, min, 0)
+  end
+
   def authenticate(username, password)
     return (username == "guide@tivi.co.ke" && password == "sproutt1v!")
   end
@@ -132,7 +138,7 @@ module SchedulerHelper
   end
 
   def get_reminders (duration=5, from=Time.now)
-    shows = get_shows_starting_in_duration(duration,from)
+    shows = get_shows_starting_in_duration(duration,round_down(from))
     reminders = []
     shows.each { |show|
       #find any subscriptions for these shows
