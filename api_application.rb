@@ -44,10 +44,6 @@ class ApiApplication < Sinatra::Base
     register Sinatra::Reloader
   end
 
-  #configure :production do
-  #  require 'newrelic_rpm'
-  #end
-
   configure do
     enable :logging
     set :public_folder, Proc.new { File.join(root, "static") }

@@ -37,6 +37,12 @@ describe 'The Tivi App' do
       description: "Follow the campus students"
   }
 
+  user = {
+      :email => "trevor@kimenye.com",
+      :password => "h3ll0p@ssword",
+      :phone_number => "254705866564"
+  }
+
   def app
     ApiApplication
   end
@@ -274,5 +280,55 @@ describe 'The Tivi App' do
     get "/messages"
     last_response.should be_ok
     last_response.body.should == Message.all.to_json
+  end
+
+  it "should create a user" do
+    Admin.delete_all
+
+    post "/admins", user.to_json
+    last_response.should be_ok
+    created_id = last_response.body
+    Admin.find_by_id!(created_id)
+  end
+
+  it "should return all users" do
+    get "/admins"
+    last_response.should be_ok
+    last_response.body.should == Admin.all.to_json
+  end
+
+  it "should return a user" do
+    admin = Admin.create!(:email => "sdf@email.com", :phone_number => "25476547654ds3", :password => "8373jdddsff")
+    get "/admins/#{admin.id}"
+
+    last_response.should be_ok
+    last_response.body.should == admin.to_json
+  end
+
+  it "should update a user" do
+    admin = Admin.create!(:email => "test@email.com", :phone_number => "254765476543", :password => "8373jdddff")
+
+    updated = {
+        :phone_number => "254876654332",
+        :password => "p@ssw0rd",
+        :email => "me@you.com"
+    }
+
+    patch "/admins/#{admin.id}", updated.to_json
+    last_response.should be_ok
+    admin = Admin.find_by_id(admin.id)
+
+    admin.phone_number.should == "254876654332"
+    admin.password.should == "p@ssw0rd"
+    admin.email.should == "me@you.com"
+  end
+
+  it "should delete a user" do
+    admin = Admin.create!(:email => "sdf@emajjil.com", :phone_number => "25476547654ds3", :password => "8373jdddsff")
+    delete "/admins/#{admin.id}"
+
+    last_response.should be_ok
+    admin = Admin.find_by_id(admin.id)
+    admin.should be_nil?
   end
 end
