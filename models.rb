@@ -68,3 +68,11 @@ class Subscriber
 
   key :phone_number, String
 end
+
+class Admin
+  include MongoMapper::Document
+
+  key :email, String
+  key :password, String
+  key :phone_number, String
+end
