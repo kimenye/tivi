@@ -593,7 +593,7 @@ class ApiApplication < Sinatra::Base
       control do
         admins = Admin.all
         status 200
-        body(admin.to_json)
+        body(admins.to_json)
       end
     end
     
@@ -657,6 +657,85 @@ class ApiApplication < Sinatra::Base
           admin.save!
           status 200
           body(admin.id.to_s)
+        end
+      end
+    end
+  end
+  
+  collection :messages do
+    description "API operations for managing messages"
+
+    operation :index do
+      description "Return all messages"
+      control do
+        messages = Message.all
+        status 200
+        body(mesages.to_json)
+      end
+    end
+    
+    operation :show do
+      description "Get a specific message"
+      
+      param :id, :string, :required
+      control do
+        message = Message.find_by_id(params[:id])
+        if message.nil?
+          status 404
+        else
+          status 200
+          body(message.to_json)
+        end
+      end
+    end
+    
+    operation :destroy do
+      description "Delete a specific message"
+      
+      param :id, :string, :required
+      control do
+        Message.delete([ params[:id] ])
+        body(params[:id])
+      end
+    end
+    
+    operation :create do
+      description "Create a message"
+      
+      control do
+        data = JSON.parse(request.body.string)
+        if data.nil? or !data.has_key?('external_id') or !data.has_key?('message_text') or !data.has_key?('type') or !data.has_key?('sent')
+          status 400
+          body({error: "Invalid data"}.to_json)
+        else
+          message = Message.new
+          message.external_id = data['external_id']
+          message.message_text = data['message_text']
+          message.type = data['type']
+          message.sent = data['sent']
+          message.save!
+          status 200
+          body(message.id.to_s)
+        end
+      end
+    end
+    
+    operation :update do
+      description "Update an existing message"
+      
+      control do
+        message = Message.find(params[:id])
+        data = JSON.parse(request.body.string)
+        if data.nil? or !data.has_key?('external_id') or !data.has_key?('message_text') or !data.has_key?('type') or !data.has_key?('sent')
+          status 404
+        else
+          message.external_id = data['external_id']
+          message.message_text = data['message_text']
+          message.type = data['type']
+          message.sent = data['sent']
+          message.save!
+          status 200
+          body(message.id.to_s)
         end
       end
     end
