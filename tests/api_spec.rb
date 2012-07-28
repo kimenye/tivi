@@ -81,7 +81,6 @@ describe 'The Tivi App' do
   it "returns the correct version of the api" do
     get '/describe'
     last_response.should be_ok
-    #last_response.body.should == "{\"version\":\"1.0 \"}"
     last_response.body.should == {
         :version => "1.0",
         :is_production => false,
@@ -329,6 +328,115 @@ describe 'The Tivi App' do
 
     last_response.should be_ok
     admin = Admin.find_by_id(admin.id)
-    admin.should be_nil?
+    admin.should be_nil
+  end
+  
+  it "returns subscriptions" do
+    get '/subscriptions'
+    subscriptions = Subscription.all
+    last_response.should be_ok
+    last_response.body.should == subscriptions.to_json
+  end
+  
+  it "returns a subscription" do
+    subscription = Subscription.first()
+    if !subscription.nil?
+      get "/subscriptions/#{subscription.id}"
+      last_response.should be_ok
+      last_response.body.should == subscription.to_json
+    end
+  end
+
+  it "does not return a subscription when there is no id" do
+    get "/subscriptions/"
+    last_response.should_not be_ok
+  end
+  
+  it "deletes a subscription" do
+    Subscription.delete_all
+    s = Subscription.new
+    s.show_name = "News"
+    s.active = true
+    s.cancelled = true
+    s.save!
+
+    to_delete_id = s.id
+    delete "/subscriptions/#{to_delete_id.to_s}"
+
+    last_response.should be_ok
+    s = Subscription.find_by_id(s.id)
+    s.should be_nil
+  end
+  
+  it "returns subscribers" do
+    get '/subscribers'
+    subscribers = Subscriber.all
+    last_response.should be_ok
+    last_response.body.should == subscribers.to_json
+  end
+  
+  it "returns a subscriber" do
+    subscriber = Subscriber.first()
+    if !subscriber.nil?
+      get "/subscribers/#{subscriber.id}"
+      last_response.should be_ok
+      last_response.body.should == subscriber.to_json
+    end
+  end
+
+  it "does not return a subscriber when there is no id" do
+    get "/subscribers/"
+    last_response.should_not be_ok
+  end
+  
+  it "deletes a subscriber" do
+    Subscriber.delete_all
+    s = Subscriber.new
+    s.phone_number = "254722123456"
+    s.save!
+
+    to_delete_id = s.id
+    delete "/subscribers/#{to_delete_id.to_s}"
+
+    last_response.should be_ok
+    s = Subscriber.find_by_id(s.id)
+    s.should be_nil
+  end
+  
+  it "returns sms logs" do
+    get '/sms'
+    sms = SMSLog.all
+    last_response.should be_ok
+    last_response.body.should == sms.to_json
+  end
+  
+  it "returns a sms" do
+    sms = SMSLog.first()
+    if !sms.nil?
+      get "/sms/#{sms.id}"
+      last_response.should be_ok
+      last_response.body.should == sms.to_json
+    end
+  end
+
+  it "does not return an sms log when there is no id" do
+    get "/sms/"
+    last_response.should_not be_ok
+  end
+  
+  it "deletes an sms log" do
+    SMSLog.delete_all
+    s = SMSLog.new
+    s.external_id = "01"
+    s.from = "JD"
+    s.msg = "lorem ipsum"
+    s.save!
+
+    to_delete_id = s.id
+    delete "/sms/#{to_delete_id.to_s}"
+
+    last_response.should be_ok
+    s = SMSLog.find_by_id(s.id)
+    s.should be_nil
   end
 end

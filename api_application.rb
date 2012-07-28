@@ -603,6 +603,84 @@ class ApiApplication < Sinatra::Base
       end
     end
   end
+  
+  collection :admins do
+    description "API operations for managing admins"
+
+    operation :index do
+      description "Return all admins"
+      control do
+        admins = Admin.all
+        status 200
+        body(admins.to_json)
+      end
+    end
+    
+    operation :show do
+      description "Get a specific admin"
+      
+      param :id, :string, :required
+      control do
+        admin = Admin.find_by_id(params[:id])
+        if admin.nil?
+          status 404
+        else
+          status 200
+          body(admin.to_json)
+        end
+      end
+    end
+    
+    operation :destroy do
+      description "Delete a specific admin"
+      
+      param :id, :string, :required
+      control do
+        Admin.delete([ params[:id] ])
+        body(params[:id])
+      end
+    end
+    
+    operation :create do
+      description "Create an admin"
+      
+      control do
+        data = JSON.parse(request.body.string)
+        if data.nil? or !data.has_key?('email') or !data.has_key?('password') or !data.has_key?('phone_number')
+          status 400
+          body({error: "Invalid data"}.to_json)
+        else
+          admin = Admin.new
+          admin.email = data['email']
+          admin.password = data['password']
+          admin.phone_number = data['phone_number']
+          admin.save!
+          status 200
+          body(admin.id.to_s)
+        end
+      end
+    end
+    
+    operation :update do
+      description "Update an existing admin"
+      
+      control do
+        admin = Admin.find(params[:id])
+        data = JSON.parse(request.body.string)
+        if data.nil? or !data.has_key?('email') or !data.has_key?('password') or !data.has_key?('phone_number')
+          status 404
+        else
+          admin.email = data['email']
+          admin.password = data['password']
+          admin.phone_number = data['phone_number']
+          admin.save!
+          status 200
+          body(admin.id.to_s)
+        end
+      end
+    end
+  end
+
 
   # start the server if ruby file executed directly
   #run! if app_file == $0
