@@ -81,6 +81,7 @@ GEM
       activesupport (~> 3.0)
       plucky (~> 0.4.0)
     multi_json (1.0.4)
+    newrelic_rpm (3.4.1)
     plucky (0.4.4)
       mongo (~> 1.5)
     pry (0.9.10)
@@ -137,6 +138,7 @@ DEPENDENCIES
   json
   mongo
   mongo_mapper
+  newrelic_rpm
   pry
   pry-nav
   rack-test!

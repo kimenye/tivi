@@ -11,7 +11,7 @@ require 'time'
 require_relative 'models'
 require_relative 'scheduler'
 require_relative 'sms_gateway'
-
+require 'newrelic_rpm' if production?
 require 'pry'
 
 module Sinatra
@@ -44,6 +44,9 @@ class ApiApplication < Sinatra::Base
     register Sinatra::Reloader
   end
 
+  #configure :production do
+  #  require 'newrelic_rpm'
+  #end
 
   configure do
     enable :logging
