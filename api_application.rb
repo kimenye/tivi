@@ -165,7 +165,9 @@ class ApiApplication < Sinatra::Base
           Message.delete_all
 
           if create == "true"
-            ktn = Channel.create(:code => "KTN", :name => "Kenya Television Network", :calendar_id => "tivi.co.ke_1aku43rv679bbnj9r02coema98@group.calendar.google.com")
+            ktn = Channel.create!(:code => "KTN", :name => "Kenya Television Network", :calendar_id => "tivi.co.ke_1aku43rv679bbnj9r02coema98@group.calendar.google.com")
+            ntv = Channel.create!(:code => "NTV", :name => "Nation Television Network", :calendar_id => "guide@tivi.co.ke")
+            ctz = Channel.create!(:code => "CTZ", :name => "Citizen TV", :calendar_id => "tivi.co.ke_m6htn7v99d9vfsp874cm4g6bi0@group.calendar.google.com")
           end
 
           body({:success => true }.to_json)

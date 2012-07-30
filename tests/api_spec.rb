@@ -76,6 +76,9 @@ describe 'The Tivi App' do
     last_response.body.should == { :success => true}.to_json
 
     Channel.empty?.should be_false
+    Channel.find_by_code!("KTN")
+    Channel.find_by_code!("NTV")
+    Channel.find_by_code!("CTZ")
   end
 
   it "returns the correct version of the api" do
