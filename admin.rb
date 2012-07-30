@@ -2,6 +2,7 @@ require 'rubygems'
 require 'sinatra'
 require 'pry'
 require_relative 'api_application'
+require 'sinatra/reloader' if development? or test?
 
 class AdminApp < Sinatra::Base
 
@@ -30,6 +31,12 @@ class AdminApp < Sinatra::Base
     protected!
     channel = Channel.find_by_id(params[:id])
     haml :"admin/channel", :layout => :guide, :locals => { :channel => channel }
+  end
+
+  get '/subscription' do
+    protected!
+    subscriptions = Subscription.all
+    haml :"admin/subscription", :layout => :admin, :locals => { :subscriptions => subscriptions }
   end
 
 end
