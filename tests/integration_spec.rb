@@ -37,6 +37,7 @@ describe 'The User Experience' do
     subscription.active.should eq(true)
     show = Show.find_by_id!(subscription.show_id)
     ack = Message.find_by_type!(Message::TYPE_ACKNOWLEDGEMENT)
+    ack.message_text.should eq("Thank you for your subscription. Reminders will be billed at 5KSH each. Sms 'STOP' to quit subscription")
   end
 
   it "should stop a subscription when a subscriber sends the stop keyword" do

@@ -98,7 +98,7 @@ class ApiApplication < Sinatra::Base
       if !is_stop_message(sms.msg) and is_subscription(sms.msg) then
         subscription = create_subscription(sms)
         if !subscription.nil? and subscription.active == true then
-          msg = "Thank you for your subscription. Reminders will be billed at 5KSH each. STOP 'STOP' to quit subscription"
+          msg = "Thank you for your subscription. Reminders will be billed at 5KSH each. Sms 'STOP' to quit subscription"
           settings.gateway.send_message(subscription.subscriber.phone_number, msg, Message::TYPE_ACKNOWLEDGEMENT, subscription, subscription.show, settings.is_prod)
         end
       elsif is_stop_message(sms.msg) then
