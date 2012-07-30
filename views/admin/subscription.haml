@@ -1,0 +1,27 @@
+.container#subscriptions-div
+  .row
+    .span3
+      %h1 Subscriptions
+    .span9.container
+      %table.table.table-bordered
+        %thead
+          %th
+            Date
+          %th
+            Show
+          %th
+            Phone Number
+          %th
+            Status
+        %tbody
+        - subscriptions.each do |sub|
+          %tr
+            %td
+              = sub.from
+            %td
+              = sub.show.name
+            %td
+              = sub.subscriber.phone_number
+            %td
+              = sub.active == true ? "Active" : "In-active"
+
