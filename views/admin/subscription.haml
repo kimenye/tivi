@@ -19,7 +19,7 @@
             %td
               = sub.from
             %td
-              = sub.show.name
+              = sub.show.nil? ? sub.show_name : sub.show.name
             %td
               = sub.subscriber.phone_number
             %td
