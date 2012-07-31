@@ -8,6 +8,11 @@ class Channel
   key :calendar_id, String
   key :created_at, Time, :default => Time.now
   many :shows
+
+  def safe_delete
+    Show.find_all_by_channel_id(id).each { |s| s.safe_delete }
+    destroy
+  end
 end
 
 class Show
@@ -17,6 +22,11 @@ class Show
   key :description, String
   key :created_at, Time, :default => Time.now
   belongs_to :channel
+
+  def safe_delete
+    Schedule.find_all_by_show_id(id).each { |s| s.destroy }
+    destroy
+  end
 end
 
 class Schedule

@@ -482,10 +482,8 @@ class ApiApplication < Sinatra::Base
       description "Delete a specific channel"
       param :id, :string, :required
       control do
-        channel_id = params[:id]
-        shows = Show.find_all_by_channel_id(channel_id).collect { |c| c.id }
-        Show.delete(shows)
-        Channel.delete([ params[:id] ])
+        channel = Channel.find(params[:id] )
+        channel.safe_delete
         body(params[:id])
       end
     end
@@ -558,7 +556,8 @@ class ApiApplication < Sinatra::Base
       description "Delete a specific show"
       param :id, :string, :required
       control do
-        Show.delete([ params[:id] ])
+        show = Show.find(params[:id])
+        show.safe_delete
         body(params[:id])
       end
     end

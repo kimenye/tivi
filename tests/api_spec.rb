@@ -114,15 +114,18 @@ describe 'The Tivi App' do
     c.should be_nil
   end
 
-  it "when a channel is deleted the shows for that channel are also deleted" do
-    Channel.delete_all
+  it "when a channel is deleted the shows and schedules for that channel are also deleted" do
+    Schedule.delete_all
     Show.delete_all
+    Channel.delete_all
 
     c = create_a_test_channel
     s = Show.create(:name => "A test channel", :description => "Test Desc", :channel => c)
+    sch = Schedule.create(:start_time => Time.now, :show => s, :end_time => Time.now, :promo_text => "Nothing")
 
     delete "/channels/#{c.id.to_s}"
     Show.all.length.should == 0
+    Schedule.all.length.should == 0
   end
 
   it "updates a tv channel" do
