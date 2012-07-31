@@ -65,8 +65,21 @@ class ApiApplication < Sinatra::Base
       scheduler = Rufus::Scheduler.start_new
       set :scheduler, scheduler
       set :is_prod, true
-      scheduler.every '5m' do
+      schedule '5m' do
         settings.processor.process_reminders(settings.gateway, true)
+      end
+
+      timer = Rufus::Scheduler.start_new
+      timer.cron '55 23 * * *' do
+        next_day = settings.processor.tomorrow
+        service = GCal4Ruby::Service.new
+        service.authenticate "guide@tivi.co.ke", "sproutt1v!"
+
+        Channels.all.each  { |channel|
+          puts ">>> Preparing schedule for #{channel.code}"
+          settings.processor.create_schedule(service,channel,false,next_day)
+          settings.gateway.send_message("254705866564", "Synced channel #{channel.code}", Message::TYPE_SERVICE)
+        }
       end
     else
       set :is_prod, false
@@ -90,6 +103,29 @@ class ApiApplication < Sinatra::Base
 
     status 200
     body({ success: true}.to_json)
+  end
+
+  post '/shows/subscribers/:id' do
+    show_id = params[:id]
+    show = Show.find(show_id)
+    data = JSON.parse(request.body.string)
+
+    if !show.nil? and data.has_key?("phone_number")
+
+      sub = Subscriber.find_or_create_by_phone_number(data["phone_number"])
+      subscription = Subscription.find_by_show_id_and_subscriber_id(show.id,sub.id)
+
+      if subscription.nil?
+        Subscription.create(:show => show, :subscriber => sub, :active => true)
+      end
+
+      status 200
+      body({:success => true}.to_json)
+    else
+      status 500
+      body({:success => false}.to_json)
+    end
+
   end
 
   get "/sms_gateway" do
@@ -603,6 +639,21 @@ class ApiApplication < Sinatra::Base
           show.save!
           status 200
           body(show.id.to_s)
+        end
+      end
+    end
+
+    collection :subscribers do
+
+      operation :show do
+        description "The subscribers that have subscribed to this show"
+
+        control do
+          subs = Subscription.find_all_by_show_id(params[:id])
+          subscribers = subs.collect { |sub| sub.subscriber }
+
+          status 200
+          body(subscribers.to_json)
         end
       end
     end

@@ -199,6 +199,23 @@ describe 'The Tivi App' do
     end
   end
 
+  it "Can subscribe to a tv show directly" do
+    Subscriber.delete_all
+    Subscription.delete_all
+    show = create_a_test_show
+    post "/shows/subscribers/#{show.id}", { :phone_number => "254705866564" }.to_json
+    last_response.should be_ok
+    last_response.body.should == { :success => true}.to_json
+    Subscriber.all.length.should == 1
+    s = Subscriber.first
+    s.phone_number.should == "254705866564"
+    Subscription.all.length.should == 1
+
+    get "/shows/subscribers/#{show.id}"
+    last_response.should be_ok
+    last_response.body.should == Subscriber.all.to_json
+  end
+
   it "deletes a tv show" do
     first_or_ktn = Channel.first_or_create(ktn)
     briefcase_inc_with_channel = briefcase_inc.update({ channel: first_or_ktn.id.to_s })

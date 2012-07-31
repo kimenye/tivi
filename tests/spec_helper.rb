@@ -36,6 +36,10 @@ module TestHelpers
     Channel.find_or_create_by_code_and_name_and_calendar_id("TC","Test Channel", "fsddsf")
   end
 
+  def create_a_test_show
+    Show.find_or_create_by_name_and_description("Test", "Test Description")
+  end
+
   def get_test_channel
     Channel.find_by_code!('Tst')
   end

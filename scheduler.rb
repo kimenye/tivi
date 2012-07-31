@@ -14,6 +14,11 @@ module SchedulerHelper
     return Time.local(today.year, today.month, today.day, hour, min, 0)
   end
 
+  def tomorrow(time=Time.now)
+    today = _get_start_of_day(time)
+    return today + (24 * 3600)
+  end
+
   def _get_end_of_day(time)
     Time.local(time.year, time.month, time.day, 23,59,59)
   end
@@ -101,11 +106,11 @@ module SchedulerHelper
     Schedule.create!(:start_time => today_at_time(10,30), :end_time => today_at_time(11,00), :show => ten_thirty_show)
   end
 
-  def create_schedule(service, channel, weekly=false)
+  def create_schedule(service, channel, weekly=false, from=Time.now)
     if weekly
       shows = sync_shows_for_week(service, channel.calendar_id)
     else
-      shows = sync_shows(service, channel.calendar_id)
+      shows = sync_shows(service, channel.calendar_id, from)
     end
 
     shows.each{ |_show|

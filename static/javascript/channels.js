@@ -129,6 +129,19 @@ $(document).ready(function() {
             $('#show-edit-modal').modal('show');
         };
 
+        self.subscribeToShow = function(show) {
+            bootbox.prompt("Enter the subscription phone number:", function(result) {
+
+                if (result != null && result.length > 0) {
+                    var _str = JSON.stringify({phone_number: result});
+                    $.post('/api/shows/subscribers/' +show.id, _str,
+                        function(data) {
+                            bootbox.alert("Successfully subscribed " + result + " to " + show.name());
+                        });
+                }
+            });
+        };
+
         self.buttonState = ko.computed(function() {
             if (self.id() == null)
                 return "Create";
@@ -227,7 +240,7 @@ $(document).ready(function() {
                         url: "/api/reset?username=guide@tivi.co.ke&password=sproutt1v!&create=true",
                         success: function(data) {
                             self.loadChannels();
-                            self.showMsg("Reset the application");
+                            bootbox.alert("Reset the application");
                         }
                     });
                 }

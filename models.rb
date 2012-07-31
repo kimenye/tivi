@@ -63,10 +63,11 @@ class Message
 
   TYPE_REMINDER = "REMINDER"
   TYPE_ACKNOWLEDGEMENT = "ACKNOWLEDGEMENT"
+  TYPE_SERVICE = "SERVICE"
 
   key :external_id, Integer
   key :message_text, String
-  key :type, String, :in => [TYPE_REMINDER,TYPE_ACKNOWLEDGEMENT]
+  key :type, String, :in => [TYPE_REMINDER,TYPE_ACKNOWLEDGEMENT,TYPE_SERVICE]
   key :sent, Time, :default => Time.now
   belongs_to :subscriber
   belongs_to :show

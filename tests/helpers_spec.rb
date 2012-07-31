@@ -162,6 +162,17 @@ describe 'Sinatra helpers' do
     helpers._get_start_of_the_week(next_sunday).should eq(next_sunday)
   end
 
+  it "should get the right date of the next day" do
+    now = Time.local(2012,7,15,0,0,0)
+    tomorrow = helpers.tomorrow(now)
+    tomorrow.day.should eq(16)
+
+    end_of_month = Time.local(2012,2,29,0,0,0)
+    next_month = helpers.tomorrow(end_of_month)
+    next_month.day.should eq(1)
+    next_month.month.should eq(3)
+  end
+
   it "should sync shows for a whole week from the start of the week" do
     Schedule.delete_all
 
