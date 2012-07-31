@@ -57,7 +57,12 @@ describe 'Gateway methods' do
     rsp.should eq("870851")
   end
 
-  #it "should send a real text" do
-  #  id = gateway.send_message("254705866564", "This is a test message",Message::TYPE_ACKNOWLEDGEMENT,nil,nil,true)
-  #end
+  it "should not send an SMS that is longer than 160 characters" do
+    Message.delete_all
+    msg = "This is a really long message that should be longer than one hundred and sixty characters. This is a really long message that should be longer than one hundred and"
+    msg.length.should eq(163)
+    id = gateway.send_message("254711098765", msg)
+    msg = Message.first
+    msg.message_text.length.should eq(160)
+  end
 end
