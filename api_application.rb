@@ -482,6 +482,9 @@ class ApiApplication < Sinatra::Base
       description "Delete a specific channel"
       param :id, :string, :required
       control do
+        channel_id = params[:id]
+        shows = Show.find_all_by_channel_id(channel_id).collect { |c| c.id }
+        Show.delete(shows)
         Channel.delete([ params[:id] ])
         body(params[:id])
       end

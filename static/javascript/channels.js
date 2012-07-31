@@ -83,6 +83,36 @@ $(document).ready(function() {
             $('#channel-edit-modal').modal('show');
         };
 
+        self.delete = function(channel) {
+            bootbox.confirm("You will lose the currently saved shows and schedule data. Are you sure you want to delete " + channel.code() + "?", function(result) {
+                if (result) {
+                    $.ajax({
+                        type : "DELETE",
+                        url : "/api/channels/" + channel.id,
+                        success: function(data) {
+                            bootbox.alert("Successfully deleted " + channel.code());
+                            self.loadChannels();
+                        }
+                    });
+                }
+            });
+        };
+
+        self.deleteShow = function(show) {
+            bootbox.confirm("You will lose the currently saved subscriptions for this show. Are you sure you want to delete " + show.name() + "?", function(result) {
+               if (result) {
+                   $.ajax({
+                       type: "DELETE",
+                       url: "/api/shows/"+ show.id,
+                       success: function(data) {
+                           bootbox.alert("Successfully deleted " + show.name());
+                           self.selectChannel(self.channel());
+                       }
+                   });
+               }
+            });
+        }
+
         self.newShow = function() {
             self.showName(null);
             self.showDescription(null);

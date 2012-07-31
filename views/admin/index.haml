@@ -70,15 +70,19 @@
         %tbody{'data-bind' => 'foreach: channels'}
           %tr
             %td
-              %a{ 'data-bind' => 'click: $parent.edit', 'href' => '#channel-edit-modal'}
-                %i.icon-edit
               %span{ 'data-bind' => 'text: code'}
             %td{ 'data-bind' => 'text: name'}
             %td
-              %a.btn.btn-success{ 'data-bind' => "click: $parent.selectChannel" }
-                View Shows
-              %a.btn.btn-success{ 'data-bind' => "attr: { id: code }, click: $parent.syncSchedule", 'data-loading-text' => 'Sync in Progress...' }
-                Sync Schedule
+              %button.btn{ 'data-bind' => 'click: $parent.edit'}
+                %i.icon-edit
+              %button.btn{ 'data-bind' => 'click: $parent.delete'}
+                %i.icon-trash
+              %button.btn{ 'data-bind' => 'click: $parent.selectChannel' }
+                %i.icon-list-alt
+                Shows
+              %button.btn{ 'data-bind' => "attr: { id: code }, click: $parent.syncSchedule", 'data-loading-text' => 'Sync in Progress...' }
+                %i.icon-refresh
+                Sync
   %section{'data-bind' => 'if: selected() != null'}
     .row{'data-bind' => 'with: selected'}
       .span3
@@ -107,10 +111,12 @@
               %thead
                 %th Name
                 %th Description
+                %th
               %tbody{'data-bind' => 'foreach: shows'}
                 %tr
-                  %td
-                    %a{ 'data-bind' => 'click: $root.editShow'}
-                      %i.icon-edit
+                  %td.span3
                     %span{ 'data-bind' => 'text: name'}
                   %td{ 'data-bind' => 'text: description'}
+                  %td
+                    %button.btn{ 'data-bind' => 'click: $root.editShow'}
+                      %i.icon-edit

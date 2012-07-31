@@ -104,11 +104,7 @@ describe 'The Tivi App' do
 
   it "deletes a tv channel" do
     Channel.delete_all
-    c = Channel.new
-    c.code = "TC"
-    c.name = "Test Channel"
-    c.calendar_id = "fsdfdsf"
-    c.save!
+    c = create_a_test_channel
 
     to_delete_id = c.id
     delete "/channels/#{to_delete_id.to_s}"
@@ -116,6 +112,18 @@ describe 'The Tivi App' do
     last_response.should be_ok
     c = Channel.find_by_id(c.id)
     c.should be_nil
+  end
+
+  it "when a channel is deleted the shows for that channel are also deleted" do
+    Channel.delete_all
+    Show.delete_all
+
+    c = create_a_test_channel
+    s = Show.create(:name => "A test channel", :description => "Test Desc", :channel => c)
+
+    delete "/channels/#{c.id.to_s}"
+    s = Show.find_by_id(s.id)
+    s.should be_nil
   end
 
   it "updates a tv channel" do
