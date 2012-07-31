@@ -122,8 +122,7 @@ describe 'The Tivi App' do
     s = Show.create(:name => "A test channel", :description => "Test Desc", :channel => c)
 
     delete "/channels/#{c.id.to_s}"
-    s = Show.find_by_id(s.id)
-    s.should be_nil
+    Show.all.length.should == 0
   end
 
   it "updates a tv channel" do
@@ -201,14 +200,14 @@ describe 'The Tivi App' do
     first_or_ktn = Channel.first_or_create(ktn)
     briefcase_inc_with_channel = briefcase_inc.update({ channel: first_or_ktn.id.to_s })
 
-    c = Show.first_or_create(briefcase_inc_with_channel)
+    s = Show.first_or_create(briefcase_inc_with_channel)
 
-    to_delete_id = c.id
+    to_delete_id = s.id
     delete "/shows/#{to_delete_id.to_s}"
 
     last_response.should be_ok
-    c = Show.find_by_id(c.id)
-    c.should be_nil
+    s = Show.find_by_id(s.id)
+    s.should be_nil
   end
 
   it "updates a tv show" do
