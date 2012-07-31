@@ -74,6 +74,23 @@ $(document).ready(function() {
             $('#channel-edit-modal').modal('show');
         };
 
+        self.newChannel = function() {
+            self.code(null);
+            self.name(null);
+            self.calendar_id(null);
+            self.id(null);
+            self.editable(null);
+            $('#channel-edit-modal').modal('show');
+        };
+
+        self.newShow = function() {
+            self.showName(null);
+            self.showDescription(null);
+            self.showId(null);
+            self.editableShow(null);
+            $('#show-edit-modal').modal('show');
+        }
+
         self.editShow = function(show) {
             self.showName(show.name());
             self.showDescription(show.description());
@@ -153,15 +170,7 @@ $(document).ready(function() {
 
         self.closeModal = function(modal, msg) {
             $(modal).modal('hide');
-
-            self.showMsg(msg);
-        };
-
-        self.showMsg = function(msg) {
-            self.msg(msg);
-            setTimeout(function(){
-                self.msg(null);
-            }, 2000 );
+            bootbox.alert(msg);
         };
 
         self.loadChannels = function() {
@@ -176,30 +185,34 @@ $(document).ready(function() {
                         });
                         self.channels(models);
                     }
-//                    self.selectChannel(_.first(self.channels()));
                 }
             });
         }
 
         self.reset = function() {
-            $.ajax({
-                type: "GET",
-                url: "/api/reset?username=guide@tivi.co.ke&password=sproutt1v!&create=true",
-                success: function(data) {
-                    self.loadChannels();
-                    self.showMsg("Reset the application");
+            bootbox.confirm("You will lose the currently saved information. Are you sure you want to reset?", function(result) {
+                if (result) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/api/reset?username=guide@tivi.co.ke&password=sproutt1v!&create=true",
+                        success: function(data) {
+                            self.loadChannels();
+                            self.showMsg("Reset the application");
+                        }
+                    });
                 }
-            })
+            });
         }
 
         self.syncSchedule = function(channel) {
-            $('#btn-sync').button('loading');
+            var btn = "#" + channel.code();
+            $(btn).button('loading');
             $.ajax({
                 type: "POST",
                 url: "/api/channels/sync/" + channel.id,
                 success: function(data) {
-                    $('#btn-sync').button('reset');
-                    self.showMsg("Synced the schedule for channel ", channel.code());
+                    $(btn).button('reset');
+                    bootbox.alert("Synced the schedule for channel " + channel.code());
                 }
             })
         }
@@ -211,7 +224,6 @@ $(document).ready(function() {
             self.showChannel(channel);
 
             //load shows
-
             $.ajax({
                 type: "GET",
                 url: "/api/channels/shows/" + channel.id,

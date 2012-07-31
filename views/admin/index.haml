@@ -48,13 +48,6 @@
   .row{ 'data-bind' => 'visible: selected() == null'}
     .span3
       %h1 Channels
-    .span9
-      -##status.alert.alert-success{'data-bind' => 'visible: msg() != null'}
-      -#  %span{'data-bind' => 'text: msg'}
-  .row
-    .span9.offset3
-      #status.alert.alert-success{'data-bind' => 'visible: msg() != null'}
-        %span{'data-bind' => 'text: msg'}
   .row{ 'data-bind' => 'visible: selected() == null'}
     .span3.sidebar
       .well{'role' => 'navigation'}
@@ -62,7 +55,7 @@
           %li.nav-header
             Options
           %li
-            %a.home{'data-toggle' => 'modal', 'href' => '#channel-edit-modal'}
+            %a.home{'data-bind' => 'click: $root.newChannel' }
               %i.icon-file
               New Channel
           %li
@@ -84,7 +77,7 @@
             %td
               %a.btn.btn-success{ 'data-bind' => "click: $parent.selectChannel" }
                 View Shows
-              %a#btn-sync.btn.btn-success{ 'data-bind' => "click: $parent.syncSchedule", 'data-loading-text' => 'Sync in Progress...' }
+              %a.btn.btn-success{ 'data-bind' => "attr: { id: code }, click: $parent.syncSchedule", 'data-loading-text' => 'Sync in Progress...' }
                 Sync Schedule
   %section{'data-bind' => 'if: selected() != null'}
     .row{'data-bind' => 'with: selected'}
@@ -98,9 +91,11 @@
               Options
             %li
               %a.home{'data-bind' => 'click: $root.backHome' }
+                %i.icon-arrow-left
                 Back
             %li
-              %a.home{'data-toggle' => 'modal', 'href' => '#show-edit-modal'}
+              %a.home{'data-bind' => 'click: $root.newShow' }
+                %i.icon-file
                 New Show
       .span9.container
         .row
