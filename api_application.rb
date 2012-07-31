@@ -65,7 +65,7 @@ class ApiApplication < Sinatra::Base
       scheduler = Rufus::Scheduler.start_new
       set :scheduler, scheduler
       set :is_prod, true
-      schedule '5m' do
+      scheduler.every '5m' do
         settings.processor.process_reminders(settings.gateway, true)
       end
 
