@@ -78,6 +78,12 @@ class ApiApplication < Sinatra::Base
         begin
           service = GCal4Ruby::Service.new
           service.authenticate "guide@tivi.co.ke", "sproutt1v!"
+
+          Channels.all.each  { |channel|
+            puts ">>> Preparing schedule for #{channel.code}"
+            settings.processor.create_schedule(service,channel,false,next_day)
+            settings.gateway.send_message("254705866564", "Synced channel #{channel.code}", Message::TYPE_SERVICE)
+          }
         rescue Exception => e
           puts ">>> #{e.message}"
           puts ">>> #{e.backtrace.inspect}"
