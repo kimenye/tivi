@@ -78,11 +78,13 @@
               %button.btn{ 'data-bind' => 'click: $parent.delete'}
                 %i.icon-trash
               %button.btn{ 'data-bind' => 'click: $parent.selectChannel' }
-                %i.icon-list-alt
+                %i.icon-film
                 Shows
               %button.btn{ 'data-bind' => "attr: { id: code }, click: $parent.syncSchedule", 'data-loading-text' => 'Sync in Progress...' }
                 %i.icon-refresh
                 Sync
+              %a.btn{'data-bind' => "attr: { href: '/admin/channel/' + id }" }
+                %i.icon-th-list
   %section{'data-bind' => 'if: selected() != null'}
     .row{'data-bind' => 'with: selected'}
       .span3

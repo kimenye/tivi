@@ -21,6 +21,7 @@ class AdminApp < Sinatra::Base
     end
 
   end
+  helpers SchedulerHelper
 
   get '/' do
     protected!

@@ -23,7 +23,7 @@
         - messages.each do |msg|
           %tr
             %td
-              = msg.sent
+              = msg.sent.strftime("%c")
             %td
               = msg.type
             %td
