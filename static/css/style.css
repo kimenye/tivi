@@ -40,3 +40,7 @@ h1 small {
 .logo h1 small {
     display: block;
 }
+
+.centered {
+    text-align: center;
+}

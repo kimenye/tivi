@@ -65,6 +65,7 @@ class Message
   TYPE_ACKNOWLEDGEMENT = "ACKNOWLEDGEMENT"
   TYPE_SERVICE = "SERVICE"
 
+  key :recipient, String
   key :external_id, Integer
   key :message_text, String
   key :type, String, :in => [TYPE_REMINDER,TYPE_ACKNOWLEDGEMENT,TYPE_SERVICE]

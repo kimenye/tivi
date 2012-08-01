@@ -1,0 +1,34 @@
+.container#message-div
+  .row
+    .span3
+      %h1 Messages
+    .span9.container
+      %table.table.table-bordered
+        %thead
+          %th
+            Date
+          %th
+            Type
+          %th
+            Text
+          %th
+            Phone Number
+          %th
+            ID
+        %tbody
+        - if messages.empty?
+          %tr
+            %td.centered{ :colspan => 5 }
+              No Messages
+        - messages.each do |msg|
+          %tr
+            %td
+              = msg.sent
+            %td
+              = msg.type
+            %td
+              = msg.message_text
+            %td
+              = msg.subscriber.nil? ? msg.recipient : msg.subscriber.phone_number
+            %td
+              = msg.external_id

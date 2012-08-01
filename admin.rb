@@ -27,16 +27,23 @@ class AdminApp < Sinatra::Base
     haml :"admin/index", :layout => :admin
   end
 
-  get '/schedule/:id' do
-    protected!
-    channel = Channel.find_by_id(params[:id])
-    haml :"admin/channel", :layout => :guide, :locals => { :channel => channel }
-  end
-
   get '/subscription' do
     protected!
     subscriptions = Subscription.all
     haml :"admin/subscription", :layout => :admin, :locals => { :subscriptions => subscriptions }
+  end
+
+  get '/message' do
+    protected!
+    messages = Message.all
+    haml :"admin/message", :layout => :admin, :locals => { :messages => messages }
+  end
+
+  get '/channel/:id' do
+    protected!
+    channel = Channel.find(params[:id])
+    schedule = get_schedule_for_day(Time.now, channel)
+    haml :"admin/channel", :layout => :admin, :locals => { :channel => channel, :schedule => schedule }
   end
 
 end

@@ -40,10 +40,10 @@ class RoamTechGateway
 
       if response_code == 200
         id = process_response(data)
-        return Message.create!(:external_id => id.to_i, :message_text => msg, :type => type, :subscriber => subscriber, :show => show)
+        return Message.create!(:external_id => id.to_i, :message_text => msg, :type => type, :subscriber => subscriber, :show => show, :recipient => recipient)
       end
     else
-      msg = Message.create!(:external_id => process_response("DN1701 | 870851").to_i, :message_text => msg, :type => type, :subscriber => subscriber, :show => show)
+      msg = Message.create!(:external_id => process_response("DN1701 | 870851").to_i, :message_text => msg, :type => type, :subscriber => subscriber, :show => show, :recipient => recipient)
       return msg
     end
   end

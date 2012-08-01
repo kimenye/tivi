@@ -14,6 +14,10 @@
           %th
             Status
         %tbody
+        - if subscriptions.empty?
+          %tr
+            %td.centered{ :colspan => 4}
+              No Subscriptions
         - subscriptions.each do |sub|
           %tr
             %td

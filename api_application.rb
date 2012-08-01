@@ -70,7 +70,7 @@ class ApiApplication < Sinatra::Base
       end
 
       timer = Rufus::Scheduler.start_new
-      timer.cron '30 * * * *' do
+      timer.cron '55 23 * * *' do
 
         next_day = settings.processor.tomorrow
         puts ">> Prepare schedule for #{next_day}"
@@ -79,7 +79,7 @@ class ApiApplication < Sinatra::Base
           service = GCal4Ruby::Service.new
           service.authenticate "guide@tivi.co.ke", "sproutt1v!"
 
-          Channels.all.each  { |channel|
+          Channel.all.each  { |channel|
             puts ">>> Preparing schedule for #{channel.code}"
             settings.processor.create_schedule(service,channel,false,next_day)
             settings.gateway.send_message("254705866564", "Synced channel #{channel.code}", Message::TYPE_SERVICE)
@@ -88,14 +88,6 @@ class ApiApplication < Sinatra::Base
           puts ">>> #{e.message}"
           puts ">>> #{e.backtrace.inspect}"
         end
-        #service = GCal4Ruby::Service.new
-        #service.authenticate "guide@tivi.co.ke", "sproutt1v!"
-        #
-        #Channels.all.each  { |channel|
-        #  puts ">>> Preparing schedule for #{channel.code}"
-        #  settings.processor.create_schedule(service,channel,false,next_day)
-        #  settings.gateway.send_message("254705866564", "Synced channel #{channel.code}", Message::TYPE_SERVICE)
-        #}
       end
     else
       set :is_prod, false

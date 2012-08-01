@@ -113,6 +113,8 @@ module SchedulerHelper
       shows = sync_shows(service, channel.calendar_id, from)
     end
 
+    puts ">> Found #{shows.length} for channel #{channel.code}"
+
     shows.each{ |_show|
       show = Show.find_by_name_and_channel_id(_show[:name], channel.id)
       if show.nil?
