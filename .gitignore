@@ -3,3 +3,4 @@
 #*.lock
 Procfile
 spect/gateway_spec.rb
+log
