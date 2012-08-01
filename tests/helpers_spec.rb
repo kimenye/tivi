@@ -151,6 +151,22 @@ describe 'Sinatra helpers' do
     helpers.get_schedule_for_day(helpers.today_at_time(10,30), test).length.should eq(1)
   end
 
+  it "should return the scheduled shows for the day in ascending order of start time time" do
+    Schedule.delete_all
+    test = Channel.find_by_code!('Tst')
+
+    a_show = Show.find_by_name_and_channel_id!('10 AM Show',test.id)
+
+    Schedule.create(:show => a_show, :start_time => helpers.today_at_time(10,30).utc, :end_time => helpers.today_at_time(11,30).utc)
+    Schedule.create(:show => a_show, :start_time => helpers.today_at_time(9,30).utc, :end_time => helpers.today_at_time(10,00).utc)
+    Schedule.create(:show => a_show, :start_time => helpers.today_at_time(12,30).utc, :end_time => helpers.today_at_time(13,00).utc)
+
+    schedule_for_day = helpers.get_schedule_for_day(Time.now, test)
+    schedule_for_day.length.should eq(3)
+    schedule_for_day.first.start_time.should eq(helpers.today_at_time(9,30).utc)
+    schedule_for_day.last.start_time.should eq(helpers.today_at_time(12,30).utc)
+  end
+
   it "should get the correct start of the week" do
     a_sunday = Time.local(2012,7,15,0,0,0)
     helpers._get_start_of_the_week(a_sunday).should eq(a_sunday)

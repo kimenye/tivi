@@ -51,7 +51,10 @@ module SchedulerHelper
   def get_schedule_for_day(time, channel)
     start_of_day = _get_start_of_day(time)
     end_of_day = _get_end_of_day(time)
-    Schedule.all(:start_time => { '$gte' => start_of_day.utc },:end_time => { '$lte' => end_of_day.utc }, :show_id => { '$in' => Show.all(:channel_id => channel.id).collect { |s| s.id }  })
+    Schedule.all(:start_time => {'$gte' => start_of_day.utc},
+                 :end_time => {'$lte' => end_of_day.utc},
+                 :show_id => {'$in' => Show.all(:channel_id => channel.id).collect { |s| s.id }},
+                 :order => :start_time)
   end
 
   def get_next_time_scheduled(show)
