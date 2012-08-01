@@ -1,20 +1,30 @@
 .container#schedule-div
   .row
-    .span12
+    .span3
       %h1 Schedule
       %small= channel.name
       %br
       %br
+    .span3
+      %h2= day.strftime("%e %a %b %G")
   .row
-    .span2.sidebar
+    .span3.sidebar
       .well{'role' => 'navigation'}
         %ul.nav.nav-list
           %li.nav-header
             Options
           %li
+            %a
+              %i.icon-forward
+              Next Day
+          %li
+            %a
+              %i.icon-backward
+              Previous Day
+          %li
             %a.home{:href => '/admin' }
               %i.icon-arrow-left
-              Back
+              Back to Channels
     .span9.container
       %table.table.table-bordered
         %thead

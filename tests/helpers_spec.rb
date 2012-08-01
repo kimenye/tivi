@@ -189,6 +189,13 @@ describe 'Sinatra helpers' do
     next_month.month.should eq(3)
   end
 
+  it "should get the right date of the previous date" do
+    now = Time.local(2012,8,1,0,0,0)
+    exp_yesterday = Time.local(2012,7,31,0,0,0)
+    yesterday = helpers.yesterday(now)
+    yesterday.should eq(exp_yesterday)
+  end
+
   it "should sync shows for a whole week from the start of the week" do
     Schedule.delete_all
 

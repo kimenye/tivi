@@ -19,6 +19,11 @@ module SchedulerHelper
     return today + (24 * 3600)
   end
 
+  def yesterday(time=Time.now)
+    day = _get_start_of_day(time)
+    return day - (24 * 3600)
+  end
+
   def _get_end_of_day(time)
     Time.local(time.year, time.month, time.day, 23,59,59)
   end

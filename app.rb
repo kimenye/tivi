@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'sinatra'
+require 'haml'
 require_relative 'api_application'
 
 class TiviApp < Sinatra::Base
