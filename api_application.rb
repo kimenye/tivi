@@ -70,7 +70,7 @@ class ApiApplication < Sinatra::Base
       end
 
       timer = Rufus::Scheduler.start_new
-      timer.cron '0 * * * *' do
+      timer.cron '30 * * * *' do
 
         next_day = settings.processor.tomorrow
         puts ">> Prepare schedule for #{next_day}"
