@@ -14,11 +14,11 @@
           %li.nav-header
             Options
           %li
-            %a
+            %a{:href => "?when=" + next_day.to_s}
               %i.icon-forward
               Next Day
           %li
-            %a
+            %a{:href => "?when=" + prev_day.to_s}
               %i.icon-backward
               Previous Day
           %li
