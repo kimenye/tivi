@@ -82,7 +82,7 @@ class ApiApplication < Sinatra::Base
           Channel.all.each  { |channel|
             puts ">>> Preparing schedule for #{channel.code}"
             settings.processor.create_schedule(service,channel,false,next_day)
-            settings.gateway.send_message("254705866564", "Synced channel #{channel.code}", Message::TYPE_SERVICE, nil, nil, true)
+            settings.gateway.send_message("254705866564", "Synced channel #{channel.code}", Message::TYPE_SERVICE, nil, nil, false)
           }
         rescue Exception => e
           puts ">>> #{e.message}"

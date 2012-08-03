@@ -146,7 +146,7 @@ module SchedulerHelper
     reminders = get_reminders(duration,from)
     puts "Got #{reminders.length} to send"
     reminders.each { | reminder|
-      msg = gateway.send_message(reminder[:to], reminder[:message], Message::TYPE_REMINDER, reminder[:subscription].subscriber, reminder[:subscription].show, real)
+      msg = gateway.send_message(reminder[:to], reminder[:message], Message::TYPE_REMINDER, reminder[:subscription].subscriber, reminder[:subscription].show, false)
       puts ">> Sent #{real} msg to #{reminder[:to]} - ID: #{msg.external_id}"
     }
     puts "Finished sending messages"
