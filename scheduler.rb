@@ -191,6 +191,8 @@ module SchedulerHelper
     subscriber = Subscriber.first_or_create(:phone_number => sms.from)
 
     show = Show.first(:name => {'$regex' => /#{show_name}/i })
+    
+    # If show exists, create subscription else create unknown subscription object
 
     subscription = Subscription.new
     subscription.subscriber = subscriber

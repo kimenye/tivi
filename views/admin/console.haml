@@ -1,0 +1,82 @@
+.container#console-div
+  #admin-create-modal.modal.hide
+    .modal-header
+      %button.close{'type' => 'button', 'data-dismiss' => 'modal'}
+        x
+      %h3 Create Admin
+    %form.modal-form.form-horizontal{'data-bind' => 'submit: createAdmin'}
+      .modal-body
+        %fieldset
+          .control-group
+            %label.control-label{ 'for' => 'email' } Email
+            .controls
+              %input.input-medium#email{'name' => 'email', 'type' => 'email', 'data-bind' => 'value: email', 'required' => 'required'}
+          .control-group
+            %label.control-label{ 'for' => 'password' } Password
+            .controls
+              %input.input-medium#password{'name' => 'password', 'type' => 'password', 'data-bind' => 'value: password', 'required' => 'required'}
+          .control-group
+            %label.control-label{:for => 'phone_number' } Phone Number
+            .controls
+              %input.input-medium#phone_number{:name => 'phone_number', :type => 'text','data-bind' => 'value: phone_number', 'required' => 'required'}
+      .modal-footer
+        %a.btn{'data-dismiss' => 'modal', 'href' => '#'} Close
+        %input.btn.btn-success{ 'type' => 'submit', 'value' => 'Save'}
+  #admin-edit-modal.modal.hide
+    .modal-header
+      %button.close{'type' => 'button', 'data-dismiss' => 'modal'}
+        x
+      %h3 Edit or Delete Admin
+    %form.modal-form.form-horizontal{'data-bind' => 'submit: editOrDeleteAdmin'}
+      .modal-body
+        %fieldset
+          .control-group
+            %label.control-label{'for' => 'email'} Email
+            .controls
+              %input.input-medium#email{'name' => 'email', 'type' => 'email', 'data-bind' => 'value: email', 'required' => 'required'}
+          .control-group
+            %label.control-label{'for' => 'phone_number'} Phone Number
+            .controls
+              %input.input-medium#phone_number{'name' => 'phone_number', 'type' => 'text', 'data-bind' => 'value: phone_number', 'required' => 'required'}
+      .modal-footer
+        %a.btn{'data-dismiss' => 'modal', 'href' => '#close'} Close
+        %input.btn.btn-success{'type' => 'submit', 'value' => 'Save'}
+  .row
+    .span3
+      %h1 Admin Console
+  .row
+    .span3.sidebar
+      .well{'role' => 'navigation'}
+        %ul.nav.nav-list
+          %li.nav-header
+            Options
+          %li
+            %a
+              %i.icon-plus-sign
+              Add Admin
+          - if !admins.empty?
+            %li.nav-header
+              Admins
+            - admins.each do |admin|
+              %li
+                %a
+                  %i.icon-user
+                  = admin.email
+                  %i.icon-edit
+    .span9.container
+      %table.table.table-bordered
+        %tr
+          %th Phone Number:
+          %td no.
+        %tr
+          %th Text:
+          %td no.
+        %tr
+          %th Shows:
+          - if shows.empty?
+            %td No Shows in Database
+          - shows.each do |show|
+            %td
+              %select
+                %option
+                  = show.name
