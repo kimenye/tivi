@@ -19,7 +19,13 @@ class AdminApp < Sinatra::Base
 
     def authorized?
       @auth ||= Rack::Auth::Basic::Request.new(request.env)
-      @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == ['guide@tivi.co.ke', 'sproutt1v!']
+      return false unless @auth.provided?
+      email = @auth.credentials.first
+      password = @auth.credentials.last
+
+      admin = Admin.find_by_email_and_password(email,password)
+
+      @auth.provided? && @auth.basic? && @auth.credentials && !admin.nil?
     end
 
   end

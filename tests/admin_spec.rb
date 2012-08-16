@@ -19,9 +19,6 @@ describe 'The Tivi Administration App' do
 
   end
 
-  username = 'guide@tivi.co.ke'
-  password = 'sproutt1v!'
-
   it "should not be able to access the admin area without login credentials" do
     get '/'
     last_response.status.should == 401
@@ -33,8 +30,9 @@ describe 'The Tivi Administration App' do
     last_response.status.should == 401
   end
 
-  it "should authenticate the user with the correct login details" do
-    authorize username, password
+  it "should use the admins email and password" do
+    admin = Admin.create!({ :email => "me@somewhere.com", :password => "abcdefghi", :phone_number => "0705332222" })
+    authorize admin.email, admin.password
     get '/'
     last_response.should be_ok
   end

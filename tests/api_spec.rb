@@ -476,10 +476,11 @@ describe 'The Tivi App' do
     last_response.should be_ok
     last_response.body.should == unknown_subscriptions.to_json
   end
-  
+
+  #TODO: Make sure test data is present for the tests
   it "returns an unknown_subscription" do
     unknown_subscription = UnknownSubscription.first()
-    if unknown_subscription.nil?
+    if !unknown_subscription.nil?
       get "/unknown_subscriptions/#{unknown_subscription.id}"
       last_response.should be_ok
       last_response.body.should == unknown_subscription.to_json
