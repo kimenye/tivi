@@ -27,6 +27,8 @@ class AdminApp < Sinatra::Base
 
   get '/' do
     protected!
+    # unknown_subscriptions = UnknownSubscription.all
+    # haml :"admin/index", :layout => :admin, :locals => {:unknown_subscriptions => unknown_subscriptions}
     haml :"admin/index", :layout => :admin
   end
 
@@ -52,6 +54,15 @@ class AdminApp < Sinatra::Base
     next_day = tomorrow(day)
 
     haml :"admin/channel", :layout => :admin, :locals => {:channel => channel, :schedule => schedule, :day => day, :prev_day => prev_day, :next_day => next_day }
+  end
+  
+  get '/console' do
+    protected!
+    shows = Show.all
+    admins = Admin.all
+    # unknown_subscriptions = UnknownSubscription.all
+    # haml :"admin/console", :layout => :admin, :locals => {:shows => shows, :admins => admins, :unknown_subscriptions => unknown_subscriptions}
+    haml :"admin/console", :layout => :admin, :locals => {:shows => shows, :admins => admins}
   end
 
 end

@@ -207,6 +207,7 @@ class ApiApplication < Sinatra::Base
           Channel.delete_all
           SMSLog.delete_all
           Message.delete_all
+          UnknownSubscription.delete_all
 
           if create == "true"
             ktn = Channel.create!(:code => "KTN", :name => "Kenya Television Network", :calendar_id => "tivi.co.ke_1aku43rv679bbnj9r02coema98@group.calendar.google.com")
@@ -818,6 +819,82 @@ class ApiApplication < Sinatra::Base
           message.save!
           status 200
           body(message.id.to_s)
+        end
+      end
+    end
+  end
+  
+  collection :unknown_subscriptions do
+    description "API operations for managing unknown_subscriptions"
+
+    operation :index do
+      description "Return all unknown_subscriptions"
+      control do
+        unknown_subscriptions = UnknownSubscription.all
+        status 200
+        body(unknown_subscriptions.to_json)
+      end
+    end
+    
+    operation :show do
+      description "Get a specific unknown_subscription"
+      
+      param :id, :string, :required
+      control do
+        unknown_subscription = UnknownSubscription.find_by_id(params[:id])
+        if unknown_subscription.nil?
+          status 404
+        else
+          status 200
+          body(unknown_subscription.to_json)
+        end
+      end
+    end
+    
+    operation :destroy do
+      description "Delete a specific unknown_subscription"
+      
+      param :id, :string, :required
+      control do
+        UnknownSubscription.delete([ params[:id] ])
+        body(params[:id])
+      end
+    end
+    
+    operation :create do
+      description "Create an unknown_subscription"
+      
+      control do
+        data = JSON.parse(request.body.string)
+        if data.nil? or !data.has_key?('phone_number') or !data.has_key?('unknown_show_name')
+          status 400
+          body({error: "Invalid data"}.to_json)
+        else
+          unknown_subscription = UnknownSubscription.new
+          unknown_subscription.phone_number = data['phone_number']
+          unknown_subscription.unknown_show_name = data['unknown_show_name']
+          unknown_subscription.save!
+          status 200
+          body(unknown_subscription.id.to_s)
+        end
+      end
+    end
+    
+    operation :update do
+      description "Update an existing unknown_subscription"
+      
+      control do
+        unknown_subscriptions = UnknownSubscription.find(params[:id])
+        data = JSON.parse(request.body.string)
+        if data.nil? or !data.has_key?('phone_number') or !data.has_key?('unknown_show_name')
+          status 404
+        else
+          unknown_subscription = UnknownSubscription.new
+          unknown_subscription.phone_number = data['phone_number']
+          unknown_subscription.unknown_show_name = data['unknown_show_name']
+          unknown_subscription.save!
+          status 200
+          body(unknown_subscription.id.to_s)
         end
       end
     end

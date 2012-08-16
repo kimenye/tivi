@@ -22,6 +22,11 @@
               %a{ 'href' => '/admin/subscription' } Subscriptions
             %li
               %a{ 'href' => '/admin/message' } Messages
+            %li
+              %a{ 'href' => '/admin/console' }
+                Console
+                /!- if !unknown_subscriptions.empty?
+                /!%span.badge.badge-warning unknown_subscriptions.length
 
     /! end of top navbar
 
@@ -50,4 +55,5 @@
     %script{ 'type' => 'text/javascript', 'src' => '/javascript/sammy.js'}
     %script{ 'type' => 'text/javascript', 'src' => '/javascript/app.js'}
     %script{ 'type' => 'text/javascript', 'src' => '/javascript/channels.js'}
+    %script{ 'type' => 'text/javascript', 'src' => '/javascript/admins.js'}
     -#%script{ 'type' => 'text/javascript', 'src' => 'http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php/en_US'}
