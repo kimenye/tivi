@@ -2,5 +2,6 @@
 .idea
 #*.lock
 Procfile
-spect/gateway_spec.rb
+spec/gateway_spec.rb
 log
+*DS_Store
