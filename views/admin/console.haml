@@ -1,4 +1,4 @@
-.container#console-div
+.container#admins-div
   #admin-create-modal.modal.hide
     .modal-header
       %button.close{'type' => 'button', 'data-dismiss' => 'modal'}
@@ -27,7 +27,7 @@
       %button.close{'type' => 'button', 'data-dismiss' => 'modal'}
         x
       %h3 Edit or Delete Admin
-    %form.modal-form.form-horizontal{'data-bind' => 'submit: editOrDeleteAdmin'}
+    %form.modal-form.form-horizontal{'data-bind' => 'submit: editAdmin'}
       .modal-body
         %fieldset
           .control-group
@@ -41,6 +41,30 @@
       .modal-footer
         %a.btn{'data-dismiss' => 'modal', 'href' => '#close'} Close
         %input.btn.btn-success{'type' => 'submit', 'value' => 'Save'}
+        %button.btn{ 'data-bind' => 'click: $parent.deleteAdmin'}
+  #admin-subscription-modal.modal.hide
+    .modal-header
+      %button.close{'type' => 'button', 'data-dismiss' => 'modal'}
+        x
+      %h3 Create Subscription
+    %form.modal-form.form-horizontal{'data-bind' => 'submit: createSubscription'}
+      .modal-body
+        %fieldset
+          .control-group
+            %label.control-label{ 'for' => 'phone_number' } Phone Number
+            .controls
+              %input.input-medium#phone_number{'name' => 'phone_number', 'type' => 'text', 'data-bind' => 'value: phone_number', 'readonly' => 'readonly'}
+          .control-group
+            %label.control-label{ 'for' => 'unknown_show_name' } Unknown Show Name
+            .controls
+              %input.input-medium#unknown_show_name{'name' => 'unknown_show_name', 'type' => 'text', 'data-bind' => 'value: unknown_show_name', 'readonly' => 'readonly'}
+          .control-group
+            %label.control-label{:for => 'shows' } Available Shows
+            .controls
+              %select#shows{'name' => 'shows', 'data-bind' => "enable: true, options: shows, optionsText: 'name', value: show, optionsCaption: 'Please Choose...'"}
+      .modal-footer
+        %a.btn{'data-dismiss' => 'modal', 'href' => '#'} Close
+        %input.btn.btn-success{ 'type' => 'submit', 'value' => 'Save'}
   .row
     .span3
       %h1 Admin Console
@@ -51,7 +75,7 @@
           %li.nav-header
             Options
           %li
-            %a
+            %a.home{'data-bind' => 'click: $root.newAdmin' }
               %i.icon-plus-sign
               Add Admin
           - if !admins.empty?
@@ -59,24 +83,9 @@
               Admins
             - admins.each do |admin|
               %li
-                %a
+                %a.home{'data-bind' => 'click: $root.edit' }
                   %i.icon-user
                   = admin.email
                   %i.icon-edit
     .span9.container
-      %table.table.table-bordered
-        %tr
-          %th Phone Number:
-          %td no.
-        %tr
-          %th Text:
-          %td no.
-        %tr
-          %th Shows:
-          - if shows.empty?
-            %td No Shows in Database
-          - shows.each do |show|
-            %td
-              %select
-                %option
-                  = show.name
+      Lorem Ipsum
