@@ -88,10 +88,3 @@ class Admin
   key :password, String
   key :phone_number, String
 end
-
-class UnknownSubscription
-  include MongoMapper::Document
-
-  key :phone_number, String
-  key :unknown_show_name, String
-end

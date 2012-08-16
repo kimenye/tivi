@@ -470,40 +470,4 @@ describe 'The Tivi App' do
     s.should be_nil
   end
   
-  it "returns unknown_subscriptions" do
-    get '/unknown_subscriptions'
-    unknown_subscriptions = UnknownSubscription.all
-    last_response.should be_ok
-    last_response.body.should == unknown_subscriptions.to_json
-  end
-
-  #TODO: Make sure test data is present for the tests
-  it "returns an unknown_subscription" do
-    unknown_subscription = UnknownSubscription.first()
-    if !unknown_subscription.nil?
-      get "/unknown_subscriptions/#{unknown_subscription.id}"
-      last_response.should be_ok
-      last_response.body.should == unknown_subscription.to_json
-    end
-  end
-
-  it "does not return an unknown_subscription when there is no id" do
-    get "/unknown_subscriptions/"
-    last_response.should_not be_ok
-  end
-  
-  it "deletes an unknown_subscription" do
-    UnknownSubscription.delete_all
-    unknown_subscription = UnknownSubscription.new
-    unknown_subscription.phone_number = "254723894962"
-    unknown_subscription.unknown_show_name = "Hotsel"
-    unknown_subscription.save!
-
-    to_delete_id = unknown_subscription.id
-    delete "/unknown_subscriptions/#{to_delete_id.to_s}"
-
-    last_response.should be_ok
-    unknown_subscription = UnknownSubscription.find_by_id(unknown_subscription.id)
-    unknown_subscription.should be_nil
-  end
 end

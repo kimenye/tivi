@@ -192,7 +192,7 @@ module SchedulerHelper
 
     show = Show.first(:name => {'$regex' => /#{show_name}/i })
     
-    # If show exists, create subscription else create unknown subscription object
+    # If show exists, create active subscription else create inactive subscription
 
     subscription = Subscription.new
     subscription.subscriber = subscriber

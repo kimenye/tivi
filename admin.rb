@@ -33,8 +33,6 @@ class AdminApp < Sinatra::Base
 
   get '/' do
     protected!
-    # unknown_subscriptions = UnknownSubscription.all
-    # haml :"admin/index", :layout => :admin, :locals => {:unknown_subscriptions => unknown_subscriptions}
     haml :"admin/index", :layout => :admin
   end
 
@@ -66,8 +64,6 @@ class AdminApp < Sinatra::Base
     protected!
     shows = Show.all
     admins = Admin.all
-    # unknown_subscriptions = UnknownSubscription.all
-    # haml :"admin/console", :layout => :admin, :locals => {:shows => shows, :admins => admins, :unknown_subscriptions => unknown_subscriptions}
     haml :"admin/console", :layout => :admin, :locals => {:shows => shows, :admins => admins}
   end
 
