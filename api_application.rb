@@ -265,7 +265,7 @@ class ApiApplication < Sinatra::Base
       
       control do
         data = JSON.parse(request.body.string)
-        if data.nil? or !data.has_key?('show_name') or !data.has_key?('active') or !data.has_key?('cancelled')
+        if data.nil? or !data.has_key?('show_name') or !data.has_key?('active') or !data.has_key?('cancelled') or !data.has_key?('misspelt')
           status 400
           body({error: "Invalid data"}.to_json)
         else
@@ -273,6 +273,7 @@ class ApiApplication < Sinatra::Base
           subscription.show_name = data['show_name']
           subscription.active = data['active']
           subscription.cancelled = data['cancelled']
+          subscription.misspelt = data['misspelt']
           subscription.save!
           status 200
           body(subscription.id.to_s)
@@ -286,12 +287,13 @@ class ApiApplication < Sinatra::Base
       control do
         subscription = Subscription.find(params[:id])
         data = JSON.parse(request.body.string)
-        if data.nil? or !data.has_key?('show_name') or !data.has_key?('active') or !data.has_key?('cancelled')
+        if data.nil? or !data.has_key?('show_name') or !data.has_key?('active') or !data.has_key?('cancelled') or !data.has_key?('misspelt')
           status 404
         else
           subscription.show_name = data['show_name']
           subscription.active = data['active']
           subscription.cancelled = data['cancelled']
+          subscription.misspelt = data['misspelt']
           subscription.save!
           status 200
           body(subscription.id.to_s)

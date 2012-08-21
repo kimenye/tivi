@@ -44,6 +44,7 @@ class Subscription
   key :show_name, String
   key :active, Boolean, :default => false
   key :cancelled, Boolean, :default => false
+  key :misspelt, Boolean, :default => false
   key :from, Time, :default => Time.now
   belongs_to :subscriber
   belongs_to :show

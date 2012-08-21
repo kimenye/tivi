@@ -62,4 +62,14 @@ describe 'The User Experience' do
     message = Message.find_by_subscriber_id_and_type!(subscriber.id, Message::TYPE_REMINDER)
     message.subscriber.should eq(subscriber)
   end
+  
+  it "should not send an acknowledgement for a show that has been misspelt" do
+    get "/sms_gateway?message_source=#{CGI::escape("254701234567")}&message_text=#{CGI::escape("TIVI 10 MA Show")}&message_destination=5566&trxID=3434438"
+
+    incoming_sms = SMSLog.find_by_external_id!(3434438)
+    subscriber = Subscriber.find_by_phone_number!("254701234567")
+    subscription = Subscription.find_by_subscriber_id!(subscriber.id)
+    subscription.active.should eq(false)
+    subscription.misspelt.should eq(true)
+  end
 end

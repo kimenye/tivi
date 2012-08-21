@@ -99,7 +99,7 @@ describe 'Sinatra helpers' do
 
   it "should not create multiple in-active subscriptions" do
     person = Subscriber.first_or_create(:phone_number => "+254705866564")
-    subscription = Subscription.create(:subscriber => person, :show_name => "blahBlah", :active => false)
+    subscription = Subscription.create(:subscriber => person, :show_name => "blahBlah", :active => false, :misspelt => false)
 
     num_subscriptions = Subscription.count
 
