@@ -64,7 +64,8 @@ class AdminApp < Sinatra::Base
     protected!
     shows = Show.all
     admins = Admin.all
-    haml :"admin/console", :layout => :admin, :locals => {:shows => shows, :admins => admins}
+    misspelt = Subscription.find_by_misspelt(true)
+    haml :"admin/console", :layout => :admin, :locals => {:shows => shows, :admins => admins, :misspelt => misspelt}
   end
 
 end
