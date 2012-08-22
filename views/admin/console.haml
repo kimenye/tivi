@@ -88,4 +88,24 @@
                   = admin.email
                   %i.icon-edit
     .span9.container
-      Lorem Ipsum
+      %table.table.table-bordered
+        %thead
+          %th
+            Phone Number
+          %th
+            Text
+          %th
+            Shows
+        %tbody
+        - if misspelt.empty?
+          %tr
+            %td.centered{ :colspan => 3}
+              No unresolved Subscriptions
+        - misspelt.each do |miss|
+          %tr
+            %td
+              = miss.show_name
+            %td
+              blah
+            %td
+              blah
