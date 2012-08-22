@@ -205,7 +205,6 @@ module SchedulerHelper
         subscription = nil
       end
     else
-      subscription.show = show
       subscription.misspelt = true
       subscription.save!
     end

@@ -88,13 +88,25 @@
                   = admin.email
                   %i.icon-edit
     .span9.container
-      %h1= me
       %table
         %thead
+          %th
+            Phone Number
+          %th
+            Text
+          %th
+            Shows
           %th Id
         %tbody
-          - misspelt_subscriptions.each do |sub|
+          - if misspelt.empty?
             %tr
-              %td= sub.id
-
-
+              %td.centered{ :colspan => 3}
+                No unresolved Subscriptions
+          - misspelt.each do |miss|
+            %tr
+              %td
+                = miss.show_name
+              %td
+                blah
+              %td
+                blah
