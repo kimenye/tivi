@@ -88,4 +88,13 @@
                   = admin.email
                   %i.icon-edit
     .span9.container
-      Lorem Ipsum
+      %h1= me
+      %table
+        %thead
+          %th Id
+        %tbody
+          - misspelt_subscriptions.each do |sub|
+            %tr
+              %td= sub.id
+
+
