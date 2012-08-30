@@ -16,9 +16,9 @@
             .controls
               %input.input-medium#password{'name' => 'password', 'type' => 'password', 'data-bind' => 'value: password', 'required' => 'required'}
           .control-group
-            %label.control-label{:for => 'phone_number' } Phone Number
+            %label.control-label{ 'for' => 'phone_number' } Phone Number
             .controls
-              %input.input-medium#phone_number{:name => 'phone_number', :type => 'text','data-bind' => 'value: phone_number', 'required' => 'required'}
+              %input.input-medium#phone_number{'name' => 'phone_number', 'type' => 'text', 'data-bind' => 'value: phone_number', 'required' => 'required'}
       .modal-footer
         %a.btn{'data-dismiss' => 'modal', 'href' => '#'} Close
         %input.btn.btn-success{ 'type' => 'submit', 'value' => 'Save'}
@@ -41,30 +41,7 @@
       .modal-footer
         %a.btn{'data-dismiss' => 'modal', 'href' => '#close'} Close
         %input.btn.btn-success{'type' => 'submit', 'value' => 'Save'}
-        %button.btn{ 'data-bind' => 'click: $parent.deleteAdmin'}
-  #admin-subscription-modal.modal.hide
-    .modal-header
-      %button.close{'type' => 'button', 'data-dismiss' => 'modal'}
-        x
-      %h3 Create Subscription
-    %form.modal-form.form-horizontal{'data-bind' => 'submit: createSubscription'}
-      .modal-body
-        %fieldset
-          .control-group
-            %label.control-label{ 'for' => 'phone_number' } Phone Number
-            .controls
-              %input.input-medium#phone_number{'name' => 'phone_number', 'type' => 'text', 'data-bind' => 'value: phone_number', 'readonly' => 'readonly'}
-          .control-group
-            %label.control-label{ 'for' => 'unknown_show_name' } Unknown Show Name
-            .controls
-              %input.input-medium#unknown_show_name{'name' => 'unknown_show_name', 'type' => 'text', 'data-bind' => 'value: unknown_show_name', 'readonly' => 'readonly'}
-          .control-group
-            %label.control-label{:for => 'shows' } Available Shows
-            .controls
-              %select#shows{'name' => 'shows', 'data-bind' => "enable: true, options: shows, optionsText: 'name', value: show, optionsCaption: 'Please Choose...'"}
-      .modal-footer
-        %a.btn{'data-dismiss' => 'modal', 'href' => '#'} Close
-        %input.btn.btn-success{ 'type' => 'submit', 'value' => 'Save'}
+        %button.btn{ 'data-bind' => 'click: $root.deleteAdmin'} Delete
   .row
     .span3
       %h1 Admin Console
@@ -78,35 +55,34 @@
             %a.home{'data-bind' => 'click: $root.newAdmin' }
               %i.icon-plus-sign
               Add Admin
-          - if !admins.empty?
-            %li.nav-header
-              Admins
-            - admins.each do |admin|
-              %li
-                %a.home{'data-bind' => 'click: $root.edit' }
-                  %i.icon-user
-                  = admin.email
-                  %i.icon-edit
-    .span9.container
-      %table
+          %li.nav-header
+            Admins
+        %ul.nav.nav-list{'data-bind' => 'foreach: admins'}
+          %li
+            %a.home{'data-bind' => 'click: $root.edit' }
+              .span{'data-bind' => 'text: email'}
+              %i.icon-edit
+    #subs-div.span9.container
+      %table.table.table-bordered
         %thead
           %th
-            Phone Number
+            Subscriber ID
           %th
             Text
           %th
             Shows
-          %th Id
-        %tbody
-          - if misspelt.empty?
+          %tbody{'data-bind' => 'foreach: misspelt'}
             %tr
-              %td.centered{ :colspan => 3}
-                No unresolved Subscriptions
-          - misspelt.each do |miss|
-            %tr
+              %td{ 'data-bind' => 'text: subscriber_id'}
+              %td{ 'data-bind' => 'text: show_name'}
+              - if shows.empty?
+                %td No Shows in Database
+              - else
+                %td
+                  %select#show
+                    - shows.each do |show|
+                      %option{'value' => show.id}
+                        = show.name
               %td
-                = miss.show_name
-              %td
-                blah
-              %td
-                blah
+                %button.btn{ 'data-bind' => 'click: $root.resolveSubscription'}
+                  Save

@@ -145,6 +145,15 @@ class ApiApplication < Sinatra::Base
           msg = "Thank you for your subscription. Reminders will be billed at 5KSH each. Sms 'STOP' to quit subscription"
           settings.gateway.send_message(subscription.subscriber.phone_number, msg, Message::TYPE_ACKNOWLEDGEMENT, subscription, subscription.show, settings.is_prod)
         end
+        if !subscription.nil and subscription.misspelt == true then
+          admins = Admin.all
+          host = request.host_with_port
+          url = "#{host}/admin/console/mobile"
+          
+          for adm in admins do
+            settings.gateway.send_message(admin.phone_number, "Click on the link to resolve subscription: #{url}", Message::TYPE_ADMIN, nil, nil, false)
+          end
+        end
       elsif is_stop_message(sms.msg) then
         deactivate_subscriptions(sms.from)
       end
@@ -167,6 +176,26 @@ class ApiApplication < Sinatra::Base
       status 200
       body({:success => true }.to_json)
     end
+  end
+  
+  post "/resolve_subscription" do
+    show_name = params[:show_name]
+    show_id = params[:show_id]
+    subscription_id = params[:subscription_id]
+    
+    show = Show.find_by_id(show_id)
+    subscription = Subscription.find_by_id(subscription_id)
+    subscription.show = show
+    subscription.show_name = show_name
+    subscription.active = true
+    subscription.misspelt = false
+    subscription.save!
+    
+    msg = "Thank you for your subscription. Reminders will be billed at 5KSH each. Sms 'STOP' to quit subscription"
+    settings.gateway.send_message(subscription.subscriber.phone_number, msg, Message::TYPE_ACKNOWLEDGEMENT, subscription, subscription.show, settings.is_prod)
+    
+    status 200
+    body({:success => true }.to_json)
   end
 
   collection :describe do
@@ -217,7 +246,7 @@ class ApiApplication < Sinatra::Base
             subscriber02 = Subscriber.create(:phone_number => "254722098765")
             show01 = Show.create(:name => "The Night Show", :description => "News and latest happenings", :channel => ktn)
             subscription01 = Subscription.create(:show_name => "The Night Show", :active => true, :subscriber => subscriber01, :show => show01)
-            subscription02 = Subscription.create(:show_name => "The Nihgt Show", :active => false, :misspelt => true, :subscriber => subscriber01)
+            subscription02 = Subscription.create(:show_name => "The Nihgt Show", :active => false, :misspelt => true, :subscriber => subscriber02)
           end
 
           body({:success => true }.to_json)
@@ -376,7 +405,7 @@ class ApiApplication < Sinatra::Base
           subscriber.phone_number = data['phone_number']
           subscriber.save!
           status 200
-          body(channel.id.to_s)
+          body(subscriber.id.to_s)
         end
       end
     end
@@ -738,12 +767,14 @@ class ApiApplication < Sinatra::Base
       control do
         admin = Admin.find(params[:id])
         data = JSON.parse(request.body.string)
-        if data.nil? or !data.has_key?('email') or !data.has_key?('password') or !data.has_key?('phone_number')
+        if data.nil? or !data.has_key?('email') or !data.has_key?('phone_number')
           status 404
         else
           admin.email = data['email']
-          admin.password = data['password']
           admin.phone_number = data['phone_number']
+          if data.has_key?('password')
+            admin.password = data['password']
+          end
           admin.save!
           status 200
           body(admin.id.to_s)

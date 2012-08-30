@@ -398,6 +398,24 @@ describe 'The Tivi App' do
     s.should be_nil
   end
   
+  it "should update a subscription" do
+    subscription = Subscription.create!(:show_name => "The Original", :active => false, :cancelled => false, :misspelt => false)
+    subscription.active.should == false
+
+    updated = {
+        :show_name => "The Original",
+        :active => true,
+        :cancelled => false,
+        :misspelt => false
+    }
+
+    patch "/subscriptions/#{subscription.id}", updated.to_json
+    last_response.should be_ok
+    subscription = Subscription.find_by_id(subscription.id)
+
+    subscription.active.should == true
+  end
+  
   it "returns subscribers" do
     get '/subscribers'
     subscribers = Subscriber.all
@@ -431,6 +449,20 @@ describe 'The Tivi App' do
     last_response.should be_ok
     s = Subscriber.find_by_id(s.id)
     s.should be_nil
+  end
+  
+  it "should update a subscriber" do
+    subscriber = Subscriber.create!(:phone_number => "254722000001")
+
+    updated = {
+        :phone_number => "254723145987"
+    }
+
+    patch "/subscribers/#{subscriber.id}", updated.to_json
+    last_response.should be_ok
+    subscriber = Subscriber.find_by_id(subscriber.id)
+
+    subscriber.phone_number.should == "254723145987"
   end
   
   it "returns sms logs" do
@@ -469,5 +501,44 @@ describe 'The Tivi App' do
     s = SMSLog.find_by_id(s.id)
     s.should be_nil
   end
+  
+  it "should update an sms log" do
+    s = SMSLog.create!(:external_id => "001", :from => "Me", :msg => "Hello World")
+
+    updated = {
+        :external_id => "001",
+        :from => "Me",
+        :msg => "Goodbye World"
+    }
+
+    patch "/sms/#{s.id}", updated.to_json
+    last_response.should be_ok
+    s = SMSLog.find_by_id(s.id)
+
+    s.msg.should == "Goodbye World"
+  end
+  
+  # it "resolves a subscription and sends an acknowledgement message to the user" do
+    # subscriber = Subscriber.create!(:phone_number => "254722647920")
+    # show = Show.create!(:name => "The Test Show", :description => "test show", :channel => ktn)
+    # subscription = Subscription.create!(:show_name => "The Tst Show", :active => false, :misspelt => true, :subscriber => subscriber)
+#     
+    # sub = {
+      # show_name: show.name,
+      # show_id: show.id,
+      # subscription_id: subscription.id
+    # }
+#     
+    # post "/resolve_subscription", sub.to_json
+    # last_response.should be_ok
+#     
+    # subscription.show_name.should == show.name
+    # subscription.show_id.should == show.id
+    # subscription.active.should == true
+    # subscription.misspelt.should == false
+#     
+    # ack = Message.find_by_subscriber_id_and_type!(subscriber.id, TYPE_ACKNOWLEDGEMENT)
+    # ack.message_text.should eq("Thank you for your subscription. Reminders will be billed at 5KSH each. Sms 'STOP' to quit subscription")
+  # end
   
 end
