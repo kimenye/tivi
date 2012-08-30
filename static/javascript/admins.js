@@ -126,7 +126,7 @@ $(document).ready(function() {
         };
         
         self.deleteAdmin = function(admin) {
-        	alert(admin.id);
+        	// doesnt work. Need to get admin id
         	$("#admin-edit-modal").modal('hide');
             bootbox.confirm("This action cannot be undone. Are you sure you want to delete the admin?", function(result) {
                if (result) {
