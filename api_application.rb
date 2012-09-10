@@ -151,7 +151,8 @@ class ApiApplication < Sinatra::Base
           url = "#{host}/admin/console/mobile"
           
           for adm in admins do
-            settings.gateway.send_message(admin.phone_number, "Click on the link to resolve subscription: #{url}", Message::TYPE_ADMIN, nil, nil, false)
+            id = adm.id
+            settings.gateway.send_message(admin.phone_number, "Click on the link to resolve subscription: #{url}?id=#{id}", Message::TYPE_ADMIN, nil, nil, false)
           end
         end
       elsif is_stop_message(sms.msg) then

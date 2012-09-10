@@ -72,4 +72,16 @@ describe 'The User Experience' do
     subscription.active.should eq(false)
     subscription.misspelt.should eq(true)
   end
+  
+  it "should send a message to the admin for a show that has been misspelt" do
+    get "/sms_gateway?message_source=#{CGI::escape("254721234567")}&message_text=#{CGI::escape("TIVI 10 MA Show")}&message_destination=5566&trxID=3434439"
+
+    incoming_sms = SMSLog.find_by_external_id!(3434439)
+    subscriber = Subscriber.find_by_phone_number!("254721234567")
+    subscription = Subscription.find_by_subscriber_id!(subscriber.id)
+    subscription.active.should eq(false)
+    subscription.misspelt.should eq(true)
+    msg = Message.find_by_type!(Message::TYPE_ADMIN)
+    msg.message_text.should eq("Thank you for your subscription. Reminders will be billed at 5KSH each. Sms 'STOP' to quit subscription")
+  end
 end

@@ -518,27 +518,27 @@ describe 'The Tivi App' do
     s.msg.should == "Goodbye World"
   end
   
-  # it "resolves a subscription and sends an acknowledgement message to the user" do
-    # subscriber = Subscriber.create!(:phone_number => "254722647920")
-    # show = Show.create!(:name => "The Test Show", :description => "test show", :channel => ktn)
-    # subscription = Subscription.create!(:show_name => "The Tst Show", :active => false, :misspelt => true, :subscriber => subscriber)
-#     
-    # sub = {
-      # show_name: show.name,
-      # show_id: show.id,
-      # subscription_id: subscription.id
-    # }
-#     
-    # post "/resolve_subscription", sub.to_json
-    # last_response.should be_ok
-#     
-    # subscription.show_name.should == show.name
-    # subscription.show_id.should == show.id
-    # subscription.active.should == true
-    # subscription.misspelt.should == false
-#     
-    # ack = Message.find_by_subscriber_id_and_type!(subscriber.id, TYPE_ACKNOWLEDGEMENT)
-    # ack.message_text.should eq("Thank you for your subscription. Reminders will be billed at 5KSH each. Sms 'STOP' to quit subscription")
-  # end
+  it "resolves a subscription and sends an acknowledgement message to the user" do
+    subscriber = Subscriber.create!(:phone_number => "254722647920")
+    show = Show.create!(:name => "The Test Show", :description => "test show", :channel => ktn)
+    subscription = Subscription.create!(:show_name => "The Tst Show", :active => false, :misspelt => true, :subscriber => subscriber)
+    
+    sub = {
+      show_name: show.name,
+      show_id: show.id,
+      subscription_id: subscription.id
+    }
+    
+    post "/resolve_subscription", sub.to_json
+    last_response.should be_ok
+    
+    subscription.show_name.should == show.name
+    subscription.show_id.should == show.id
+    subscription.active.should == true
+    subscription.misspelt.should == false
+    
+    ack = Message.find_by_subscriber_id_and_type!(subscriber.id, TYPE_ACKNOWLEDGEMENT)
+    ack.message_text.should eq("Thank you for your subscription. Reminders will be billed at 5KSH each. Sms 'STOP' to quit subscription")
+  end
   
 end

@@ -68,7 +68,7 @@ class AdminApp < Sinatra::Base
   
   get "/console/mobile" do
     shows = Show.all
-    haml :"admin/mobile", :layout => :mobile, :locals => {:shows => shows}
+    haml :"admin/mobile", :layout => :mobile_layout, :locals => {:shows => shows}
   end
 
 end
