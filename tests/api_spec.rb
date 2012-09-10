@@ -518,6 +518,59 @@ describe 'The Tivi App' do
     s.msg.should == "Goodbye World"
   end
   
+  it "returns admin logs" do
+    get '/adminlogs'
+    adminlogs = AdminLog.all
+    last_response.should be_ok
+    last_response.body.should == adminlogs.to_json
+  end
+  
+  it "returns an admin log" do
+    adminlog = AdminLog.first()
+    if !adminlog.nil?
+      get "/adminlogs/#{adminlog.id}"
+      last_response.should be_ok
+      last_response.body.should == adminlog.to_json
+    end
+  end
+
+  it "does not return an admin log when there is no id" do
+    get "/adminlogs/"
+    last_response.should_not be_ok
+  end
+  
+  it "deletes an admin log" do
+    AdminLog.delete_all
+    adminlog = AdminLog.new
+    adminlog.user_phone_number = "254733987234"
+    adminlog.user_text = "Tis Show"
+    adminlog.show_name = "This Show"
+    adminlog.save!
+
+    to_delete_id = adminlog.id
+    delete "/adminlogs/#{to_delete_id.to_s}"
+
+    last_response.should be_ok
+    adminlog = AdminLog.find_by_id(adminlog.id)
+    adminlog.should be_nil
+  end
+  
+  it "should update an admin log" do
+    adminlog = AdminLog.create!(:user_phone_number => "254734187653", :user_text => "My Shw", :show_name => "My Show")
+
+    updated = {
+        :user_phone_number => "254735286432",
+        :user_text => "My Shw",
+        :show_name => "My Show"
+    }
+
+    patch "/adminlogs/#{adminlog.id}", updated.to_json
+    last_response.should be_ok
+    adminlog = AdminLog.find_by_id(adminlog.id)
+
+    adminlog.user_phone_number.should == "254735286432"
+  end
+  
   it "resolves a subscription and sends an acknowledgement message to the user" do
     subscriber = Subscriber.create!(:phone_number => "254722647920")
     show = Show.create!(:name => "The Test Show", :description => "test show", :channel => ktn)

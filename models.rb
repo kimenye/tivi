@@ -90,3 +90,13 @@ class Admin
   key :password, String
   key :phone_number, String
 end
+
+class AdminLog
+  include MongoMapper::Document
+
+  key :user_phone_number, String
+  key :user_text, String
+  key :show_name, String
+  key :date, Time, :default => Time.now
+  belongs_to :admin
+end

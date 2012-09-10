@@ -862,6 +862,83 @@ class ApiApplication < Sinatra::Base
       end
     end
   end
+  
+  collection :adminlogs do
+    description "API operations for managing admin logs"
+
+    operation :index do
+      description "Return all admin logs"
+      control do
+        adminlogs = AdminLog.all
+        status 200
+        body(adminlogs.to_json)
+      end
+    end
+    
+    operation :show do
+      description "Get a specific admin log"
+      
+      param :id, :string, :required
+      control do
+        adminlog = AdminLog.find_by_id(params[:id])
+        if adminlog.nil?
+          status 404
+        else
+          status 200
+          body(adminlog.to_json)
+        end
+      end
+    end
+    
+    operation :destroy do
+      description "Delete a specific admin log"
+      
+      param :id, :string, :required
+      control do
+        AdminLog.delete([ params[:id] ])
+        body(params[:id])
+      end
+    end
+    
+    operation :create do
+      description "Create an admin log"
+      
+      control do
+        data = JSON.parse(request.body.string)
+        if data.nil? or !data.has_key?('user_text') or !data.has_key?('show_name') or !data.has_key?('user_phone_number')
+          status 400
+          body({error: "Invalid data"}.to_json)
+        else
+          adminlog = AdminLog.new
+          adminlog.user_text = data['user_text']
+          adminlog.show_name = data['show_name']
+          adminlog.user_phone_number = data['user_phone_number']
+          adminlog.save!
+          status 200
+          body(adminlog.id.to_s)
+        end
+      end
+    end
+    
+    operation :update do
+      description "Update an existing admin log"
+      
+      control do
+        adminlog = AdminLog.find(params[:id])
+        data = JSON.parse(request.body.string)
+        if data.nil? or !data.has_key?('user_text') or !data.has_key?('show_name') or !data.has_key?('user_phone_number')
+          status 404
+        else
+          adminlog.user_text = data['user_text']
+          adminlog.show_name = data['show_name']
+          adminlog.user_phone_number = data['user_phone_number']
+          adminlog.save!
+          status 200
+          body(adminlog.id.to_s)
+        end
+      end
+    end
+  end
 
   # start the server if ruby file executed directly
   #run! if app_file == $0
