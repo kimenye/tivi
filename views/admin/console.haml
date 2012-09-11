@@ -66,14 +66,11 @@
       %table.table.table-bordered
         %thead
           %th
-            Subscriber ID
-          %th
             Text
           %th
             Shows
           %tbody{'data-bind' => 'foreach: misspelt'}
             %tr
-              %td{ 'data-bind' => 'text: subscriber_id'}
               %td{ 'data-bind' => 'text: show_name'}
               - if shows.empty?
                 %td No Shows in Database

@@ -67,9 +67,9 @@ $(document).ready(function() {
                     if (_.isArray(data)) {
                         var models = [];
                         _.each(data, function (item) {
-                        	if(item.misspelt) {
-                            	models.push(new Subscription(item));
-                        	}
+                            if(item.misspelt) {
+                                models.push(new Subscription(item));
+                            }
                         });
                         self.misspelt(models);
                     }
