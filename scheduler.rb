@@ -1,4 +1,5 @@
 require_relative 'models'
+require 'url_shortener'
 
 module SchedulerHelper
   def get_seconds_from_min min
@@ -209,6 +210,14 @@ module SchedulerHelper
       subscription.save!
     end
     subscription
+  end
+
+  def shorten_url(original)
+    auth = UrlShortener::Authorize.new 'tiviguide', 'R_8ee80122d7bb3b807f246941c084ddf0'
+    client = UrlShortener::Client.new auth
+    result = client.shorten(original)
+
+    result.result['nodeKeyVal']['shortUrl']
   end
 end
 

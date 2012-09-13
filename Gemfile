@@ -18,6 +18,7 @@ gem "rufus-scheduler"
 gem "gcal4ruby"
 gem "curb"
 gem "newrelic_rpm"
+gem "url_shortener"
 
 group :test do
   gem 'rack-test', :git => "https://github.com/brynary/rack-test.git"

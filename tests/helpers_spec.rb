@@ -235,4 +235,11 @@ describe 'Sinatra helpers' do
 
     Schedule.delete_all(:show_id => test_show.id)
   end
+
+  it "should shorten a url according to the bit.ly format" do
+    original = "http://www.tivi.co.ke"
+    expected = "http://bit.ly/QOaiBl"
+
+    helpers.shorten_url(original).should eq(expected)
+  end
 end
