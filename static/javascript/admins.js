@@ -114,13 +114,17 @@ $(document).ready(function() {
         self.resolveSubscription = function(misspelt) {
         	var selectedShowId = $('#show :selected').val();
         	var selectedShowName = $.trim($("#show :selected").text());
+        	if(selectedShowId === 'no_choice') {
+        		alert("You must select a show");
+        		return;
+        	}
         	var url = "/api/resolve_subscription";
                 $.ajax({
                     url: url,
                     type: 'post',
                     data: { show_name: selectedShowName, show_id: selectedShowId, subscription_id: misspelt.id }})
                     .success(function (data) {
-                        bootbox.alert("Subscription resolved");
+                        alert("Subscription resolved");
             			self.loadMisspelt();
                     });
         };

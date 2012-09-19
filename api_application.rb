@@ -246,8 +246,11 @@ class ApiApplication < Sinatra::Base
             subscriber01 = Subscriber.create(:phone_number => "254722654321")
             subscriber02 = Subscriber.create(:phone_number => "254722098765")
             show01 = Show.create(:name => "The Night Show", :description => "News and latest happenings", :channel => ktn)
+            show01 = Show.create(:name => "Another Show", :description => "whatever", :channel => ntv)
+            show01 = Show.create(:name => "Yet Another Show", :description => "blah blah", :channel => ctz)
             subscription01 = Subscription.create(:show_name => "The Night Show", :active => true, :subscriber => subscriber01, :show => show01)
             subscription02 = Subscription.create(:show_name => "The Nihgt Show", :active => false, :misspelt => true, :subscriber => subscriber02)
+            subscription03 = Subscription.create(:show_name => "Anthr Show", :active => false, :misspelt => true, :subscriber => subscriber02)
           end
 
           body({:success => true }.to_json)
