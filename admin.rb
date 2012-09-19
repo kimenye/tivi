@@ -62,13 +62,12 @@ class AdminApp < Sinatra::Base
   
   get '/console' do
     protected!
-    shows = Show.all
-    haml :"admin/console", :layout => :admin, :locals => {:shows => shows}
+    haml :"admin/console", :layout => :admin
   end
   
-  get "/console/mobile" do
+  get "/console/mobile/:id/:show_name" do
     shows = Show.all
-    haml :"admin/mobile", :layout => :mobile_layout, :locals => {:shows => shows}
+    haml :"admin/mobile", :layout => :mobile_layout, :locals => {:shows => shows, :admin_id => params[:id], :show_name => params[:show_name]}
   end
 
 end

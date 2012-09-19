@@ -91,9 +91,9 @@ describe 'The User Experience' do
     admin = Admin.create!(:id => "5059aa637edd6f0b010001a0", :email => "mine@mine.com", :phone_number => "254722734912", :password => "mine")
     #host = request.host_with_port
     #url = "#{host}/admin/console/mobile"
-    url = "http://example.org/admin/console/mobile?admin_id=5059aa637edd6f0b010001a0&show=#{subscription.show_name}"
+    url = "http://example.org/admin/console/mobile/5059aa637edd6f0b010001a0/#{subscription.show_name}"
     
-    expected = "http://bit.ly/UjbgSg"
+    expected = "http://bit.ly/SBm9xB"
     
     shortened_url = helpers.shorten_url(url)
     shortened_url.should eq(expected)

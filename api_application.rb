@@ -148,10 +148,9 @@ class ApiApplication < Sinatra::Base
         if !subscription.nil and subscription.misspelt == true then
           admins = Admin.all
           host = request.host_with_port
-          url = "http://#{host}/admin/console/mobile"
           
           for adm in admins do
-            full_url = "#{url}?admin_id=#{adm.id}&show=#{subscripion.show_name}"
+            full_url = "http://#{host}/admin/console/mobile/#{adm.id}/#{subscripion.show_name}"
             shortened_url = shorten_url(full_url);
             settings.gateway.send_message(adm.phone_number, "Click on the link to resolve the subscription: #{shortened_url}", Message::TYPE_ADMIN, nil, nil, false)
           end
