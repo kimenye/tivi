@@ -3,9 +3,15 @@ require_relative 'spec_helper'
 require 'rspec-expectations'
 require 'rack/test'
 
+class TestHelper
+  include SchedulerHelper
+end
+
 describe 'The User Experience' do
   include TestHelpers
   include Rack::Test::Methods
+  
+  let(:helpers) { TestHelper.new }
 
   def app
     ApiApplication
@@ -81,7 +87,17 @@ describe 'The User Experience' do
     subscription = Subscription.find_by_subscriber_id!(subscriber.id)
     subscription.active.should eq(false)
     subscription.misspelt.should eq(true)
+    Admin.delete_all
+    admin = Admin.create!(:id => "5059aa637edd6f0b010001a0", :email => "mine@mine.com", :phone_number => "254722734912", :password => "mine")
+    #host = request.host_with_port
+    #url = "#{host}/admin/console/mobile"
+    url = "http://example.org/admin/console/mobile?admin_id=5059aa637edd6f0b010001a0&show=#{subscription.show_name}"
+    
+    expected = "http://bit.ly/UjbgSg"
+    
+    shortened_url = helpers.shorten_url(url)
+    shortened_url.should eq(expected)
     msg = Message.find_by_type!(Message::TYPE_ADMIN)
-    msg.message_text.should eq("Thank you for your subscription. Reminders will be billed at 5KSH each. Sms 'STOP' to quit subscription")
+    msg.message_text.should eq("Click on the link to resolve the subscription: #{shortened_url}")
   end
 end

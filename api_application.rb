@@ -148,7 +148,7 @@ class ApiApplication < Sinatra::Base
         if !subscription.nil and subscription.misspelt == true then
           admins = Admin.all
           host = request.host_with_port
-          url = "#{host}/admin/console/mobile"
+          url = "http://#{host}/admin/console/mobile"
           
           for adm in admins do
             full_url = "#{url}?admin_id=#{adm.id}&show=#{subscripion.show_name}"
