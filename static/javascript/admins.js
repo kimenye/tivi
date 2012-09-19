@@ -94,7 +94,11 @@ $(document).ready(function() {
         }
         
         self.loadMisspelt();
-        self.loadAdmins()
+        self.loadAdmins();
+        $('#show-choice').change(function() {
+		  alert('Handler for .change() called.');
+		});
+
         
         self.newAdmin = function() {
             self.email(null);
@@ -112,8 +116,8 @@ $(document).ready(function() {
         };
         
         self.resolveSubscription = function(misspelt) {
-        	var selectedShowId = $('#show :selected').val();
-        	var selectedShowName = $.trim($("#show :selected").text());
+        	var selectedShowId = $('#show-choice :selected').val();
+        	var selectedShowName = $.trim($("#show-choice :selected").text());
         	if(selectedShowId === 'no_choice') {
         		alert("You must select a show");
         		return;

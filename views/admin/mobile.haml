@@ -9,7 +9,7 @@
           - if shows.empty?
             No Shows in Database
           - else
-            %select#show
+            %select#show-choice
               %option{'value' => 'no_choice', 'data-placeholder' => 'true'} Select a Show
               - shows.each do |show|
                 %option{'value' => show.id}
