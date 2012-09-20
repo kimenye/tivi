@@ -253,6 +253,7 @@ class ApiApplication < Sinatra::Base
           Channel.delete_all
           SMSLog.delete_all
           Message.delete_all
+          AdminLog.delete_all
 
           if create == "true"
             ktn = Channel.create!(:code => "KTN", :name => "Kenya Television Network", :calendar_id => "tivi.co.ke_1aku43rv679bbnj9r02coema98@group.calendar.google.com")

@@ -197,7 +197,7 @@ module SchedulerHelper
     subscription.subscriber = subscriber
     subscription.show_name = show_name
     if !show.nil?
-      existing = Subscription.find_by_show_id_and_subscriber_id(show.id, subscriber.id)
+      existing = Subscription.find_by_show_id_and_subscriber_id_and_active(show.id, subscriber.id, true)
       if existing.nil?
         subscription.show = show
         subscription.active = true
@@ -206,8 +206,13 @@ module SchedulerHelper
         subscription = nil
       end
     else
-      subscription.misspelt = true
-      subscription.save!
+      existing_in_active = Subscription.find_by_subscriber_id_and_show_name_and_active(subscriber.id, {'$regex' => /#{show_name}/i}, false)
+      if existing_in_active.nil?
+        subscription.misspelt = true
+        subscription.save!
+      else
+        subscription = nil
+      end
     end
     subscription
   end
