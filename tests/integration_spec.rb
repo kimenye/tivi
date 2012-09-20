@@ -87,16 +87,12 @@ describe 'The User Experience' do
     subscription = Subscription.find_by_subscriber_id!(subscriber.id)
     subscription.active.should eq(false)
     subscription.misspelt.should eq(true)
-    Admin.delete_all
-    admin = Admin.create!(:id => "5059aa637edd6f0b010001a0", :email => "mine@mine.com", :phone_number => "254722734912", :password => "mine")
+    admin = Admin.create!(:email => "mine@mine.com", :phone_number => "254722734912", :password => "mine")
     #host = request.host_with_port
     #url = "#{host}/admin/console/mobile"
-    url = "http://example.org/admin/console/mobile/5059aa637edd6f0b010001a0/#{subscription.show_name}"
-    
-    expected = "http://bit.ly/SBm9xB"
+    url = "http://example.org/admin/console/mobile/#{admin.id}"
     
     shortened_url = helpers.shorten_url(url)
-    shortened_url.should eq(expected)
     msg = Message.find_by_type!(Message::TYPE_ADMIN)
     msg.message_text.should eq("Click on the link to resolve the subscription: #{shortened_url}")
   end

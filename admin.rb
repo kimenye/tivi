@@ -65,9 +65,13 @@ class AdminApp < Sinatra::Base
     haml :"admin/console", :layout => :admin
   end
   
-  get "/console/mobile/:id/:show_name" do
+  get "/console/mobile/:admin_id" do
+    admin = Admin.find(params[:admin_id])
+    if admin.nil?
+      throw(:halt, [401, "Not authorized\n"])
+    end
     shows = Show.all
-    haml :"admin/mobile", :layout => :mobile_layout, :locals => {:shows => shows, :admin_id => params[:id], :show_name => params[:show_name]}
+    haml :"admin/mobile", :layout => :mobile_layout, :locals => {:shows => shows, :admin_id => params[:admin_id]}
   end
 
 end

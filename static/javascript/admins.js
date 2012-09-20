@@ -118,19 +118,23 @@ $(document).ready(function() {
         self.resolveSubscription = function(misspelt) {
         	var selectedShowId = $('#show-choice :selected').val();
         	var selectedShowName = $.trim($("#show-choice :selected").text());
+        	var adminId = $('#adminId').val();
         	if(selectedShowId === 'no_choice') {
         		alert("You must select a show");
         		return;
         	}
-        	var url = "/api/resolve_subscription";
-                $.ajax({
-                    url: url,
-                    type: 'post',
-                    data: { show_name: selectedShowName, show_id: selectedShowId, subscription_id: misspelt.id }})
-                    .success(function (data) {
-                        alert("Subscription resolved");
-            			self.loadMisspelt();
-                    });
+            $.ajax({
+                url: '/api/resolve_subscription',
+                type: 'post',
+                data: { show_name: selectedShowName, show_id: selectedShowId, subscription_id: misspelt.id, admin_id: adminId }})
+                .success(function (data) {
+                    alert("Subscription resolved");
+        			self.loadMisspelt();
+                })
+                .error(function(data) {
+                	alert("Subscription has already been resolved");
+                	self.loadMisspelt();
+                });
         };
         
         self.deleteAdmin = function() {

@@ -150,7 +150,7 @@ class ApiApplication < Sinatra::Base
           host = request.host_with_port
           
           for adm in admins do
-            full_url = "http://#{host}/admin/console/mobile/#{adm.id}/#{subscripion.show_name}"
+            full_url = "http://#{host}/admin/console/mobile/#{adm.id}"
             shortened_url = shorten_url(full_url);
             settings.gateway.send_message(adm.phone_number, "Click on the link to resolve the subscription: #{shortened_url}", Message::TYPE_ADMIN, nil, nil, false)
           end
@@ -183,20 +183,36 @@ class ApiApplication < Sinatra::Base
     show_name = params[:show_name]
     show_id = params[:show_id]
     subscription_id = params[:subscription_id]
+    admin_id = params[:admin_id]
     
     show = Show.find_by_id(show_id)
     subscription = Subscription.find_by_id(subscription_id)
-    subscription.show = show
-    subscription.show_name = show_name
-    subscription.active = true
-    subscription.misspelt = false
-    subscription.save!
+    misspelt_text = subscription.show_name
     
-    msg = "Thank you for your subscription. Reminders will be billed at 5KSH each. Sms 'STOP' to quit subscription"
-    settings.gateway.send_message(subscription.subscriber.phone_number, msg, Message::TYPE_ACKNOWLEDGEMENT, subscription, subscription.show, settings.is_prod)
+    if subscription.misspelt == true
+      subscription.show = show
+      subscription.show_name = show_name
+      subscription.active = true
+      subscription.misspelt = false
+      subscription.save!
+  
+      admin = Admin.find_by_id(admin_id)
+      adminlog = AdminLog.new
+      adminlog.user_phone_number = subscription.subscriber.phone_number
+      adminlog.user_text = misspelt_text
+      adminlog.show_name = subscription.show_name
+      adminlog.save!
+      
+      msg = "Thank you for your subscription. Reminders will be billed at 5KSH each. Sms 'STOP' to quit subscription"
+      settings.gateway.send_message(subscription.subscriber.phone_number, msg, Message::TYPE_ACKNOWLEDGEMENT, subscription, subscription.show, settings.is_prod)
+      
+      status 200
+      body({:success => true }.to_json)
+    else
+      status 409
+      body({:success => false}.to_json)
+    end
     
-    status 200
-    body({:success => true }.to_json)
   end
 
   collection :describe do
