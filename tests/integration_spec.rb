@@ -72,7 +72,6 @@ describe 'The User Experience' do
   it "should not send an acknowledgement for a show that has been misspelt" do
     get "/sms_gateway?message_source=#{CGI::escape("254701234567")}&message_text=#{CGI::escape("TIVI 10 MA Show")}&message_destination=5566&trxID=3434438"
 
-    incoming_sms = SMSLog.find_by_external_id!(3434438)
     subscriber = Subscriber.find_by_phone_number!("254701234567")
     subscription = Subscription.find_by_subscriber_id!(subscriber.id)
     subscription.active.should eq(false)
@@ -80,18 +79,19 @@ describe 'The User Experience' do
   end
   
   it "should send a message to the admin for a show that has been misspelt" do
+    
+    Message.delete_all
+    Admin.delete_all
+    admin = Admin.create!(:email => "mine@mine.com", :phone_number => "254722734912", :password => "mine")
+    
     get "/sms_gateway?message_source=#{CGI::escape("254721234567")}&message_text=#{CGI::escape("TIVI 10 MA Show")}&message_destination=5566&trxID=3434439"
 
-    incoming_sms = SMSLog.find_by_external_id!(3434439)
     subscriber = Subscriber.find_by_phone_number!("254721234567")
     subscription = Subscription.find_by_subscriber_id!(subscriber.id)
     subscription.active.should eq(false)
     subscription.misspelt.should eq(true)
-    admin = Admin.create!(:email => "mine@mine.com", :phone_number => "254722734912", :password => "mine")
-    #host = request.host_with_port
-    #url = "#{host}/admin/console/mobile"
-    url = "http://example.org/admin/console/mobile/#{admin.id}"
     
+    url = "http://example.org/admin/console/mobile/#{admin.id}"
     shortened_url = helpers.shorten_url(url)
     msg = Message.find_by_type!(Message::TYPE_ADMIN)
     msg.message_text.should eq("Click on the link to resolve the subscription: #{shortened_url}")

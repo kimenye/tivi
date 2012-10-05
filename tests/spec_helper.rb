@@ -22,6 +22,7 @@ module TestHelpers
     Channel.delete_all
     SMSLog.delete_all
     Message.delete_all
+    AdminLog.delete_all
   end
 
   def get_test_subscriber
