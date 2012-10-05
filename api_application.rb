@@ -145,7 +145,7 @@ class ApiApplication < Sinatra::Base
           msg = "Thank you for your subscription. Reminders will be billed at 5KSH each. Sms 'STOP' to quit subscription"
           settings.gateway.send_message(subscription.subscriber.phone_number, msg, Message::TYPE_ACKNOWLEDGEMENT, subscription, subscription.show, settings.is_prod)
         end
-        if !subscription.nil and subscription.misspelt == true then
+        if !subscription.nil? and subscription.misspelt == true then
           admins = Admin.all
           host = request.host_with_port
           

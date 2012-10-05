@@ -572,25 +572,35 @@ describe 'The Tivi App' do
   end
   
   it "resolves a subscription and sends an acknowledgement message to the user" do
+    Channel.delete_all
+    c = Channel.new
+    c.code = ktn[:code]
+    c.name = ktn[:name]
+    c.calendar_id = ktn[:calendar_id]
+    c.save!
+    
+    admin = Admin.create!(:email => "whatever@whatever.org", :phone_number => "254765476543", :password => "whatever")
+    
     subscriber = Subscriber.create!(:phone_number => "254722647920")
-    show = Show.create!(:name => "The Test Show", :description => "test show", :channel => ktn)
+    show = Show.create!(:name => "The Test Show", :description => "test show", :channel => c)
     subscription = Subscription.create!(:show_name => "The Tst Show", :active => false, :misspelt => true, :subscriber => subscriber)
     
     sub = {
       show_name: show.name,
       show_id: show.id,
-      subscription_id: subscription.id
+      subscription_id: subscription.id,
+      admin_id: admin.id
     }
-    
-    post "/resolve_subscription", sub.to_json
+    post "/resolve_subscription", sub
     last_response.should be_ok
     
+    subscription = Subscription.find_by_id(subscription.id)
     subscription.show_name.should == show.name
     subscription.show_id.should == show.id
     subscription.active.should == true
     subscription.misspelt.should == false
     
-    ack = Message.find_by_subscriber_id_and_type!(subscriber.id, TYPE_ACKNOWLEDGEMENT)
+    ack = Message.find_by_type!(Message::TYPE_ACKNOWLEDGEMENT)
     ack.message_text.should eq("Thank you for your subscription. Reminders will be billed at 5KSH each. Sms 'STOP' to quit subscription")
   end
   
