@@ -198,6 +198,7 @@ class ApiApplication < Sinatra::Base
   
       admin = Admin.find_by_id(admin_id)
       adminlog = AdminLog.new
+      adminlog.admin = admin
       adminlog.user_phone_number = subscription.subscriber.phone_number
       adminlog.user_text = misspelt_text
       adminlog.show_name = subscription.show_name

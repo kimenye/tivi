@@ -3,17 +3,19 @@
     #subscriptions-header-div{'data-role' => 'header'}
       %h1 TiVi
     #subscriptions-content-div{'data-role' => 'content'}
-      %ol{'data-role' => 'listview', 'data-inset' => 'true', 'data-bind' => 'foreach: misspelt'}
-        %li
-          %h3{ 'data-bind' => 'text: show_name'}
-          - if shows.empty?
-            No Shows in Database
-          - else
-            %select#show-choice
-              %option{'value' => 'no_choice', 'data-placeholder' => 'true'} Select a Show
-              - shows.each do |show|
-                %option{'value' => show.id}
-                  = show.name
-          %button.btn{ 'data-bind' => 'click: $root.resolveSubscription', 'data-inline' => 'true', 'data-icon' => 'check', 'data-theme' => 'a'}
-            Save
+      - if misspelt.empty?
+        No subscriptions to resolve
+      - else
+        %ul{'data-role' => 'listview', 'data-inset' => 'true'}
+          - misspelt.each do |miss|
+            %li
+              %h3
+                = miss.show_name
+              %select{'id' => miss.id}
+                %option{'value' => 'no_choice', 'data-placeholder' => 'true'} Select a Show
+                - shows.each do |show|
+                  %option{'value' => show.id}
+                    = show.name
+              %button.btn{'data-inline' => 'true', 'data-icon' => 'check', 'data-theme' => 'a', 'onclick' => 'resolveSubscription("' + miss.id + '")'}
+                Save
       %input{'type' => 'hidden', 'id' => 'adminId', 'value' => admin_id}

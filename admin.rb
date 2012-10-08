@@ -71,7 +71,14 @@ class AdminApp < Sinatra::Base
       throw(:halt, [401, "Not authorized\n"])
     end
     shows = Show.all
-    haml :"admin/mobile", :layout => :mobile_layout, :locals => {:shows => shows, :admin_id => params[:admin_id]}
+    subscriptions = Subscription.all
+    misspelt = Array.new
+    for subscription in subscriptions do
+      if subscription.misspelt == true
+        misspelt.push subscription
+      end
+    end
+    haml :"admin/mobile", :layout => :mobile_layout, :locals => {:shows => shows, :admin_id => params[:admin_id], :misspelt => misspelt}
   end
 
 end
