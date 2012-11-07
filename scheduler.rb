@@ -1,5 +1,6 @@
 require_relative 'models'
 require 'url_shortener'
+require 'pry'
 
 module SchedulerHelper
   def get_seconds_from_min min
@@ -63,6 +64,23 @@ module SchedulerHelper
                  :order => :start_time)
   end
 
+  def get_schedule_for_rest_of_day(channel, time=Time.now)
+    end_of_day = _get_end_of_day(time)
+    Schedule.all(:start_time => {'$gte' => time.utc},
+                 :end_time => {'$lte' => end_of_day.utc},
+                 :show_id => {'$in' => Show.all(:channel_id => channel.id).collect { |s| s.id }},
+                 :order => :start_time)
+  end
+
+  def get_current_and_next_schedule(channel, time=Time.now)
+    end_of_day = _get_end_of_day(time)
+    Schedule.all(:start_time => {'$gte' => time.utc},
+                 :end_time => {'$lte' => end_of_day.utc},
+                 :show_id => {'$in' => Show.all(:channel_id => channel.id).collect { |s| s.id }},
+                 :order => :start_time,
+                 :limit => 2)
+  end
+
   def get_next_time_scheduled(show)
     Schedule.first(:show_id => show.id, :start_time => { '$gte' => Time.now.utc } , :order => :start_time)
   end
@@ -93,6 +111,7 @@ module SchedulerHelper
           :description => event.content
       }
     }
+
   end
 
   def sync_shows_for_week (service, calendar, from=_get_start_of_the_week(Time.now))
@@ -132,7 +151,7 @@ module SchedulerHelper
 
       schedule = Schedule.find_by_show_id_and_start_time(show.id, _show[:start_time])
       if schedule.nil?
-        Schedule.create!(:start_time => _show[:start_time], :end_time => _show[:end_time], :show => show)
+        Schedule.create!(:start_time => _show[:start_time].localtime, :end_time => _show[:end_time].localtime, :show => show)
       end
     }
   end
