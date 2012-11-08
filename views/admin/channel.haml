@@ -45,9 +45,9 @@
             - schedule.each do |show|
               %tr
                 %td.span2
-                  = show.start_time.strftime("%r")
+                  = show.start_time.localtime.strftime("%r")
                 %td.span2
-                  = show.end_time.strftime("%r")
+                  = show.end_time.localtime.strftime("%r")
                 %td.span3
                   = show.show.name
                 %td

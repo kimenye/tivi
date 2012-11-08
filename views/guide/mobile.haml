@@ -18,7 +18,11 @@
               - data['shows'].each do |show|
                 %li
                   %a{:href => "#" + show.show.id, 'data-rel' => 'dialog'}
-                    = show.show.name
+                    %img{'src' => '/images/logo.png'}
+                    %h3
+                      = show.show.name
+                    %p
+                      = show.start_time.localtime.strftime("%R") + " - " + show.end_time.localtime.strftime("%R")
   - channel_complete.each do |data|
     .channel-div{'id' => data['channel'].id, 'data-role' => 'page'}
       .channel-header-div{'data-role' => 'header'}
@@ -32,7 +36,11 @@
             - data['shows'].each do |show|
               %li
                 %a{:href => "#" + show.show.id, 'data-rel' => 'dialog'}
-                  = show.show.name
+                  %img{'src' => '/images/logo.png'}
+                  %h3
+                    = show.show.name
+                  %p
+                    = show.start_time.localtime.strftime("%R") + " - " + show.end_time.localtime.strftime("%R")
     - data['shows'].each do |show|
       .show-div{'id' => show.show.id, 'data-role' => 'page'}
         .show-header-div{'data-role' => 'header'}
