@@ -1,0 +1,42 @@
+#guide-div
+  #channels-div{'data-role' => 'page'}
+    #channels-header-div{'data-role' => 'header'}
+      %h1 TiVi Guide
+    #channels-content-div{'data-role' => 'content'}
+      - if channel_summary.empty?
+        No channels in database
+      - else
+        %ul{'data-role' => 'listview'}
+          - channel_summary.each do |data|
+            %li{'data-role' => 'list-divider'}
+              %a{:href => "#" + data['channel'].id}
+                = data['channel'].name
+            - if data['shows'].empty?
+              %li
+                No Scheduled Shows
+            - else
+              - data['shows'].each do |show|
+                %li
+                  %a{:href => "#" + show.show.id, 'data-rel' => 'dialog'}
+                    = show.show.name
+  - channel_complete.each do |data|
+    .channel-div{'id' => data['channel'].id, 'data-role' => 'page'}
+      .channel-header-div{'data-role' => 'header'}
+        %h1
+          = data['channel'].name
+      .channel-content-div{'data-role' => 'content'}
+        - if data['shows'].empty?
+          No Scheduled Shows
+        - else
+          %ul{'data-role' => 'listview'}
+            - data['shows'].each do |show|
+              %li
+                %a{:href => "#" + show.show.id, 'data-rel' => 'dialog'}
+                  = show.show.name
+    - data['shows'].each do |show|
+      .show-div{'id' => show.show.id, 'data-role' => 'page'}
+        .show-header-div{'data-role' => 'header'}
+          %h1
+            = show.show.name
+        .show-content-div{'data-role' => 'content'}
+          = (show.promo_text.nil? || show.promo_text.empty?) ? show.show.description : show.promo_text
