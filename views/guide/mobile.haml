@@ -38,12 +38,13 @@
               - else
                 %li
                   %a{:href => "#" + show.show.id, 'class' => 'show-link'}
-                    .time-div
-                      %h3
-                        = show.start_time.localtime.strftime("%R") + " - " + show.end_time.localtime.strftime("%R")
-                    .name-div
-                      %h3
-                        = show.show.name
+                    .ui-grid-a
+                      .time-div{'class' => 'ui-block-a'}
+                        %h3
+                          = show.start_time.localtime.strftime("%R") + " - " + show.end_time.localtime.strftime("%R")
+                      .name-div{'class' => 'ui-block-b'}
+                        %h3
+                          = show.show.name
     - data['shows'].each do |show|
       - if !show.nil?
         .show-div{'id' => show.show.id, 'data-role' => 'page'}
