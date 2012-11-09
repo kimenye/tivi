@@ -8,17 +8,13 @@
       - else
         %ul{'data-role' => 'listview'}
           - channel_summary.each do |data|
-            %li{'data-role' => 'list-divider'}
+            %li
               %a{:href => "#" + data['channel'].id}
-                = data['channel'].name
-            - if data['shows'].empty?
-              %li
-                No Scheduled Shows
-            - else
-              - data['shows'].each do |show|
-                %li
-                  %a{:href => "#" + show.show.id, 'data-rel' => 'dialog'}
-                    %img{'src' => '/images/logo.png'}
+                %img{'src' => '/images/logo.png'}
+                - if data['shows'].empty?
+                  No Scheduled Shows
+                - else
+                  - data['shows'].each do |show|
                     %h3
                       = show.show.name
                     %p
@@ -48,5 +44,5 @@
             = show.show.name
         .show-content-div{'data-role' => 'content'}
           %img{'src' => '/images/logo.png'}
-          %h3
+          %p
             = (show.promo_text.nil? || show.promo_text.empty?) ? show.show.description : show.promo_text
