@@ -10,39 +10,52 @@
           - channel_summary.each do |data|
             %li
               %a{:href => "#" + data['channel'].id}
-                %img{'src' => '/images/logo.png'}
+
+                - if data['channel'].logo.nil?
+                  %img{'src' => '/images/logo.png'}
+                - else
+                  %img{:src => "/media/images/#{data['channel'].logo.id}"}
+
                 - if data['shows'].empty?
                   No Scheduled Shows
                 - else
                   - data['shows'].each do |show|
-                    %h3
-                      = show.show.name
-                    %p
-                      = show.start_time.localtime.strftime("%R") + " - " + show.end_time.localtime.strftime("%R")
+                    - if show.nil?
+                      N/A
+                    - else
+                      %h3
+                        = show.show.name
+                      %p
+                        = show.start_time.localtime.strftime("%R") + " - " + show.end_time.localtime.strftime("%R")
   - channel_complete.each do |data|
     .channel-div{'id' => data['channel'].id, 'data-role' => 'page'}
       .channel-header-div{'data-role' => 'header'}
         %h1
-          = data['channel'].name
+          = data['channel'].code
       .channel-content-div{'data-role' => 'content'}
         - if data['shows'].empty?
           No Scheduled Shows
         - else
           %ul{'data-role' => 'listview'}
             - data['shows'].each do |show|
-              %li
-                %a{:href => "#" + show.show.id, 'data-rel' => 'dialog'}
-                  %img{'src' => '/images/logo.png'}
-                  %h3
-                    = show.show.name
-                  %p
-                    = show.start_time.localtime.strftime("%R") + " - " + show.end_time.localtime.strftime("%R")
+              - if show.nil?
+                N/A
+              - else
+                %li
+                  %a{:href => "#" + show.show.id, 'class' => 'show-link'}
+                    .time-div
+                      %h3
+                        = show.start_time.localtime.strftime("%R") + " - " + show.end_time.localtime.strftime("%R")
+                    .name-div
+                      %h3
+                        = show.show.name
     - data['shows'].each do |show|
-      .show-div{'id' => show.show.id, 'data-role' => 'page'}
-        .show-header-div{'data-role' => 'header'}
-          %h1
-            = show.show.name
-        .show-content-div{'data-role' => 'content'}
-          %img{'src' => '/images/logo.png'}
-          %p
-            = (show.promo_text.nil? || show.promo_text.empty?) ? show.show.description : show.promo_text
+      - if !show.nil?
+        .show-div{'id' => show.show.id, 'data-role' => 'page'}
+          .show-header-div{'data-role' => 'header'}
+            %h1
+              = show.show.name
+          .show-content-div{'data-role' => 'content'}
+            %img{'src' => '/images/logo.png'}
+            %p
+              = (show.promo_text.nil? || show.promo_text.empty?) ? show.show.description : show.promo_text
