@@ -66,19 +66,34 @@ module SchedulerHelper
 
   def get_schedule_for_rest_of_day(channel, time=Time.now)
     end_of_day = _get_end_of_day(time)
-    Schedule.all(:start_time => {'$gte' => time.utc},
+    schedule = Schedule.all(:start_time => {'$gte' => time.utc},
                  :end_time => {'$lte' => end_of_day.utc},
                  :show_id => {'$in' => Show.all(:channel_id => channel.id).collect { |s| s.id }},
                  :order => :start_time)
+    schedule_for_rest_of_day = Array.new
+    schedule_for_rest_of_day.push(get_current_show_in_schedule(channel, time))
+    schedule_for_rest_of_day.concat(schedule)
   end
 
   def get_current_and_next_schedule(channel, time=Time.now)
     end_of_day = _get_end_of_day(time)
-    Schedule.all(:start_time => {'$gte' => time.utc},
+    schedule = Schedule.all(:start_time => {'$gte' => time.utc},
                  :end_time => {'$lte' => end_of_day.utc},
                  :show_id => {'$in' => Show.all(:channel_id => channel.id).collect { |s| s.id }},
                  :order => :start_time,
-                 :limit => 2)
+                 :limit => 1)
+    current_and_next_schedule = Array.new
+    current_and_next_schedule.push(get_current_show_in_schedule(channel, time))
+    current_and_next_schedule.concat(schedule)
+  end
+  
+  def get_current_show_in_schedule(channel, time=Time.now)
+    current_schedule = Schedule.all(:start_time => {'$lte' => time.utc},
+                 :end_time => {'$gte' => time.utc},
+                 :show_id => {'$in' => Show.all(:channel_id => channel.id).collect { |s| s.id }},
+                 :order => :start_time,
+                 :limit => 1)
+    return current_schedule[0]
   end
 
   def get_next_time_scheduled(show)
