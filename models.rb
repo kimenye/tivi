@@ -1,13 +1,17 @@
 require 'mongo_mapper'
+require 'joint'
 
 class Channel
   include MongoMapper::Document
+  plugin Joint
 
   key :name, String, :required => true
   key :code, String, :required => true
   key :calendar_id, String
   key :created_at, Time, :default => Time.now
+
   many :shows
+  attachment :logo
 
   def safe_delete
     Show.find_all_by_channel_id(id).each { |s| s.safe_delete }
