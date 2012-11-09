@@ -47,4 +47,6 @@
           %h1
             = show.show.name
         .show-content-div{'data-role' => 'content'}
-          = (show.promo_text.nil? || show.promo_text.empty?) ? show.show.description : show.promo_text
+          %img{'src' => '/images/logo.png'}
+          %h3
+            = (show.promo_text.nil? || show.promo_text.empty?) ? show.show.description : show.promo_text
