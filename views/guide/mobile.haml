@@ -10,7 +10,12 @@
           - channel_summary.each do |data|
             %li
               %a{:href => "#" + data['channel'].id}
-                %img{'src' => '/images/logo.png'}
+
+                - if data['channel'].logo.nil?
+                  %img{'src' => '/images/logo.png'}
+                - else
+                  %img{:src => "/media/images/#{data['channel'].logo.id}"}
+
                 - if data['shows'].empty?
                   No Scheduled Shows
                 - else
