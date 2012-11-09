@@ -31,7 +31,7 @@
           %ul{'data-role' => 'listview'}
             - data['shows'].each do |show|
               %li
-                %a{:href => "#" + show.show.id, 'data-rel' => 'dialog'}
+                %a{:href => "#" + show.show.id}
                   %img{'src' => '/images/logo.png'}
                   %h3
                     = show.show.name
