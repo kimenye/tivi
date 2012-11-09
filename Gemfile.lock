@@ -100,6 +100,10 @@ GEM
     pry-nav (0.2.2)
       pry (~> 0.9.10)
     rack (1.4.1)
+    rack-gridfs (0.4.1)
+      mime-types
+      mongo (~> 1.2)
+      rack
     rack-protection (1.2.0)
       rack
     rspec (2.11.0)
@@ -158,6 +162,7 @@ DEPENDENCIES
   newrelic_rpm
   pry
   pry-nav
+  rack-gridfs
   rack-test!
   rspec
   rufus-scheduler

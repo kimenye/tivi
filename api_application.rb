@@ -257,18 +257,11 @@ class ApiApplication < Sinatra::Base
           AdminLog.delete_all
 
           if create == "true"
-            ktn = Channel.create!(:code => "KTN", :name => "Kenya Television Network", :calendar_id => "tivi.co.ke_1aku43rv679bbnj9r02coema98@group.calendar.google.com")
-            ntv = Channel.create!(:code => "NTV", :name => "Nation Television Network", :calendar_id => "guide@tivi.co.ke")
-            ctz = Channel.create!(:code => "CTZ", :name => "Citizen TV", :calendar_id => "tivi.co.ke_m6htn7v99d9vfsp874cm4g6bi0@group.calendar.google.com")
-            # Will remove. Need them for testing
-            subscriber01 = Subscriber.create(:phone_number => "254722654321")
-            subscriber02 = Subscriber.create(:phone_number => "254722098765")
-            show01 = Show.create(:name => "The Night Show", :description => "News and latest happenings", :channel => ktn)
-            show01 = Show.create(:name => "Another Show", :description => "whatever", :channel => ntv)
-            show01 = Show.create(:name => "Yet Another Show", :description => "blah blah", :channel => ctz)
-            subscription01 = Subscription.create(:show_name => "The Night Show", :active => true, :subscriber => subscriber01, :show => show01)
-            subscription02 = Subscription.create(:show_name => "The Nihgt Show", :active => false, :misspelt => true, :subscriber => subscriber02)
-            subscription03 = Subscription.create(:show_name => "Anthr Show", :active => false, :misspelt => true, :subscriber => subscriber02)
+            base_dir = Dir.pwd + "/static/images/channels/"
+
+            ktn = Channel.create!(:code => "KTN",:name => "Kenya Television Network",:calendar_id => "tivi.co.ke_1aku43rv679bbnj9r02coema98@group.calendar.google.com",:logo => File.open("#{base_dir}ktn.png"))
+            ntv = Channel.create!(:code => "NTV", :name => "Nation Television Network", :calendar_id => "guide@tivi.co.ke",:logo => File.open("#{base_dir}ntv.png"))
+            ctz = Channel.create!(:code => "CTZ", :name => "Citizen TV", :calendar_id => "tivi.co.ke_m6htn7v99d9vfsp874cm4g6bi0@group.calendar.google.com",:logo => File.open("#{base_dir}citizen.png"))
           end
 
           body({:success => true }.to_json)
