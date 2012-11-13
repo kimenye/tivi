@@ -21,6 +21,7 @@ gem "newrelic_rpm"
 gem "url_shortener"
 gem "joint"
 gem "rack-gridfs"
+gem "httparty"
 
 group :test do
   gem 'rack-test', :git => "https://github.com/brynary/rack-test.git"

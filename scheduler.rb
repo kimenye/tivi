@@ -3,6 +3,15 @@ require 'url_shortener'
 require 'pry'
 
 module SchedulerHelper
+  
+  def get_categories
+    
+    connection = XMLRPC::Client.new2('http://tivi.co.ke/xmlrpc.php')
+    categories = connection.call('wp.getTerms',1,'admin','h3@ventivi', 'category')
+    # cache categories
+    
+  end
+  
   def get_seconds_from_min min
     return min * 60
   end

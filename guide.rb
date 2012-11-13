@@ -3,11 +3,41 @@ require 'sinatra'
 require 'pry'
 require 'haml'
 require 'time'
+require "xmlrpc/client"
+require "httparty"
 require 'sinatra/reloader' if development? or test?
+require 'yaml'
+YAML::ENGINE.yamler = 'syck'
 
 class GuideApp < Sinatra::Base
 
   helpers SchedulerHelper
+ 
+  post '/blogs' do
+    
+    show_name = params[:show_name]
+    categories = get_categories
+    blogs = Array.new
+    
+    for category in categories do
+      
+      temp_hash = Hash.new
+      res = HTTParty.get("http://tivi.co.ke/?cat=#{category['term_id']}&json=1")
+      if res['category']['title'] == show_name
+        
+        posts = res['posts']
+        for post in posts do
+          temp_hash["blog_title"] = post['title']
+          temp_hash["blog_url"] = post['url']
+          blogs.push(temp_hash)
+        end
+        
+      end
+      
+    end
+    blogs.to_json
+    
+  end
 
   get '/' do
 
@@ -26,7 +56,6 @@ class GuideApp < Sinatra::Base
       temp_hash2["shows"] = schedule_for_rest_of_day
       channel_complete.push(temp_hash2)
     end
-    # binding.pry
 
     haml :"guide/mobile", :layout => :guide_layout, :locals => {:channel_summary => channel_summary, :channel_complete => channel_complete }
 
