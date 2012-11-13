@@ -115,6 +115,8 @@ describe 'The Tivi Guide App' do
     }
     post "/blogs", data
     last_response.should be_ok
+    last_response.body.should_not be_nil
+    JSON.parse(last_response.body).length.should be > 1
     
   end
   

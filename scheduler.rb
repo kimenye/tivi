@@ -1,14 +1,22 @@
 require_relative 'models'
 require 'url_shortener'
 require 'pry'
+require 'memcached'
 
 module SchedulerHelper
   
   def get_categories
     
-    connection = XMLRPC::Client.new2('http://tivi.co.ke/xmlrpc.php')
-    categories = connection.call('wp.getTerms',1,'admin','h3@ventivi', 'category')
-    # cache categories
+    memcached = Memcached.new("localhost:11211")
+    begin
+      categories = memcached.get('categories')
+    rescue Memcached::Error
+      connection = XMLRPC::Client.new2('http://tivi.co.ke/xmlrpc.php')
+      categories = connection.call('wp.getTerms',1,'admin','h3@ventivi', 'category')
+      memcached.set('categories', categories)
+    end
+  
+    categories
     
   end
   
