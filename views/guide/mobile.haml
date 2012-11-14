@@ -60,3 +60,5 @@
             %img{'src' => '/images/logo.png'}
             %p
               = (show.promo_text.nil? || show.promo_text.empty?) ? show.show.description : show.promo_text
+            %button.btn{'data-inline' => 'true', 'data-mini' => 'true', 'data-theme' => 'a', 'onclick' => 'subscribe("' + show.show.id + '", "' + show.show.name + '")'}
+              Remind Me
