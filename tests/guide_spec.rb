@@ -114,7 +114,6 @@ describe 'The Tivi Guide App' do
     post "/blogs"
     last_response.should be_ok
     last_response.body.should_not be_nil
-    binding.pry
     
   end
   
