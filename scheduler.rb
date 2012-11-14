@@ -4,20 +4,46 @@ require 'pry'
 require 'memcached'
 
 module SchedulerHelper
-  
-  def get_categories
-    
+
+  def cache_data
+
+    shows = Show.all
     memcached = Memcached.new("localhost:11211")
     begin
-      categories = memcached.get('categories')
-    rescue Memcached::Error
+      cached_shows = memcached.get('cached_shows')
+    rescue
       connection = XMLRPC::Client.new2('http://tivi.co.ke/xmlrpc.php')
       categories = connection.call('wp.getTerms',1,'admin','h3@ventivi', 'category')
-      memcached.set('categories', categories)
+      res_data = Array.new
+      blogs = Array.new
+
+      for category in categories do
+        res = HTTParty.get("http://tivi.co.ke/?cat=#{category['term_id']}&json=1")
+        res_data.push(res)
+      end
+
+      for show in shows do
+        temp_hash = Hash.new
+        for res in res_data do
+          if res['category']['title'] == show.name
+
+            posts = res['posts']
+
+            for post in posts do
+              temp_hash["show_id"] = show.id
+              temp_hash["blog_title"] = post['title']
+              temp_hash["blog_url"] = post['url']
+              blogs.push(temp_hash)
+            end
+
+          end
+        end
+      end
+      memcached.set('cached_shows', blogs)
+      sleep(86400)
+
     end
-  
-    categories
-    
+    cached_shows
   end
   
   def get_seconds_from_min min

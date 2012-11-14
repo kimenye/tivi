@@ -103,20 +103,18 @@ describe 'The Tivi Guide App' do
   end
   
   it "Returns categories form wordpress blog" do
-    categories = helpers.get_categories
-    categories.should_not be_nil
+    term_ids = helpers.get_category_term_ids
+    term_ids.should_not be_nil
     
   end
   
   it "Searches for blog posts for a particular show" do
-    
-    data = {
-      show_name: "Nairobi Half Life"
-    }
-    post "/blogs", data
+    c = Channel.create(:code => "NTV", :name=> "Nation TV")
+    Show.create(:name => "Nairobi Half Life", :channel=> c)
+    post "/blogs"
     last_response.should be_ok
     last_response.body.should_not be_nil
-    JSON.parse(last_response.body).length.should be > 1
+    binding.pry
     
   end
   

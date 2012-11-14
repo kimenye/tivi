@@ -15,27 +15,8 @@ class GuideApp < Sinatra::Base
  
   post '/blogs' do
     
-    show_name = params[:show_name]
-    categories = get_categories
-    blogs = Array.new
-    
-    for category in categories do
-      
-      temp_hash = Hash.new
-      res = HTTParty.get("http://tivi.co.ke/?cat=#{category['term_id']}&json=1")
-      if res['category']['title'] == show_name
-        
-        posts = res['posts']
-        for post in posts do
-          temp_hash["blog_title"] = post['title']
-          temp_hash["blog_url"] = post['url']
-          blogs.push(temp_hash)
-        end
-        
-      end
-      
-    end
-    blogs.to_json
+    data = cache_data
+    data.to_json
     
   end
 
