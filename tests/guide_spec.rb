@@ -102,12 +102,6 @@ describe 'The Tivi Guide App' do
     
   end
   
-  it "Returns categories form wordpress blog" do
-    term_ids = helpers.get_category_term_ids
-    term_ids.should_not be_nil
-    
-  end
-  
   it "Searches for blog posts for a particular show" do
     c = Channel.create(:code => "NTV", :name=> "Nation TV")
     Show.create(:name => "Nairobi Half Life", :channel=> c)
