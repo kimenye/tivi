@@ -23,6 +23,7 @@ gem "joint"
 gem "rack-gridfs"
 gem "httparty"
 gem 'memcached'
+gem 'twitter'
 
 group :test do
   gem 'rack-test', :git => "https://github.com/brynary/rack-test.git"

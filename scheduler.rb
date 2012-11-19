@@ -2,8 +2,14 @@ require_relative 'models'
 require 'url_shortener'
 require 'pry'
 require 'memcached'
+require 'twitter'
 
 module SchedulerHelper
+  #Change these to be specific to sprout's account
+  CONSUMER_KEY = 'NNlqNkPQjkTFThT0mjnzxg'
+  CONSUMER_SECRET = 'FSc90KN9VxahZDGz8LnB1S5c7w2slNea49t1kEvhc3k'
+  OAUTH_TOKEN = '46093973-iyJ4XDQS76kcsVX4nr7JTvHrU87cfb4p8t50OvXk'
+  OAUTH_TOKEN_SECRET = 'ce85FRpPFrdILD7WkF6uxQGCBmdevCYTRy3iQT9Uk'
 
   def cache_data
 
@@ -228,6 +234,8 @@ module SchedulerHelper
       puts ">> Sent #{real} msg to #{reminder[:to]} - ID: #{msg.external_id}"
     }
     puts "Finished sending messages"
+
+    tweet_show_reminders(duration,from)
   end
 
   def get_reminders (duration=5, from=Time.now)
@@ -301,6 +309,24 @@ module SchedulerHelper
 
     result.result['nodeKeyVal']['shortUrl']
   end
+
+  def tweet_show_reminders (duration=5, from=Time.now)
+    shows = get_shows_starting_in_duration(duration,round_down(from))
+
+    Twitter.configure do |config|
+
+      config.consumer_key = CONSUMER_KEY
+      config.consumer_secret = CONSUMER_SECRET
+      config.oauth_token = OAUTH_TOKEN
+      config.oauth_token_secret = OAUTH_TOKEN_SECRET
+    end
+
+    shows.each { |show|
+      Twitter.update('#{show.show.name} will start shortly')
+    }
+
+  end
+
 end
 
 class Scheduler
