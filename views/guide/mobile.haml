@@ -28,7 +28,7 @@
                       %p
                         = show.start_time.localtime.strftime("%R") + " - " + show.end_time.localtime.strftime("%R")
   - channel_complete.each do |data|
-    .channel-div{'id' => data['channel'].id, 'data-role' => 'page'}
+    .channel-div{'id' => data['channel'].id, 'data-role' => 'page', 'data-add-back-btn' => 'true'}
       .channel-header-div{'data-role' => 'header'}
         %h1
           = data['channel'].code
@@ -52,7 +52,7 @@
                           = show.show.name
     - data['shows'].each do |show|
       - if !show.nil?
-        .show-div{'id' => show.show.id, 'data-role' => 'page'}
+        .show-div{'id' => show.show.id, 'data-role' => 'page', 'data-add-back-btn' => 'true'}
           .show-header-div{'data-role' => 'header'}
             %h1
               = show.show.name
