@@ -26,6 +26,7 @@ GEM
     crack (0.1.6)
     curb (0.8.1)
     daemons (1.1.9)
+    dalli (2.5.0)
     data_mapper (1.2.0)
       dm-aggregates (~> 1.2.0)
       dm-constraints (~> 1.2.0)
@@ -66,8 +67,6 @@ GEM
     dm-validations (1.2.0)
       dm-core (~> 1.2.0)
     eventmachine (1.0.0)
-    faraday (0.8.4)
-      multipart-post (~> 1.1)
     fastercsv (1.5.5)
     gcal4ruby (0.5.5)
       gdata4ruby (>= 0.1.5)
@@ -83,7 +82,6 @@ GEM
       wand (~> 0.4)
     json (1.7.5)
     json_pure (1.7.5)
-    memcached (1.4.6)
     method_source (0.8)
     mime-types (1.19)
     mongo (1.7.0)
@@ -93,7 +91,6 @@ GEM
       activesupport (~> 3.0)
       plucky (~> 0.5.2)
     multi_json (1.3.6)
-    multipart-post (1.1.5)
     newrelic_rpm (3.4.2.1)
     plucky (0.5.2)
       mongo (~> 1.5)
@@ -121,7 +118,6 @@ GEM
     rufus-scheduler (2.0.17)
       tzinfo (>= 0.3.23)
     safe_shell (1.0.2)
-    simple_oauth (0.1.9)
     sinatra (1.3.3)
       rack (~> 1.3, >= 1.3.6)
       rack-protection (~> 1.2)
@@ -142,10 +138,6 @@ GEM
       eventmachine (>= 0.12.6)
       rack (>= 1.0.0)
     tilt (1.3.3)
-    twitter (4.3.0)
-      faraday (~> 0.8)
-      multi_json (~> 1.3)
-      simple_oauth (~> 0.1.6)
     tzinfo (0.3.33)
     url_shortener (0.0.7)
       hashie (~> 0.4.0)
@@ -161,13 +153,13 @@ PLATFORMS
 DEPENDENCIES
   bson_ext
   curb
+  dalli
   data_mapper
   gcal4ruby
   haml
   httparty
   joint
   json
-  memcached
   mongo
   mongo_mapper
   newrelic_rpm
@@ -181,5 +173,4 @@ DEPENDENCIES
   sinatra-contrib
   sinatra-rabbit
   thin
-  twitter
   url_shortener

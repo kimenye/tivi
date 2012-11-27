@@ -1,8 +1,10 @@
 require_relative 'models'
 require 'url_shortener'
 require 'pry'
-require 'memcached'
-require 'twitter'
+#require 'memcached'
+#require 'twitter'
+require 'dalli'
+
 
 module SchedulerHelper
   #Change these to be specific to sprout's account
@@ -14,7 +16,9 @@ module SchedulerHelper
   def cache_data
 
     shows = Show.all
-    memcached = Memcached.new("localhost:11211")
+    #memcached = Memcached.new("localhost:11211")
+    #set :cache, Dalli::Client.new
+    memcached = Dalli::Client.new
     begin
       cached_shows = memcached.get('cached_shows')
     rescue
