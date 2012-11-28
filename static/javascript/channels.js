@@ -296,4 +296,30 @@ $(document).ready(function() {
 
     if ($('#channels-div').length > 0)
         ko.applyBindings(new ChannelsApplication(), $("#channels-div")[0]);
+
+    var options = {
+        //target:        '#output2',   // target element(s) to be updated with server response
+        beforeSubmit:  showRequest,  // pre-submit callback
+        success:       showResponse,  // post-submit callback
+        clearForm: true,        // clear all form fields after successful submit
+        resetForm: true        // reset the form after successful submit
+    };
+
+    $('#channel-logo').submit(function() {
+        $(this).ajaxSubmit(options);
+
+        return false;
+    });
+
+    function showRequest(formData, jqForm, options) {
+
+        alert('About to submit');
+
+        return true;
+    }
+
+    function showResponse()  {
+
+        alert('after submit');
+    }
 });

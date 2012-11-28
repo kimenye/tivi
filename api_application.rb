@@ -141,6 +141,8 @@ class ApiApplication < Sinatra::Base
     File.open("#{base_dir}" + params['logo'][:filename], "w") do |f|
       f.write(params['logo'][:tempfile].read)
     end
+    status 200
+    body({:success => true}.to_json)
   end
 
   get "/sms_gateway" do
