@@ -45,6 +45,19 @@
       .modal-footer
         %a.btn{'data-dismiss' => 'modal', 'href' => '#close'} Close
         %input.btn.btn-success{'type' => 'submit', 'value' => 'Save'}
+  #image-upload-modal.modal.hide
+    .modal-header
+      %button.close{'type' => 'button', 'data-dismiss' => 'modal'}
+        x
+      %h3 Upload Image
+    %form.modal-form.form-horizontal{'method' => 'post', 'enctype' => 'multipart/form-data', 'action' => '/api/upload'}
+      .modal-body
+        %fieldset
+          .control-group
+            %img{ 'src' => '../images/logo.png' }
+      .modal-footer
+        %input{'type' => 'file', 'name' => 'logo'}
+        %input.btn.btn-success{ 'type' => 'submit', 'value' => 'Update'}
   .row{ 'data-bind' => 'visible: selected() == null'}
     .span3
       %h1 Channels
@@ -85,6 +98,9 @@
                 Sync
               %a.btn{'data-bind' => "attr: { href: '/admin/channel/' + id }" }
                 %i.icon-th-list
+              %button.btn{ 'data-bind' => 'click: $parent.changeLogo' }
+                %i.icon-picture
+                Logo
   %section{'data-bind' => 'if: selected() != null'}
     .row{'data-bind' => 'with: selected'}
       .span3

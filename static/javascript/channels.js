@@ -62,6 +62,7 @@ $(document).ready(function() {
         self.showDescription = ko.observable(null);
         self.showId = ko.observable(null);
         self.editableShow = ko.observable(null);
+        self.imagePath = ko.observable(null);
 
 
         //TODO: We can make this common between the different things we are editing
@@ -82,6 +83,14 @@ $(document).ready(function() {
             self.editable(null);
             $('#channel-edit-modal').modal('show');
         };
+
+        self.changeLogo = function() {
+            $('#image-upload-modal').modal('show');
+        };
+
+        self.uploadImage = function() {
+            alert("in upload logo");
+        }
 
         self.delete = function(channel) {
             bootbox.confirm("You will lose the currently saved shows and schedule data. Are you sure you want to delete " + channel.code() + "?", function(result) {

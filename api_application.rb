@@ -136,6 +136,13 @@ class ApiApplication < Sinatra::Base
 
   end
 
+  post "/upload" do
+    base_dir = Dir.pwd + "/static/images/channels/"
+    File.open("#{base_dir}" + params['logo'][:filename], "w") do |f|
+      f.write(params['logo'][:tempfile].read)
+    end
+  end
+
   get "/sms_gateway" do
     sms = settings.gateway.receive_notification(params)
     if !sms.nil?
