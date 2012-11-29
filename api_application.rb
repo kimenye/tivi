@@ -136,13 +136,24 @@ class ApiApplication < Sinatra::Base
 
   end
 
-  post "/upload" do
-    base_dir = Dir.pwd + "/static/images/channels/"
-    File.open("#{base_dir}" + params['logo'][:filename], "w") do |f|
-      f.write(params['logo'][:tempfile].read)
-    end
+  post "/upload_channel_logo" do
+    id = params[:id]
+    c = Channel.find_by_id(id)
+    logo = File.open(params['logo'][:tempfile])
+    c.logo = logo
+    c.save!
     status 200
-    body({:success => true}.to_json)
+    body({:success => true, :logoId => c.logo.id}.to_json)
+  end
+
+  post "/upload_show_logo" do
+    id = params[:id]
+    s = Show.find_by_id(id)
+    logo = File.open(params['logo'][:tempfile])
+    s.logo = logo
+    s.save!
+    status 200
+    body({:success => true, :logoId => s.logo.id}.to_json)
   end
 
   get "/sms_gateway" do
