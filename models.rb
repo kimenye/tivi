@@ -21,6 +21,7 @@ end
 
 class Show
   include MongoMapper::Document
+  plugin Joint
 
   key :name, String
   key :description, String
