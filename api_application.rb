@@ -148,7 +148,6 @@ class ApiApplication < Sinatra::Base
 
   post "/upload_show_logo" do
     id = params[:id]
-    binding.pry
     s = Show.find_by_id(id)
     logo = File.open(params['logo'][:tempfile])
     s.logo = logo

@@ -351,5 +351,6 @@ $(document).ready(function() {
 
     function showRes(data)  {
         var jsonObj = $.parseJSON( data );
+//        alert(jsonObj.logoId);
     }
 });
