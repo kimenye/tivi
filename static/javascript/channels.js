@@ -1,4 +1,7 @@
 $(document).ready(function() {
+    var chanId = null;
+    var showId = null;
+
     var Channel = JS.Class({
         construct: function (data) {
             var self = this;
@@ -62,7 +65,7 @@ $(document).ready(function() {
         self.showDescription = ko.observable(null);
         self.showId = ko.observable(null);
         self.editableShow = ko.observable(null);
-        self.imagePath = ko.observable(null);
+        self.channelLogo = ko.observable(null);
 
 
         //TODO: We can make this common between the different things we are editing
@@ -84,13 +87,16 @@ $(document).ready(function() {
             $('#channel-edit-modal').modal('show');
         };
 
-        self.changeLogo = function() {
-            $('#image-upload-modal').modal('show');
+        self.changeChannelLogo = function(channel) {
+            chanId = channel.id;
+            $('#channel-image-upload-modal').modal('show');
         };
 
-        self.uploadImage = function() {
-            alert("in upload logo");
-        }
+        self.changeShowLogo = function(show) {
+            showId = show.id;
+            $('#show-image-upload-modal').modal('show');
+        };
+
 
         self.delete = function(channel) {
             bootbox.confirm("You will lose the currently saved shows and schedule data. Are you sure you want to delete " + channel.code() + "?", function(result) {
@@ -302,7 +308,8 @@ $(document).ready(function() {
         beforeSubmit:  showRequest,  // pre-submit callback
         success:       showResponse,  // post-submit callback
         clearForm: true,        // clear all form fields after successful submit
-        resetForm: true        // reset the form after successful submit
+        resetForm: true,        // reset the form after successful submit
+        data: { id: null }
     };
 
     $('#channel-logo').submit(function() {
@@ -312,14 +319,37 @@ $(document).ready(function() {
     });
 
     function showRequest(formData, jqForm, options) {
-
-        alert('About to submit');
+        options.data.id = chanId;
 
         return true;
     }
 
-    function showResponse()  {
+    function showResponse(data)  {
+        var jsonObj = $.parseJSON( data );
+    }
 
-        alert('after submit');
+    var opt = {
+        //target:        '#output2',   // target element(s) to be updated with server response
+        beforeSubmit:  showReq,  // pre-submit callback
+        success:       showRes,  // post-submit callback
+        clearForm: true,        // clear all form fields after successful submit
+        resetForm: true,        // reset the form after successful submit
+        data: { id: null }
+    };
+
+    $('#show-logo').submit(function() {
+        $(this).ajaxSubmit(opt);
+
+        return false;
+    });
+
+    function showReq(formData, jqForm, options) {
+        options.data.id = showId;
+
+        return true;
+    }
+
+    function showRes(data)  {
+        var jsonObj = $.parseJSON( data );
     }
 });
