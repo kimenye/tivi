@@ -11,6 +11,7 @@ $(document).ready(function() {
             self.name = ko.observable(data.name);
             self.calendar_id = ko.observable(data.calendar_id);
             self.shows = ko.observableArray([]);
+            self.logo_id = ko.observable(data.logo_id);
         },
 
         toJSON: function() {
@@ -65,11 +66,12 @@ $(document).ready(function() {
         self.showDescription = ko.observable(null);
         self.showId = ko.observable(null);
         self.editableShow = ko.observable(null);
-        self.channelLogo = ko.observable(null);
+        self.logo_id = ko.observable();
 
 
         //TODO: We can make this common between the different things we are editing
         self.edit = function(channel) {
+            console.log(channel);
             self.code(channel.code());
             self.name(channel.name());
             self.calendar_id(channel.calendar_id());
@@ -89,6 +91,7 @@ $(document).ready(function() {
 
         self.changeChannelLogo = function(channel) {
             chanId = channel.id;
+            self.logo_id(channel.logo_id());
             $('#channel-image-upload-modal').modal('show');
         };
 
