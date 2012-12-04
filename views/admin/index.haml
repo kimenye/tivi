@@ -65,7 +65,7 @@
     %form.modal-form.form-horizontal{'method' => 'post', 'enctype' => 'multipart/form-data', 'action' => '/api/upload_show_logo', 'id' => 'show-logo'}
       .modal-body
         #logo-div
-          %img{ 'src' => '../images/logo.png' }
+          %img{ 'data-bind' => "attr: { src: get_show_logo_id }" }
       .modal-footer
         %input{'type' => 'file', 'name' => 'logo', 'size' => '35%'}
         %input.btn.btn-success{ 'type' => 'submit', 'value' => 'Update'}

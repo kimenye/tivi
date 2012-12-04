@@ -35,6 +35,7 @@ $(document).ready(function() {
             self.channelId = data.channel;
             self.name = ko.observable(data.name);
             self.description = ko.observable(data.description);
+            self.show_logo_id = ko.observable(data.logo_id);
         },
 
         toJSON: function() {
@@ -66,9 +67,13 @@ $(document).ready(function() {
         self.showDescription = ko.observable(null);
         self.showId = ko.observable(null);
         self.editableShow = ko.observable(null);
-        self.logo_id = ko.observable(null);
+        self.logo_id = ko.observable('');
         self.get_logo_id = ko.computed(function() {
             return "/media/images/" + self.logo_id();
+        }, self);
+        self.show_logo_id = ko.observable('');
+        self.get_show_logo_id = ko.computed(function() {
+            return "/media/images/" + self.show_logo_id();
         }, self);
 
 
@@ -99,6 +104,7 @@ $(document).ready(function() {
 
         self.changeShowLogo = function(show) {
             showId = show.id;
+            self.show_logo_id(show.show_logo_id());
             $('#show-image-upload-modal').modal('show');
         };
 
@@ -329,7 +335,6 @@ $(document).ready(function() {
 
             var jsonObj = $.parseJSON( data );
             self.logo_id(jsonObj.logoId);
-            window.s = self;
         }
 
         var opt = {
@@ -355,6 +360,8 @@ $(document).ready(function() {
 
         function showRes(data)  {
             var jsonObj = $.parseJSON( data );
+            self.show_logo_id(jsonObj.logoId);
+
         }
     }
 
