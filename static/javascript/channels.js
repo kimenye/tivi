@@ -66,7 +66,7 @@ $(document).ready(function() {
         self.showDescription = ko.observable(null);
         self.showId = ko.observable(null);
         self.editableShow = ko.observable(null);
-        self.logo_id = ko.observable();
+        self.logo_id = ko.observable(null);
 
 
         //TODO: We can make this common between the different things we are editing
