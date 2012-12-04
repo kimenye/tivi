@@ -45,6 +45,30 @@
       .modal-footer
         %a.btn{'data-dismiss' => 'modal', 'href' => '#close'} Close
         %input.btn.btn-success{'type' => 'submit', 'value' => 'Save'}
+  #channel-image-upload-modal.modal.hide
+    .modal-header
+      %button.close{'type' => 'button', 'data-dismiss' => 'modal'}
+        x
+      %h3 Upload Image
+    %form.modal-form.form-horizontal{'method' => 'post', 'enctype' => 'multipart/form-data', 'action' => '/api/upload_channel_logo', 'id' => 'channel-logo'}
+      .modal-body
+        #logo-div
+          %img{'data-bind' => "attr: { src: '/media/images/' + logo_id }" }
+      .modal-footer
+        %input{'type' => 'file', 'name' => 'logo', 'size' => '35%'}
+        %input.btn.btn-success{ 'type' => 'submit', 'value' => 'Update'}
+  #show-image-upload-modal.modal.hide
+    .modal-header
+      %button.close{'type' => 'button', 'data-dismiss' => 'modal'}
+        x
+      %h3 Upload Image
+    %form.modal-form.form-horizontal{'method' => 'post', 'enctype' => 'multipart/form-data', 'action' => '/api/upload_show_logo', 'id' => 'show-logo'}
+      .modal-body
+        #logo-div
+          %img{ 'src' => '../images/logo.png' }
+      .modal-footer
+        %input{'type' => 'file', 'name' => 'logo', 'size' => '35%'}
+        %input.btn.btn-success{ 'type' => 'submit', 'value' => 'Update'}
   .row{ 'data-bind' => 'visible: selected() == null'}
     .span3
       %h1 Channels
@@ -85,6 +109,9 @@
                 Sync
               %a.btn{'data-bind' => "attr: { href: '/admin/channel/' + id }" }
                 %i.icon-th-list
+              %button.btn{ 'data-bind' => 'click: $parent.changeChannelLogo' }
+                %i.icon-picture
+                Logo
   %section{'data-bind' => 'if: selected() != null'}
     .row{'data-bind' => 'with: selected'}
       .span3
@@ -124,3 +151,6 @@
                       %i.icon-edit
                     %button.btn{ 'data-bind' => 'click: $root.subscribeToShow'}
                       %i.icon-tag
+                    %button.btn{ 'data-bind' => 'click: $root.changeShowLogo' }
+                      %i.icon-picture
+                      Logo

@@ -21,11 +21,13 @@ end
 
 class Show
   include MongoMapper::Document
+  plugin Joint
 
   key :name, String
   key :description, String
   key :created_at, Time, :default => Time.now
   belongs_to :channel
+  attachment :logo
 
   def safe_delete
     Schedule.find_all_by_show_id(id).each { |s| s.destroy }

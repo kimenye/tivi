@@ -1,4 +1,7 @@
 $(document).ready(function() {
+    var chanId = null;
+    var showId = null;
+
     var Channel = JS.Class({
         construct: function (data) {
             var self = this;
@@ -8,6 +11,7 @@ $(document).ready(function() {
             self.name = ko.observable(data.name);
             self.calendar_id = ko.observable(data.calendar_id);
             self.shows = ko.observableArray([]);
+            self.logo_id = ko.observable(data.logo_id);
         },
 
         toJSON: function() {
@@ -62,10 +66,12 @@ $(document).ready(function() {
         self.showDescription = ko.observable(null);
         self.showId = ko.observable(null);
         self.editableShow = ko.observable(null);
+        self.logo_id = ko.observable();
 
 
         //TODO: We can make this common between the different things we are editing
         self.edit = function(channel) {
+            console.log(channel);
             self.code(channel.code());
             self.name(channel.name());
             self.calendar_id(channel.calendar_id());
@@ -82,6 +88,18 @@ $(document).ready(function() {
             self.editable(null);
             $('#channel-edit-modal').modal('show');
         };
+
+        self.changeChannelLogo = function(channel) {
+            chanId = channel.id;
+            self.logo_id(channel.logo_id());
+            $('#channel-image-upload-modal').modal('show');
+        };
+
+        self.changeShowLogo = function(show) {
+            showId = show.id;
+            $('#show-image-upload-modal').modal('show');
+        };
+
 
         self.delete = function(channel) {
             bootbox.confirm("You will lose the currently saved shows and schedule data. Are you sure you want to delete " + channel.code() + "?", function(result) {
@@ -287,4 +305,55 @@ $(document).ready(function() {
 
     if ($('#channels-div').length > 0)
         ko.applyBindings(new ChannelsApplication(), $("#channels-div")[0]);
+
+    var options = {
+        //target:        '#output2',   // target element(s) to be updated with server response
+        beforeSubmit:  showRequest,  // pre-submit callback
+        success:       showResponse,  // post-submit callback
+        clearForm: true,        // clear all form fields after successful submit
+        resetForm: true,        // reset the form after successful submit
+        data: { id: null }
+    };
+
+    $('#channel-logo').submit(function() {
+        $(this).ajaxSubmit(options);
+
+        return false;
+    });
+
+    function showRequest(formData, jqForm, options) {
+        options.data.id = chanId;
+
+        return true;
+    }
+
+    function showResponse(data)  {
+        var jsonObj = $.parseJSON( data );
+    }
+
+    var opt = {
+        //target:        '#output2',   // target element(s) to be updated with server response
+        beforeSubmit:  showReq,  // pre-submit callback
+        success:       showRes,  // post-submit callback
+        clearForm: true,        // clear all form fields after successful submit
+        resetForm: true,        // reset the form after successful submit
+        data: { id: null }
+    };
+
+    $('#show-logo').submit(function() {
+        $(this).ajaxSubmit(opt);
+
+        return false;
+    });
+
+    function showReq(formData, jqForm, options) {
+        options.data.id = showId;
+
+        return true;
+    }
+
+    function showRes(data)  {
+        var jsonObj = $.parseJSON( data );
+//        alert(jsonObj.logoId);
+    }
 });

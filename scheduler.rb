@@ -49,8 +49,7 @@ module SchedulerHelper
           end
         end
       end
-      memcached.set('cached_shows', blogs)
-      sleep(86400)
+      memcached.set('cached_shows', blogs, 86400)
 
     end
     cached_shows
