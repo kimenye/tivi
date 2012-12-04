@@ -53,7 +53,7 @@
     %form.modal-form.form-horizontal{'method' => 'post', 'enctype' => 'multipart/form-data', 'action' => '/api/upload_channel_logo', 'id' => 'channel-logo'}
       .modal-body
         #logo-div
-          %img{'data-bind' => "attr: { src: '/media/images/' + logo_id() }" }
+          %img{'data-bind' => "attr: { src: get_logo_id }" }
       .modal-footer
         %input{'type' => 'file', 'name' => 'logo', 'size' => '35%'}
         %input.btn.btn-success{ 'type' => 'submit', 'value' => 'Update'}

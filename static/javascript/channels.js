@@ -67,11 +67,13 @@ $(document).ready(function() {
         self.showId = ko.observable(null);
         self.editableShow = ko.observable(null);
         self.logo_id = ko.observable(null);
+        self.get_logo_id = ko.computed(function() {
+            return "/media/images/" + self.logo_id();
+        }, self);
 
 
         //TODO: We can make this common between the different things we are editing
         self.edit = function(channel) {
-            console.log(channel);
             self.code(channel.code());
             self.name(channel.name());
             self.calendar_id(channel.calendar_id());
@@ -301,59 +303,63 @@ $(document).ready(function() {
         }
 
         self.loadChannels();
+
+        var options = {
+            //target:        '#output2',   // target element(s) to be updated with server response
+            beforeSubmit:  showRequest,  // pre-submit callback
+            success:       showResponse,  // post-submit callback
+            clearForm: true,        // clear all form fields after successful submit
+            resetForm: true,        // reset the form after successful submit
+            data: { id: null }
+        };
+
+        $('#channel-logo').submit(function() {
+            $(this).ajaxSubmit(options);
+
+            return false;
+        });
+
+        function showRequest(formData, jqForm, options) {
+            options.data.id = chanId;
+
+            return true;
+        }
+
+        function showResponse(data)  {
+
+            var jsonObj = $.parseJSON( data );
+            self.logo_id(jsonObj.logoId);
+            window.s = self;
+        }
+
+        var opt = {
+            //target:        '#output2',   // target element(s) to be updated with server response
+            beforeSubmit:  showReq,  // pre-submit callback
+            success:       showRes,  // post-submit callback
+            clearForm: true,        // clear all form fields after successful submit
+            resetForm: true,        // reset the form after successful submit
+            data: { id: null }
+        };
+
+        $('#show-logo').submit(function() {
+            $(this).ajaxSubmit(opt);
+
+            return false;
+        });
+
+        function showReq(formData, jqForm, options) {
+            options.data.id = showId;
+
+            return true;
+        }
+
+        function showRes(data)  {
+            var jsonObj = $.parseJSON( data );
+        }
     }
 
     if ($('#channels-div').length > 0)
         ko.applyBindings(new ChannelsApplication(), $("#channels-div")[0]);
 
-    var options = {
-        //target:        '#output2',   // target element(s) to be updated with server response
-        beforeSubmit:  showRequest,  // pre-submit callback
-        success:       showResponse,  // post-submit callback
-        clearForm: true,        // clear all form fields after successful submit
-        resetForm: true,        // reset the form after successful submit
-        data: { id: null }
-    };
 
-    $('#channel-logo').submit(function() {
-        $(this).ajaxSubmit(options);
-
-        return false;
-    });
-
-    function showRequest(formData, jqForm, options) {
-        options.data.id = chanId;
-
-        return true;
-    }
-
-    function showResponse(data)  {
-        var jsonObj = $.parseJSON( data );
-    }
-
-    var opt = {
-        //target:        '#output2',   // target element(s) to be updated with server response
-        beforeSubmit:  showReq,  // pre-submit callback
-        success:       showRes,  // post-submit callback
-        clearForm: true,        // clear all form fields after successful submit
-        resetForm: true,        // reset the form after successful submit
-        data: { id: null }
-    };
-
-    $('#show-logo').submit(function() {
-        $(this).ajaxSubmit(opt);
-
-        return false;
-    });
-
-    function showReq(formData, jqForm, options) {
-        options.data.id = showId;
-
-        return true;
-    }
-
-    function showRes(data)  {
-        var jsonObj = $.parseJSON( data );
-//        alert(jsonObj.logoId);
-    }
 });
