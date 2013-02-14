@@ -1,0 +1,48 @@
+-#!!! 5
+-#%html
+-#  %head
+-#    %link{'rel' => 'stylesheet', 'href' => '../css/bootstrap.min.css'}
+-#    %link{'rel' => 'stylesheet', 'href' => '../css/bootstrap-responsive.min.css'}
+-#
+-#    %title TiVi :: Kenya Free TV Guide
+-#  %body
+-#    .container
+-#      .page-header.logo
+-#        %h1
+-#          %a{ 'href' => '/guide' }
+-#            %img{ 'src' => '../images/logo.png' }
+-#          %small
+-#            Your Free TV Guide
+-#    = yield
+-#
+-#
+-#    /! start of scripts
+-#    %script{ 'type' => 'text/javascript', 'src' => 'javascript/jquery.1.7.2.js'}
+-#    %script{ 'type' => 'text/javascript', 'src' => 'javascript/bootstrap.min.js'}
+
+
+
+!!! 5
+%html
+  %head
+    %script{ 'type' => 'text/javascript', 'src' => 'javascript/foundation_javascripts/jquery.js'}
+    %link{'rel' => 'stylesheet', 'href' => '../css/foundation_stylesheets/foundation.min.css'}
+    %link{'rel' => 'stylesheet', 'href' => '../css/foundation_stylesheets/app.css'}
+
+    %title TiVi :: Kenya Free TV Guide
+  %body
+    .container
+      .page-header.logo
+        %h1
+          %a{ 'href' => '/guide' }
+            %img{ 'src' => '../images/logo.png' }
+          %small
+            Your Free TV Guide
+    = yield
+
+
+    /! start of scripts
+    -#%script{ 'type' => 'text/javascript', 'src' => 'javascript/jquery.1.7.2.js'}
+    %script{ 'type' => 'text/javascript', 'src' => 'javascript/foundation_javascripts/modernizr.foundation.js'}
+    %script{ 'type' => 'text/javascript', 'src' => 'javascript/foundation_javascripts/foundation.min.js'}
+    %script{ 'type' => 'text/javascript', 'src' => 'javascript/foundation_javascripts/app.js'}
