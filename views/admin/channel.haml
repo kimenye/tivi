@@ -6,26 +6,25 @@
       %br
       %br
       %img{:src => "/media/images/#{channel.logo.id}"}
+      .sidebar
+        .well{'role' => 'navigation'}
+          %ul.nav.nav-list
+            %li.nav-header
+              Options
+            %li
+              %a{:href => "?when=" + next_day.to_s}
+                %i.icon-forward
+                Next Day
+            %li
+              %a{:href => "?when=" + prev_day.to_s}
+                %i.icon-backward
+                Previous Day
+            %li
+              %a.home{:href => '/admin' }
+                %i.icon-arrow-left
+                Back to Channels
     .span3
       %h2= day.strftime("%e %a %b %G")
-  .row
-    .span3.sidebar
-      .well{'role' => 'navigation'}
-        %ul.nav.nav-list
-          %li.nav-header
-            Options
-          %li
-            %a{:href => "?when=" + next_day.to_s}
-              %i.icon-forward
-              Next Day
-          %li
-            %a{:href => "?when=" + prev_day.to_s}
-              %i.icon-backward
-              Previous Day
-          %li
-            %a.home{:href => '/admin' }
-              %i.icon-arrow-left
-              Back to Channels
     .span9.container
       %table.table.table-bordered
         %thead
