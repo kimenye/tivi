@@ -10,6 +10,7 @@ class TiviApp < Sinatra::Base
 
   configure do
     use Rack::Session::Pool, :expire_after => 86400 # 1 day
+    set :protection, :except => :frame_options
   end
 
   get '/' do
