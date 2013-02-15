@@ -1,80 +1,38 @@
--##guide-body{'style' => "width: 500px;"}
-#featuredContent
-  - channel_complete.each do |data|
-    .channel-div{'id' => data['channel'].id}
-      %h3
-        = data['channel'].code
-      - if data['shows'].empty?
-        No Scheduled Shows
-      - else
-        %ul
-          - data['shows'].each do |show|
-            - if show.nil?
-              N/A
-            - else
-              %li
-                %a{:href => "#" + show.show.id, 'class' => 'show-link'}
-                  .ui-grid-a
-                    .time-div{'class' => 'ui-block-a'}
-                      %h6
-                        = show.start_time.localtime.strftime("%R") + " - " + show.end_time.localtime.strftime("%R")
-                    .name-div{'class' => 'ui-block-b'}
-                      %h6
-                        = show.show.name
--#- if channel_summary.empty?
--#  No channels in database
--#- else
--#  - channel_summary.each do |data|
--#    %li
--#      %a{:href => "#" + data['channel'].id}
--#        - if data['channel'].logo.nil?
--#          %img{'src' => '/images/logo.png'}
--#        - else
--#          %img{:src => "/media/images/#{data['channel'].logo.id}"}
--#
--#        - if data['shows'].empty?
--#          No Scheduled Shows
--#        - else
--#          - data['shows'].each do |show|
--#            - if show.nil?
--#              N/A
--#            - else
--#              %h3
--#                = show.show.name
--#              %p
--#                = show.start_time.localtime.strftime("%R") + " - " + show.end_time.localtime.strftime("%R")
--#- channel_co{ fluid: '16x6' }mplete.each do |data|
--#  .channel-div{'id' => data['channel'].id}
--#    %h1
--#      = data['channel'].code
--#    - if data['shows'].empty?
--#      No Scheduled Shows
--#    - else
--#      %ul
--#        - data['shows'].each do |show|
--#          - if show.nil?
--#            N/A
--#          - else
--#            %li
--#              %a{:href => "#" + show.show.id, 'class' => 'show-link'}
--#                .ui-grid-a
--#                  .time-div{'class' => 'ui-block-a'}
--#                    %h3
--#                      = show.start_time.localtime.strftime("%R") + " - " + show.end_time.localtime.strftime("%R")
--#                  .name-div{'class' => 'ui-block-b'}
--#                    %h3
--#                      = show.show.name
-  -#- data['shows'].each do |show|
-  -#  - if !show.nil?
-  -#    .show-div{'id' => show.show.id}
-  -#      %h1
-  -#        = show.show.name
-  -#      .show-content-div
-  -#        %img{'src' => '/images/logo.png'}
-  -#        %p
-  -#          = (show.promo_text.nil? || show.promo_text.empty?) ? show.show.description : show.promo_text
+#channelComplete{:class => 'carousel slide'}
+  .carousel-inner
+    - channel_complete.each do |data|
+      .item
+        .channel-div{'id' => data['channel'].id}
+          %h3#guide-channel-name
+            = data['channel'].code
+          - if data['shows'].empty?
+            No Scheduled Shows
+          - else
+            %table.table-striped
+              - data['shows'].each_with_index do |show, index|
+                %tr
+                  %td.span11
+                    - if show.nil?
+                      N/A
+                    - else
+                      %a{:href => "#" + show.show.id}
+                        - if index == 0 || index == 1
+                          %h3
+                            = show.start_time.localtime.strftime("%R") + " - " + show.end_time.localtime.strftime("%R")
+                          %h3
+                            = show.show.name
+                        - else
+                          %h6
+                            = show.start_time.localtime.strftime("%R") + " - " + show.end_time.localtime.strftime("%R")
+                          %h6
+                            = show.show.name
+  .carousel-control{:class => 'left', :href => "#channelComplete", "data-slide" => "prev"} &lsaquo;
+  .carousel-control{:class => 'right', :href => "#channelComplete", "data-slide" => "next"} &rsaquo;
+
 
 :javascript
-    $(window).load(function() {
-           $('#featuredContent').orbit({ fluid: '16x6', timer: false });
-       });
+    $(document).ready(function() {
+      $('.carousel').carousel({
+        interval: false
+      })
+    });
