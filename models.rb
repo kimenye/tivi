@@ -41,7 +41,7 @@ class Schedule
   key :start_time, Time
   key :end_time, Time
   key :promo_text, String
-  key :correct, Boolean :default => true
+  key :correct, Boolean, :default => true
   belongs_to :show
 end
 
