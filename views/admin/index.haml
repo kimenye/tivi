@@ -115,21 +115,22 @@
   %section{'data-bind' => 'if: selected() != null'}
     .row{'data-bind' => 'with: selected'}
       .span3
-        %h2{ 'data-bind' => 'text: name' }
-    .row{'data-bind' => 'with: selected'}
-      .span3.sidebar
-        .well{'role' => 'navigation'}
-          %ul.nav.nav-list
-            %li.nav-header
-              Options
-            %li
-              %a.home{'data-bind' => 'click: $root.backHome' }
-                %i.icon-arrow-left
-                Back
-            %li
-              %a.home{'data-bind' => 'click: $root.newShow' }
-                %i.icon-file
-                New Show
+        %h3{ 'data-bind' => 'text: name' }
+        %img{"data-bind" => "attr: { src: '/media/images/' + logo_id() }"}
+
+        .sidebar
+          .well{'role' => 'navigation'}
+            %ul.nav.nav-list
+              %li.nav-header
+                Options
+              %li
+                %a.home{'data-bind' => 'click: $root.backHome' }
+                  %i.icon-arrow-left
+                  Back
+              %li
+                %a.home{'data-bind' => 'click: $root.newShow' }
+                  %i.icon-file
+                  New Show
       .span9.container
         .row
           .span9
