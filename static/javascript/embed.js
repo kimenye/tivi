@@ -1,5 +1,5 @@
 (function(d) {
-    var url = "http://localhost:3000/test";
+    var url = "http://localhost:3000/embed";
     var a = d.createElement("iframe");
     a.setAttribute("allowTransparency","true");
     a.setAttribute("frameBorder", "0");

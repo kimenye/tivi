@@ -1,0 +1,62 @@
+.transparent {
+    background: transparent;
+}
+.loading {
+    background: url(/images/tivi-logo.gif) no-repeat center center;
+    width: 130px;
+    height: 115px;
+    margin: auto;
+}
+.topbar {
+    background:#333333;
+    min-height: 50px;
+    line-height: 50px;
+    margin: 0 0 30px 0;
+    padding: 0;
+    width: 100%;
+    position: relative;
+
+}
+
+.topbar li {
+    list-style-type: none;
+}
+
+.topbar li.title {
+    padding: 10px 0px;
+}
+
+.topbar li.title h1 {
+    color: #ffffff;
+    text-align: center;
+    font-size: 16px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.topbar li.previous, .topbar li.next  {
+    position: absolute;
+    top: 0;
+}
+
+.topbar li.next {
+    right: 0;
+}
+
+.topbar li.previous {
+    left: 0;
+}
+
+.topbar li.next a, .topbar li.previous a {
+    display: block;
+    height: 50px;
+    width: 39px;
+}
+
+.topbar li.previous a {
+    background: url(/css/images/foundation/orbit/left-arrow-small.png);
+}
+
+.topbar li.next a {
+    background: url(/css/images/foundation/orbit/right-arrow-small.png);
+}

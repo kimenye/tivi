@@ -1,0 +1,12 @@
+.twelve.columns
+  .loading{"data-bind" => "visible : loading"}
+  .guide{"data-bind" => "visible: !loading()"}
+    %ul.topbar
+      %li.previous
+        %a
+      %li.title
+        %h1
+          KBC
+      %li.next
+        %a
+%script{ 'type' => 'text/javascript', 'src' => 'javascript/guide.js'}

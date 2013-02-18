@@ -17,6 +17,10 @@ class TiviApp < Sinatra::Base
     haml :home, :layout => :layout
   end
 
+  get '/embed' do
+    haml :embed, :layout => :embed_layout
+  end
+
   get '/test' do
 
     channel_summary = Array.new

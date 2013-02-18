@@ -43,6 +43,16 @@ class Schedule
   key :promo_text, String
   key :correct, Boolean, :default => true
   belongs_to :show
+
+  def as_json options={}
+    {
+        :start_time => self.start_time,
+        :end_time => self.end_time,
+        :promo_text => self.promo_text,
+        :correct => self.correct,
+        :show => self.show.to_json
+    }
+  end
 end
 
 class Subscription
