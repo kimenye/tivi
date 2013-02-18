@@ -1,12 +1,33 @@
 .twelve.columns
-  .loading{"data-bind" => "visible : loading"}
-  .guide{"data-bind" => "visible: !loading()"}
-    %ul.topbar
-      %li.previous
-        %a
-      %li.title
-        %h1
-          KBC
-      %li.next
-        %a
-%script{ 'type' => 'text/javascript', 'src' => 'javascript/guide.js'}
+  -#.loading{"data-bind" => "visible : loading"}
+  -#.guide{"data-bind" => "visible: !loading()"}
+    -#%ul.topbar
+    -#  %li.previous
+    -#    %a
+    -#  %li.title
+    -#    %h1
+    -#      KBC
+    -#  %li.next
+    -#    %a
+
+  .liquid-slider#slider-id
+    %section
+      %h2.title
+        Panel
+      %p
+        Content
+    %section
+      %h2.title
+        Another Panel
+      %p
+        Another Panel Bacon ipsum dolor sit amet ea et pork chop aliquip, bacon do eu duis kielbasa consectetur meatball jerky short ribs. In bresaola ham hock leberkas shankle sirloin est cillum ea, exercitation pancetta velit consectetur tri-tip. Ham nisi turducken swine. Ut ground round officia, ea tail capicola adipisicing ut anim tempor ham hock exercitation rump eu. Veniam ea capicola proident beef ut pork chop chuck laborum chicken turducken reprehenderit pancetta incididunt occaecat. Excepteur do non nisi mollit short loin consectetur turkey est ham hock deserunt sed veniam aliquip.
+:javascript
+  $('#slider-id').liquidSlider({
+
+    dynamicTabs : true,
+    dynamicArrows: false,
+    callbackFunction: function() {
+      console.log("Panel has changed");
+    }
+  });
+-#%script{ 'type' => 'text/javascript', 'src' => 'javascript/guide.js'}
