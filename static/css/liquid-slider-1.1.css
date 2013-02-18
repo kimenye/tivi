@@ -27,7 +27,7 @@
 * markup.
 *******************************************************/
 .liquid-slider-wrapper .liquid-slider-preloader {  
-  background: url(../img/loading.gif) #f2f2f2 no-repeat center 75px;
+  /*background: url(/images/loading.gif) #f2f2f2 no-repeat center 75px;*/
   opacity:.90;
   /* Do not edit below this line */
   width:100%;
@@ -197,7 +197,7 @@
   width: 100%;
   height: 35px;
   overflow: hidden;
-  background: url(../img/menu.png) no-repeat right #ddd;
+  background: url(/images/menu.png) no-repeat right #ddd;
   
 }
 .liquid-slider-wrapper .liquid-slider-select-box select {  
@@ -256,7 +256,7 @@
 .liquid-slider-wrapper .liquid-nav-right-arrow {
   width: 25px;
   height: 25px;
-  background: url(../img/arrow.png) no-repeat top right;
+  background: url(/images/arrow.png) no-repeat top right;
   margin-top: 50px;
   margin-right: 5px;
   /* Do not edit below this line */
@@ -265,7 +265,7 @@
 .liquid-slider-wrapper .liquid-nav-left-arrow {
   width: 25px;
   height: 25px;
-  background: url(../img/arrow.png) no-repeat top left;
+  background: url(/images/arrow.png) no-repeat top left;
   margin-top: 50px;
   margin-left: 5px;
   /* Do not edit below this line */
@@ -273,14 +273,14 @@
 }
 .liquid-slider-wrapper .liquid-nav-left-arrow:hover {
   /* Left graphical arrows hover */
-  background: url(../img/arrow.png) no-repeat bottom left;
+  background: url(/images/arrow.png) no-repeat bottom left;
 }
 .liquid-slider-wrapper .liquid-nav-left-arrow:active {
   /* Left graphical arrows click */
 }
 .liquid-slider-wrapper .liquid-nav-right-arrow:hover {
   /* Right graphical arrows hover */
-  background: url(../img/arrow.png) no-repeat bottom right;
+  background: url(/images/arrow.png) no-repeat bottom right;
 }
 .liquid-slider-wrapper .liquid-nav-right-arrow:active {
   /* Right graphical arrows click */
