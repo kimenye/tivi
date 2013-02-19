@@ -1,9 +1,9 @@
 require_relative 'models'
 require 'url_shortener'
 require 'pry'
-#require 'memcached'
+require 'memcached'
 #require 'twitter'
-require 'dalli'
+#require 'dalli'
 
 
 module SchedulerHelper
@@ -53,6 +53,34 @@ module SchedulerHelper
 
     end
     cached_shows
+  end
+
+  def cache_schedule
+
+    #memcached = Dalli::Client.new
+    memcached = Memcached.new("localhost:11211")
+    begin
+      cached_channels = memcached.get('cached_channels')
+    rescue
+
+      channels = Channel.all
+      guide = Array.new
+      channels.each do |channel|
+        current_and_next_schedule = get_current_and_next_schedule(channel)
+        schedule_for_rest_of_day = get_schedule_for_rest_of_day(channel)
+
+        guide.push({
+                       :channel => channel.to_json,
+                       :current => current_and_next_schedule.first.to_json,
+                       :next => current_and_next_schedule.last.to_json,
+                       :rest => schedule_for_rest_of_day.to_json
+                   })
+      end
+
+      memcached.set('cached_channels', guide, 86400)
+
+    end
+    cached_channels
   end
   
   def get_seconds_from_min min
