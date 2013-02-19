@@ -41,8 +41,9 @@ $(document).ready(function() {
     }
 
     function Show(data) {
-        this.start_time = data.start_time;
-        this.end_time = data.end_time;
+
+        this.start_time = new Date(data.start_time).toString('HH:mm');
+        this.end_time = new Date(data.end_time).toString('HH:mm');
         this.promo_text = data.promo_text;
         var show = $.parseJSON(data.show);
         this.name = show.name;
