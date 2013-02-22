@@ -62,15 +62,12 @@ $(document).ready(function() {
         this.code = json.code;
         this.name = json.name;
         this.logo = json.logo_id;
-//        this.duration = Math.random() * 100;
 
         this.currentShow = ko.observable();
         this.nextShow = ko.observable();
         this.restOfShows = ko.observableArray([]);
 
         self.currentShow(new Show($.parseJSON(data.current)));
-//        console.log(Date.parse(self.currentShow().end_time) - Date.parse(self.currentShow().start_time));
-//        console.log(new Date());
         self.nextShow(new Show($.parseJSON(data.next)));
 
         var rest = $.parseJSON(data.rest);
