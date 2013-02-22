@@ -11,8 +11,36 @@
 
   .liquid-slider#slider-id{'data-bind' => 'foreach: channels'}
     %section
-      %h2.title{"data-bind" => "text: code"}
-
-      %p{"data-bind" => "text: 'Current show is : ' + current().name "}
+      .row
+        %h4{'class' => 'title', 'data-bind' => 'text: code'}
+      .row
+        .six.columns
+          %img{:src => "../images/tivi-logo.gif"}
+        .six.columns
+          %h6{'data-bind' => "text: currentShow().name"}
+          %p{'data-bind' => "text: currentShow().description"}
+          .progressbar{"data-bind" => "attr: { id: 'pb_' + code }"}
+      .row
+        .six.columns
+          %img{:src => "../images/tivi-logo.gif"}
+        .six.columns
+          %h6{'data-bind' => "text: nextShow().name"}
+          .row
+            .six.columns
+              %p{'data-bind' => "text: nextShow().description"}
+            .six.columns
+              %span{'data-bind' => "text: currentShow().start_time"}
+              %span
+                to
+              %span{'data-bind' => "text: currentShow().end_time"}
+      .row{'data-bind' => 'foreach: restOfShows()'}
+        .row
+          .six.columns
+            %p{'data-bind' => "text: name"}
+          .six.columns
+            %span{'data-bind' => "text: start_time"}
+            %span
+              to
+            %span{'data-bind' => "text: end_time"}
 
 %script{ 'type' => 'text/javascript', 'src' => 'javascript/guide.js'}

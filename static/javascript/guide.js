@@ -1,4 +1,8 @@
 $(document).ready(function() {
+
+    var startTime = 0;
+    var endTime = 0;
+
     function EmbeddedApp() {
         var self = this;
         this.channels = ko.observableArray([]);
@@ -32,6 +36,19 @@ $(document).ready(function() {
                     console.log("Panel has changed");
                 }
             });
+
+            _.each(self.channels(), function(c) {
+                var full_duration = Date.parse(c.currentShow().end_time) - Date.parse(c.currentShow().start_time);
+                var time_passed = new Date() - Date.parse(c.currentShow().start_time);
+                var progress = (time_passed * 100) / full_duration;
+                console.log(c.code + progress);
+
+                $( "#pb_" + c.code ).progressbar({
+                    value: progress
+                });
+            });
+
+
         });
 
         this.show = function() {
@@ -39,17 +56,29 @@ $(document).ready(function() {
         }
     }
 
-
     function Channel(data) {
         var self = this;
         var json = $.parseJSON(data.channel);
         this.code = json.code;
         this.name = json.name;
         this.logo = json.logo_id;
+//        this.duration = Math.random() * 100;
 
-        this.current = ko.observable(new Show($.parseJSON(data.current)));
-        this.next = ko.observable(null);
-        this.rest = ko.observableArray([]);
+        this.currentShow = ko.observable();
+        this.nextShow = ko.observable();
+        this.restOfShows = ko.observableArray([]);
+
+        self.currentShow(new Show($.parseJSON(data.current)));
+//        console.log(Date.parse(self.currentShow().end_time) - Date.parse(self.currentShow().start_time));
+//        console.log(new Date());
+        self.nextShow(new Show($.parseJSON(data.next)));
+
+        var rest = $.parseJSON(data.rest);
+
+        for (var i in rest) {
+            var show = new Show(rest[i]);
+            self.restOfShows.push(show);
+        }
     }
 
     /*function Show(data) {

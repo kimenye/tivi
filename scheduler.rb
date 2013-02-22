@@ -64,19 +64,8 @@ module SchedulerHelper
     rescue
 
       channels = Channel.all
-      guide = Array.new
-      channels.each do |channel|
-        current_and_next_schedule = get_current_and_next_schedule(channel)
-        schedule_for_rest_of_day = get_schedule_for_rest_of_day(channel)
 
-        guide.push({
-                       :channel => channel.to_json,
-                       :current => current_and_next_schedule.first.to_json,
-                       :next => current_and_next_schedule.last.to_json,
-                       :rest => schedule_for_rest_of_day.to_json
-                   })
-      end
-      memcached.set('cached_channels', guide, 86400)
+      memcached.set('cached_channels', channels, 86400)
 
     end
     cached_channels

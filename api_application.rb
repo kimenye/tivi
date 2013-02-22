@@ -99,22 +99,19 @@ class ApiApplication < Sinatra::Base
   end
 
   get "/guide" do
-    #channels = Channel.all
-    #guide = Array.new
-    #channels.each do |channel|
-    #  current_and_next_schedule = get_current_and_next_schedule(channel)
-    #  schedule_for_rest_of_day = get_schedule_for_rest_of_day(channel)
-    #
-    #  guide.push({
-    #      :channel => channel.to_json,
-    #      :current => current_and_next_schedule.first.to_json,
-    #      :next => current_and_next_schedule.last.to_json,
-    #      :rest => schedule_for_rest_of_day.to_json
-    #             })
-    #end
+    channels = cache_schedule
+    guide = Array.new
+    channels.each do |channel|
+      current_and_next_schedule = get_current_and_next_schedule(channel)
+      schedule_for_rest_of_day = get_schedule_for_rest_of_day(channel)
 
-    guide = cache_schedule
-    #binding.pry
+      guide.push({
+          :channel => channel.to_json,
+          :current => current_and_next_schedule.first.to_json,
+          :next => current_and_next_schedule.last.to_json,
+          :rest => schedule_for_rest_of_day.to_json
+                 })
+    end
 
     status 200
     body(guide.to_json)
