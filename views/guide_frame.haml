@@ -1,38 +1,36 @@
-#channelComplete{:class => 'carousel slide'}
-  .carousel-inner
-    - channel_complete.each do |data|
-      .item
-        .channel-div{'id' => data['channel'].id}
-          %h3#guide-channel-name
-            = data['channel'].code
-          - if data['shows'].empty?
-            No Scheduled Shows
-          - else
-            %table.table-striped
-              - data['shows'].each_with_index do |show, index|
-                %tr
-                  %td.span11
-                    - if show.nil?
-                      N/A
-                    - else
-                      %a{:href => "#" + show.show.id}
-                        - if index == 0 || index == 1
-                          %h3
-                            = show.start_time.localtime.strftime("%R") + " - " + show.end_time.localtime.strftime("%R")
-                          %h3
-                            = show.show.name
-                        - else
-                          %h6
-                            = show.start_time.localtime.strftime("%R") + " - " + show.end_time.localtime.strftime("%R")
-                          %h6
-                            = show.show.name
-  .carousel-control{:class => 'left', :href => "#channelComplete", "data-slide" => "prev"} &lsaquo;
-  .carousel-control{:class => 'right', :href => "#channelComplete", "data-slide" => "next"} &rsaquo;
+.row
+  .twelve.columns{'data-bind' => 'foreach: channels'}
+    .row
+      %h4{'data-bind' => 'text: code'}
+    .row
+      .six.columns
+        %img{:src => "../images/tivi-logo.gif"}
+      .six.columns
+        %h6{'data-bind' => "text: currentShow().name"}
+        %p{'data-bind' => "text: currentShow().description"}
+        %p
+          Progress bar
+    .row
+      .six.columns
+        %img{:src => "../images/tivi-logo.gif"}
+      .six.columns
+        %h6{'data-bind' => "text: nextShow().name"}
+        .row
+          .six.columns
+            %p{'data-bind' => "text: nextShow().description"}
+          .six.columns
+            %span{'data-bind' => "text: currentShow().start_time"}
+            %span
+              to
+            %span{'data-bind' => "text: currentShow().end_time"}
+    .row{'data-bind' => 'foreach: restOfShows()'}
+      .row
+        .six.columns
+          %p{'data-bind' => "text: name"}
+        .six.columns
+          %span{'data-bind' => "text: start_time"}
+          %span
+            to
+          %span{'data-bind' => "text: end_time"}
 
-
-:javascript
-    $(document).ready(function() {
-      $('.carousel').carousel({
-        interval: false
-      })
-    });
+%script{ 'type' => 'text/javascript', 'src' => 'javascript/guide.js'}
