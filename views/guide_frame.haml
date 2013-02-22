@@ -8,8 +8,8 @@
       .six.columns
         %h6{'data-bind' => "text: currentShow().name"}
         %p{'data-bind' => "text: currentShow().description"}
-        %p
-          Progress bar
+        .progressbar
+          %p Progress Bar
     .row
       .six.columns
         %img{:src => "../images/tivi-logo.gif"}
@@ -32,5 +32,16 @@
           %span
             to
           %span{'data-bind' => "text: end_time"}
+  -#.twelve.columns{'data-bind' => 'foreach: channels'}
+  -#  .progressbar
+  -#
+  -#.progressbar
 
 %script{ 'type' => 'text/javascript', 'src' => 'javascript/guide.js'}
+
+:javascript
+   $(function() {
+    $( ".progressbar" ).progressbar({
+      value: 37
+    });
+  });

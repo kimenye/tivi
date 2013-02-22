@@ -76,7 +76,6 @@ module SchedulerHelper
                        :rest => schedule_for_rest_of_day.to_json
                    })
       end
-
       memcached.set('cached_channels', guide, 86400)
 
     end

@@ -114,6 +114,7 @@ class ApiApplication < Sinatra::Base
     #end
 
     guide = cache_schedule
+    #binding.pry
 
     status 200
     body(guide.to_json)

@@ -1,26 +1,52 @@
 .twelve.columns
-  -#.loading{"data-bind" => "visible : loading"}
-  -#.guide{"data-bind" => "visible: !loading()"}
-    -#%ul.topbar
-    -#  %li.previous
-    -#    %a
-    -#  %li.title
-    -#    %h1
-    -#      KBC
-    -#  %li.next
-    -#    %a
 
-  .liquid-slider#slider-id
+  -#.liquid-slider#slider-id
+  -#  %section
+  -#    %h2.title
+  -#      Panel
+  -#    %p
+  -#      Content
+  -#  %section
+  -#    %h2.title
+  -#      Another Panel
+  -#    %p
+  -#      Another Panel Bacon ipsum dolor sit amet ea et pork chop aliquip, bacon do eu duis kielbasa consectetur meatball
+
+  .liquid-slider#slider-id{'data-bind' => 'foreach: channels'}
     %section
-      %h2.title
-        Panel
-      %p
-        Content
-    %section
-      %h2.title
-        Another Panel
-      %p
-        Another Panel Bacon ipsum dolor sit amet ea et pork chop aliquip, bacon do eu duis kielbasa consectetur meatball jerky short ribs. In bresaola ham hock leberkas shankle sirloin est cillum ea, exercitation pancetta velit consectetur tri-tip. Ham nisi turducken swine. Ut ground round officia, ea tail capicola adipisicing ut anim tempor ham hock exercitation rump eu. Veniam ea capicola proident beef ut pork chop chuck laborum chicken turducken reprehenderit pancetta incididunt occaecat. Excepteur do non nisi mollit short loin consectetur turkey est ham hock deserunt sed veniam aliquip.
+      .row
+        %h4{'data-bind' => 'text: code'}
+      .row
+        .six.columns
+          %img{:src => "../images/tivi-logo.gif"}
+        .six.columns
+          %h6{'data-bind' => "text: currentShow().name"}
+          %p{'data-bind' => "text: currentShow().description"}
+          %p
+            Progress bar
+      .row
+        .six.columns
+          %img{:src => "../images/tivi-logo.gif"}
+        .six.columns
+          %h6{'data-bind' => "text: nextShow().name"}
+          .row
+            .six.columns
+              %p{'data-bind' => "text: nextShow().description"}
+            .six.columns
+              %span{'data-bind' => "text: currentShow().start_time"}
+              %span
+                to
+              %span{'data-bind' => "text: currentShow().end_time"}
+      .row{'data-bind' => 'foreach: restOfShows()'}
+        .row
+          .six.columns
+            %p{'data-bind' => "text: name"}
+          .six.columns
+            %span{'data-bind' => "text: start_time"}
+            %span
+              to
+            %span{'data-bind' => "text: end_time"}
+
 :javascript
   $('#slider-id').liquidSlider({
 
@@ -30,4 +56,4 @@
       console.log("Panel has changed");
     }
   });
--#%script{ 'type' => 'text/javascript', 'src' => 'javascript/guide.js'}
+%script{ 'type' => 'text/javascript', 'src' => 'javascript/guide.js'}
