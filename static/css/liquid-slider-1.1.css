@@ -126,8 +126,8 @@
 * need to use the settings below as this will not apply.
 *******************************************************/
 .liquid-slider-wrapper .liquid-slider .panel-wrapper {  
-  padding: 20px;
-  /* Do not edit below this line */
+  /*padding: 20px;*/
+   /*Do not edit below this line */
   position:relative;
 }
 

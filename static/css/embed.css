@@ -11,7 +11,7 @@
     background:#333333;
     min-height: 50px;
     line-height: 50px;
-    margin: 0 0 30px 0;
+    margin: 0;
     padding: 0;
     width: 100%;
     position: relative;
@@ -59,4 +59,11 @@
 
 .topbar li.next a {
     background: url(/css/images/foundation/orbit/right-arrow-small.png);
+}
+
+/*
+ * Override foundation .panel styles
+ */
+.liquid-slider .panel {
+   //TODO: remove the grey background here
 }

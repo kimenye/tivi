@@ -19,6 +19,19 @@ $(document).ready(function() {
 
 
             self.loading(false);
+
+            $('#slider-id').liquidSlider({
+
+                dynamicTabs : false,
+                dynamicArrows: false,
+                responsive: true,
+                customArrows: true,
+                customArrowLeft: 'previous-slide',
+                customArrowRight: 'next-slide',
+                callbackFunction: function() {
+                    console.log("Panel has changed");
+                }
+            });
         });
 
         this.show = function() {
@@ -32,6 +45,15 @@ $(document).ready(function() {
         this.code = json.code;
         this.name = json.name;
         this.logo = json.logo_id;
+
+        this.current = ko.observable(new Show($.parseJSON(data.current)));
+        this.next = ko.observable(null);
+        this.rest = ko.observableArray([]);
+    }
+
+    function Show(data) {
+        var json = $.parseJSON(data.show);
+        this.name = json.name;
     }
 
     function show() {
