@@ -1,59 +1,18 @@
 .twelve.columns
-
-  -#.liquid-slider#slider-id
-  -#  %section
-  -#    %h2.title
-  -#      Panel
-  -#    %p
-  -#      Content
-  -#  %section
-  -#    %h2.title
-  -#      Another Panel
-  -#    %p
-  -#      Another Panel Bacon ipsum dolor sit amet ea et pork chop aliquip, bacon do eu duis kielbasa consectetur meatball
+  .loading{"data-bind" => "visible : loading"}
+  .guide{"data-bind" => "visible: !loading()"}
+    %ul.topbar
+      %li.previous
+        %a.previous-slide{:href => "#"}
+      %li.title
+        %h1
+      %li.next
+        %a.next-slide{:href => "#"}
 
   .liquid-slider#slider-id{'data-bind' => 'foreach: channels'}
     %section
-      .row
-        %h4{'data-bind' => 'text: code'}
-      .row
-        .six.columns
-          %img{:src => "../images/tivi-logo.gif"}
-        .six.columns
-          %h6{'data-bind' => "text: currentShow().name"}
-          %p{'data-bind' => "text: currentShow().description"}
-          %p
-            Progress bar
-      .row
-        .six.columns
-          %img{:src => "../images/tivi-logo.gif"}
-        .six.columns
-          %h6{'data-bind' => "text: nextShow().name"}
-          .row
-            .six.columns
-              %p{'data-bind' => "text: nextShow().description"}
-            .six.columns
-              %span{'data-bind' => "text: currentShow().start_time"}
-              %span
-                to
-              %span{'data-bind' => "text: currentShow().end_time"}
-      .row{'data-bind' => 'foreach: restOfShows()'}
-        .row
-          .six.columns
-            %p{'data-bind' => "text: name"}
-          .six.columns
-            %span{'data-bind' => "text: start_time"}
-            %span
-              to
-            %span{'data-bind' => "text: end_time"}
+      %h2.title{"data-bind" => "text: code"}
 
-:javascript
-  $('#slider-id').liquidSlider({
+      %p{"data-bind" => "text: 'Current show is : ' + current().name "}
 
-    dynamicTabs : true,
-    dynamicArrows: false,
-    callbackFunction: function() {
-      console.log("Panel has changed");
-    }
-  });
 %script{ 'type' => 'text/javascript', 'src' => 'javascript/guide.js'}

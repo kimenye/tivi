@@ -3,13 +3,35 @@ $(document).ready(function() {
         var self = this;
         this.channels = ko.observableArray([]);
         this.loading = ko.observable(true);
+        this.slideIdx = ko.observable(0);
+        this.current = ko.computed(function() {
+            if (self.channels().length > 0)
+                return self.channels()[self.slideIdx()].code;
+            else
+                return ""
+        });
 
         $.getJSON("/api/guide", function(data) {
             _.each(data, function(c) {
                 self.channels.push(new Channel(c));
             });
 
+
+
             self.loading(false);
+
+            $('#slider-id').liquidSlider({
+
+                dynamicTabs : false,
+                dynamicArrows: false,
+                responsive: true,
+                customArrows: true,
+                customArrowLeft: 'previous-slide',
+                customArrowRight: 'next-slide',
+                callbackFunction: function() {
+                    console.log("Panel has changed");
+                }
+            });
         });
 
         this.show = function() {
@@ -25,6 +47,14 @@ $(document).ready(function() {
         this.name = json.name;
         this.logo = json.logo_id;
 
+        this.current = ko.observable(new Show($.parseJSON(data.current)));
+        this.next = ko.observable(null);
+        this.rest = ko.observableArray([]);
+    }
+
+    /*function Show(data) {
+        var json = $.parseJSON(data.show);
+        this.name = json.name;
         this.currentShow = ko.observable();
         this.nextShow = ko.observable();
         this.restOfShows = ko.observableArray([]);
@@ -38,7 +68,7 @@ $(document).ready(function() {
             var show = new Show(rest[i]);
             self.restOfShows.push(show);
         }
-    }
+    }*/
 
     function Show(data) {
 
