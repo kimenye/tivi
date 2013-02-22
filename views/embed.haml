@@ -11,9 +11,9 @@
 
   .liquid-slider#slider-id{'data-bind' => 'foreach: channels'}
     %section
-      .row
+      .row.border
         %h4{'class' => 'title', 'data-bind' => 'text: code'}
-      .row
+      .row.border
         .six.columns
           %img{:src => "../images/tivi-logo.gif"}
         .six.columns
@@ -25,7 +25,7 @@
           %img{:src => "../images/tivi-logo.gif"}
         .six.columns
           %h6{'data-bind' => "text: nextShow().name"}
-          .row
+          .row.border
             .six.columns
               %p{'data-bind' => "text: nextShow().description"}
             .six.columns
@@ -34,7 +34,7 @@
                 to
               %span{'data-bind' => "text: currentShow().end_time"}
       .row{'data-bind' => 'foreach: restOfShows()'}
-        .row
+        .row.border
           .six.columns
             %p{'data-bind' => "text: name"}
           .six.columns
