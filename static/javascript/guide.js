@@ -15,12 +15,14 @@ $(document).ready(function() {
                 return "";
         });
 
-        this.channel_title = ko.observable("KTN");
+        this.channel_title = ko.observable();
 
         $.getJSON("/api/guide", function(data) {
             _.each(data, function(c) {
                 self.channels.push(new Channel(c));
             });
+
+            self.channel_title(self.channels()[0].name);
 
 
 
@@ -38,7 +40,7 @@ $(document).ready(function() {
                 callbackFunction: function () {
                     // Store the instance in a variable
                     var sliderObject = $.data( $('#slider-id')[0], 'liquidSlider');
-                    self.channel_title(self.channels()[sliderObject.currentTab].code);
+                    self.channel_title(self.channels()[sliderObject.currentTab].name);
                 }
             });
 
