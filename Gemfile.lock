@@ -26,6 +26,7 @@ GEM
     crack (0.1.6)
     curb (0.8.1)
     daemons (1.1.9)
+    dalli (2.5.0)
     data_mapper (1.2.0)
       dm-aggregates (~> 1.2.0)
       dm-constraints (~> 1.2.0)
@@ -81,7 +82,6 @@ GEM
       wand (~> 0.4)
     json (1.7.5)
     json_pure (1.7.5)
-    memcached (1.5.0)
     method_source (0.8)
     mime-types (1.19)
     mongo (1.7.0)
@@ -153,13 +153,13 @@ PLATFORMS
 DEPENDENCIES
   bson_ext
   curb
+  dalli
   data_mapper
   gcal4ruby
   haml
   httparty
   joint
   json
-  memcached
   mongo
   mongo_mapper
   newrelic_rpm

@@ -1,9 +1,9 @@
 require_relative 'models'
 require 'url_shortener'
 require 'pry'
-require 'memcached'
+#require 'memcached'
 #require 'twitter'
-#require 'dalli'
+require 'dalli'
 
 
 module SchedulerHelper
@@ -56,17 +56,11 @@ module SchedulerHelper
   end
 
   def cache_schedule
-
-    #memcached = Dalli::Client.new
-    memcached = Memcached.new("localhost:11211")
-    begin
-      cached_channels = memcached.get('cached_channels')
-    rescue
-
-      channels = Channel.all
-
-      memcached.set('cached_channels', channels, 86400)
-
+    memcached = Dalli::Client.new
+    cached_channels = memcached.get('cached_channels')
+    if cached_channels.nil?
+      cached_channels = Channel.all
+      memcached.set('cached_channels', cached_channels)
     end
     cached_channels
   end
@@ -265,7 +259,7 @@ module SchedulerHelper
     }
     puts "Finished sending messages"
 
-    tweet_show_reminders(duration,from)
+    #tweet_show_reminders(duration,from)
   end
 
   def get_reminders (duration=5, from=Time.now)
@@ -340,22 +334,22 @@ module SchedulerHelper
     result.result['nodeKeyVal']['shortUrl']
   end
 
-  def tweet_show_reminders (duration=5, from=Time.now)
-    shows = get_shows_starting_in_duration(duration,round_down(from))
-
-    Twitter.configure do |config|
-
-      config.consumer_key = CONSUMER_KEY
-      config.consumer_secret = CONSUMER_SECRET
-      config.oauth_token = OAUTH_TOKEN
-      config.oauth_token_secret = OAUTH_TOKEN_SECRET
-    end
-
-    shows.each { |show|
-      Twitter.update('#{show.show.name} will start shortly')
-    }
-
-  end
+  #def tweet_show_reminders (duration=5, from=Time.now)
+  #  shows = get_shows_starting_in_duration(duration,round_down(from))
+  #
+  #  Twitter.configure do |config|
+  #
+  #    config.consumer_key = CONSUMER_KEY
+  #    config.consumer_secret = CONSUMER_SECRET
+  #    config.oauth_token = OAUTH_TOKEN
+  #    config.oauth_token_secret = OAUTH_TOKEN_SECRET
+  #  end
+  #
+  #  shows.each { |show|
+  #    Twitter.update('#{show.show.name} will start shortly')
+  #  }
+  #
+  #end
 
 end
 

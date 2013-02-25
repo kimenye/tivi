@@ -22,8 +22,8 @@ gem "url_shortener"
 gem "joint"
 gem "rack-gridfs"
 gem "httparty"
-gem 'memcached'
-#gem 'dalli'
+#gem 'memcached'
+gem 'dalli'
 #gem 'twitter'
 
 group :test do
