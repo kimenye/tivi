@@ -1,9 +1,9 @@
 require_relative 'models'
 require 'url_shortener'
 require 'pry'
-require 'memcached'
+#require 'memcached'
 #require 'twitter'
-#require 'dalli'
+require 'dalli'
 
 
 module SchedulerHelper
@@ -56,17 +56,11 @@ module SchedulerHelper
   end
 
   def cache_schedule
-
-    #memcached = Dalli::Client.new
-    memcached = Memcached.new("localhost:11211")
-    begin
-      cached_channels = memcached.get('cached_channels')
-    rescue
-
-      channels = Channel.all
-
-      memcached.set('cached_channels', channels, 86400)
-
+    memcached = Dalli::Client.new
+    cached_channels = memcached.get('cached_channels')
+    if cached_channels.nil?
+      cached_channels = Channel.all
+      memcached.set('cached_channels', cached_channels)
     end
     cached_channels
   end
