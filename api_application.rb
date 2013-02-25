@@ -103,7 +103,7 @@ class ApiApplication < Sinatra::Base
     guide = Array.new
     channels.each do |channel|
       current_and_next_schedule = get_current_and_next_schedule(channel)
-      schedule_for_rest_of_day = get_schedule_for_rest_of_day(channel)
+      schedule_for_rest_of_day = get_schedule_for_rest_of_day_excluding_now_and_next(channel)
 
       guide.push({
           :channel => channel.to_json,

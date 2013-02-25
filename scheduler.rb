@@ -143,6 +143,17 @@ module SchedulerHelper
     schedule_for_rest_of_day.concat(schedule)
   end
 
+  def get_schedule_for_rest_of_day_excluding_now_and_next(channel, time=Time.now)
+    end_of_day = _get_end_of_day(time)
+    schedule = Schedule.all(:start_time => {'$gte' => time.utc},
+                            :end_time => {'$lte' => end_of_day.utc},
+                            :show_id => {'$in' => Show.all(:channel_id => channel.id).collect { |s| s.id }},
+                            :order => :start_time)
+    schedule_for_rest_of_day_excluding_now_and_next = Array.new
+    schedule.slice!(0)
+    schedule_for_rest_of_day_excluding_now_and_next.concat(schedule)
+  end
+
   def get_current_and_next_schedule(channel, time=Time.now)
     end_of_day = _get_end_of_day(time)
     schedule = Schedule.all(:start_time => {'$gte' => time.utc},
