@@ -12,8 +12,10 @@ $(document).ready(function() {
             if (self.channels().length > 0)
                 return self.channels()[self.slideIdx()].code;
             else
-                return ""
+                return "";
         });
+
+        this.channel_title = ko.observable("KTN");
 
         $.getJSON("/api/guide", function(data) {
             _.each(data, function(c) {
@@ -32,8 +34,11 @@ $(document).ready(function() {
                 customArrows: true,
                 customArrowLeft: 'previous-slide',
                 customArrowRight: 'next-slide',
-                callbackFunction: function() {
-                    console.log("Panel has changed");
+
+                callbackFunction: function () {
+                    // Store the instance in a variable
+                    var sliderObject = $.data( $('#slider-id')[0], 'liquidSlider');
+                    self.channel_title(self.channels()[sliderObject.currentTab].code);
                 }
             });
 
