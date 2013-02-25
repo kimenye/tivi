@@ -19,7 +19,8 @@
         .six.columns
           %h6{'data-bind' => "text: currentShow().name"}
           %p{'data-bind' => "text: currentShow().description"}
-          .progressbar{"data-bind" => "attr: { id: 'pb_' + code }"}
+          %div.progress.six
+            %span.meter{"data-bind" => "attr: { id: 'pb_' + code }"}
         .six.columns
           %span{'data-bind' => "text: currentShow().start_time"}
           %span

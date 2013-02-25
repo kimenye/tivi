@@ -43,9 +43,8 @@ $(document).ready(function() {
                 var progress = (time_passed * 100) / full_duration;
                 console.log(c.code + progress);
 
-                $( "#pb_" + c.code ).progressbar({
-                    value: progress
-                });
+                $( "#pb_" + c.code ).css('width', progress + '%');
+
             });
 
 
@@ -77,24 +76,6 @@ $(document).ready(function() {
             self.restOfShows.push(show);
         }
     }
-
-    /*function Show(data) {
-        var json = $.parseJSON(data.show);
-        this.name = json.name;
-        this.currentShow = ko.observable();
-        this.nextShow = ko.observable();
-        this.restOfShows = ko.observableArray([]);
-
-        self.currentShow(new Show($.parseJSON(data.current)));
-        self.nextShow(new Show($.parseJSON(data.next)));
-
-        var rest = $.parseJSON(data.rest);
-
-        for (var i in rest) {
-            var show = new Show(rest[i]);
-            self.restOfShows.push(show);
-        }
-    }*/
 
     function Show(data) {
 
