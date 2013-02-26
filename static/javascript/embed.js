@@ -1,5 +1,5 @@
 (function(d) {
-    var url = "www.guide.tivi.co.ke/embed"; //TODO: Make this configurable with localhost
+    var url = "http://www.guide.tivi.co.ke/embed"; //TODO: Make this configurable with localhost
     var a = d.createElement("iframe");
     a.setAttribute("allowTransparency","true");
     a.setAttribute("frameBorder", "0");
