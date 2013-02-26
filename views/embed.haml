@@ -40,11 +40,13 @@
         %ul.accordion{'data-bind' => 'foreach: restOfShows()'}
           %li
             .title
-              %h6{'data-bind' => "text: name"}
-              %span{'data-bind' => "text: start_time"}
-              %span
-                to
-              %span{'data-bind' => "text: end_time"}
+              %h6
+                %span{'data-bind' => "text: name"}
+                %small
+                  %span{'data-bind' => "text: start_time"}
+                  %span
+                    to
+                  %span{'data-bind' => "text: end_time"}
             .content
               %p{'data-bind' => "text: description"}
 

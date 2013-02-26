@@ -18,6 +18,12 @@
 
 }
 
+.channel small {
+    font-size: 90%;
+    float: right;
+    margin-right: 20px;
+}
+
 .embedded-guide {
     margin-bottom: 10px;
 }
