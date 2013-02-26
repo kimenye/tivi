@@ -22,13 +22,12 @@ $(document).ready(function() {
                 self.channels.push(new Channel(c));
             });
 
-            self.channel_title(self.channels()[0].name);
 
 
 
             self.loading(false);
 
-            $('#slider-id').liquidSlider({
+            /*$('#slider-id').liquidSlider({
 
                 dynamicTabs : false,
                 dynamicArrows: false,
@@ -47,6 +46,26 @@ $(document).ready(function() {
                     var height = $('.embedded-guide').height();
                     window.parent.postMessage(['setHeight', height], '*');
                 }
+            });*/
+
+            $('#channels').bxSlider({
+                adaptiveHeight: true,
+                mode: 'horizontal',
+                nextSelector: '.previous-slide',
+                nextText: '',
+                prevSelector: '.next-slide',
+                prevText: '',
+                pager: false,
+                onSliderLoad: function(idx) {
+                    self.channel_title(self.channels()[idx].name);
+                    self.resize();
+
+                },
+                onSlideAfter: function(element, oldIdx, newIdx) {
+                    self.channel_title(self.channels()[newIdx].name);
+                    self.resize();
+                }
+
             });
 
             _.each(self.channels(), function(c) {
@@ -62,6 +81,11 @@ $(document).ready(function() {
             var height = $('.embedded-guide').height();
             window.parent.postMessage(['setHeight', height], '*');
         });
+
+        this.resize = function() {
+            var height = $('.embedded-guide').height();
+            window.parent.postMessage(['setHeight', height], '*');
+        }
 
         this.show = function() {
 

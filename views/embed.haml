@@ -4,14 +4,14 @@
     .guide{"data-bind" => "visible: !loading()"}
       %ul.topbar
         %li.previous
-          %a.previous-slide{:href => "#left", "data-liquidslider-ref" => "slider-id"}
+          %a.previous-slide{:href => "#"}
         %li.title
           %h1{'data-bind' => "text: channel_title"}
         %li.next
-          %a.next-slide{:href => "#right", "data-liquidslider-ref" => "slider-id"}
+          %a.next-slide{:href => "#"}
 
-    .liquid-slider#slider-id{'data-bind' => 'foreach: channels'}
-      %section
+    #channels{'data-bind' => 'foreach: channels'}
+      .channel
         .row.border
           .six.columns
             %img{:src => "../images/tivi-logo.gif"}
