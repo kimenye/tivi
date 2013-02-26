@@ -55,12 +55,11 @@ $(document).ready(function() {
 
             });
 
-            var height = $('.embedded-guide').height();
-            window.parent.postMessage(['setHeight', height], '*');
+            self.resize();
         });
 
         this.resize = function() {
-            var height = $('.embedded-guide').height();
+            var height = $('.embedded-guide').height() + 30;
             window.parent.postMessage(['setHeight', height], '*');
         }
 
