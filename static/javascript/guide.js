@@ -33,9 +33,11 @@ $(document).ready(function() {
                 dynamicTabs : false,
                 dynamicArrows: false,
                 responsive: true,
-                customArrows: true,
-                customArrowLeft: 'previous-slide',
-                customArrowRight: 'next-slide',
+//                mobileUIThreshold: 100,
+                hideArrowsWhenMobile: false,
+//                hideArrowsThreshold: 481,
+                crossLinks: true,
+                slideEaseDuration: 800,
 
                 callbackFunction: function () {
                     // Store the instance in a variable
