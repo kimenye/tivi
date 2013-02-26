@@ -41,6 +41,9 @@ $(document).ready(function() {
                     // Store the instance in a variable
                     var sliderObject = $.data( $('#slider-id')[0], 'liquidSlider');
                     self.channel_title(self.channels()[sliderObject.currentTab].name);
+
+                    var height = $('.embedded-guide').height();
+                    window.parent.postMessage(['setHeight', height], '*');
                 }
             });
 
@@ -54,7 +57,8 @@ $(document).ready(function() {
 
             });
 
-
+            var height = $('.embedded-guide').height();
+            window.parent.postMessage(['setHeight', height], '*');
         });
 
         this.show = function() {

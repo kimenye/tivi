@@ -1,62 +1,63 @@
 .twelve.columns
   .loading{"data-bind" => "visible : loading"}
-  .guide{"data-bind" => "visible: !loading()"}
-    %ul.topbar
-      %li.previous
-        %a.previous-slide{:href => "#"}
-      %li.title
-        %h1{'data-bind' => "text: channel_title"}
-      %li.next
-        %a.next-slide{:href => "#"}
+  .embedded-guide
+    .guide{"data-bind" => "visible: !loading()"}
+      %ul.topbar
+        %li.previous
+          %a.previous-slide{:href => "#"}
+        %li.title
+          %h1{'data-bind' => "text: channel_title"}
+        %li.next
+          %a.next-slide{:href => "#"}
 
-  .liquid-slider#slider-id{'data-bind' => 'foreach: channels'}
-    %section
-      .row.border
-        .six.columns
-          %img{:src => "../images/tivi-logo.gif"}
-        .six.columns
-          %h6{'data-bind' => "text: currentShow().name"}
-          %p{'data-bind' => "text: currentShow().description"}
-          %div.progress.six
-            %span.meter{"data-bind" => "attr: { id: 'pb_' + code }"}
-        .six.columns
-          %span{'data-bind' => "text: currentShow().start_time"}
-          %span
-            to
-          %span{'data-bind' => "text: currentShow().end_time"}
-      .row
-        .six.columns
-          %img{:src => "../images/tivi-logo.gif"}
-        .six.columns
-          %h6{'data-bind' => "text: nextShow().name"}
-          .row.border
-            .six.columns
-              %p{'data-bind' => "text: nextShow().description"}
-            .six.columns
-              %span{'data-bind' => "text: nextShow().start_time"}
-              %span
-                to
-              %span{'data-bind' => "text: nextShow().end_time"}
-      -#%ul.accordion
-      -#  %li.active
-      -#    .title
-      -#      %h5 Accordion Panel 1
-      -#    .content
-      -#      %p Content 01
-      -#  %li
-      -#    .title
-      -#      %h5 Accordion Panel 2
-      -#    .content
-      -#      %p Content 02
-
-
-      .row{'data-bind' => 'foreach: restOfShows()'}
+    .liquid-slider#slider-id{'data-bind' => 'foreach: channels'}
+      %section
         .row.border
           .six.columns
-            %p{'data-bind' => "text: name"}
+            %img{:src => "../images/tivi-logo.gif"}
           .six.columns
-            %span{'data-bind' => "text: start_time"}
+            %h6{'data-bind' => "text: currentShow().name"}
+            %p{'data-bind' => "text: currentShow().description"}
+            %div.progress.six
+              %span.meter{"data-bind" => "attr: { id: 'pb_' + code }"}
+          .six.columns
+            %span{'data-bind' => "text: currentShow().start_time"}
             %span
               to
-            %span{'data-bind' => "text: end_time"}
+            %span{'data-bind' => "text: currentShow().end_time"}
+        .row
+          .six.columns
+            %img{:src => "../images/tivi-logo.gif"}
+          .six.columns
+            %h6{'data-bind' => "text: nextShow().name"}
+            .row.border
+              .six.columns
+                %p{'data-bind' => "text: nextShow().description"}
+              .six.columns
+                %span{'data-bind' => "text: nextShow().start_time"}
+                %span
+                  to
+                %span{'data-bind' => "text: nextShow().end_time"}
+        -#%ul.accordion
+        -#  %li.active
+        -#    .title
+        -#      %h5 Accordion Panel 1
+        -#    .content
+        -#      %p Content 01
+        -#  %li
+        -#    .title
+        -#      %h5 Accordion Panel 2
+        -#    .content
+        -#      %p Content 02
+
+
+        .row{'data-bind' => 'foreach: restOfShows()'}
+          .row.border
+            .six.columns
+              %p{'data-bind' => "text: name"}
+            .six.columns
+              %span{'data-bind' => "text: start_time"}
+              %span
+                to
+              %span{'data-bind' => "text: end_time"}
 %script{ 'type' => 'text/javascript', 'src' => 'javascript/guide.js'}
