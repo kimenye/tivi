@@ -77,7 +77,13 @@ $(document).ready(function() {
         this.nextShow = ko.observable();
         this.restOfShows = ko.observableArray([]);
 
-        self.currentShow(new Show($.parseJSON(data.current)));
+        if(data.current) {
+            self.currentShow(new Show($.parseJSON(data.current)));
+        }
+        else {
+            self.currentShow(null);
+        }
+
         self.nextShow(new Show($.parseJSON(data.next)));
 
         var rest = $.parseJSON(data.rest);

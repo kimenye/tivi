@@ -12,7 +12,7 @@
 
     .liquid-slider#slider-id{'data-bind' => 'foreach: channels'}
       %section
-        .row.border
+        .row.border{'data-bind' => 'if: currentShow()'}
           .six.columns
             %img{:src => "../images/tivi-logo.gif"}
           .six.columns
