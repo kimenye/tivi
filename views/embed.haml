@@ -37,26 +37,15 @@
                 %span
                   to
                 %span{'data-bind' => "text: nextShow().end_time"}
-        -#%ul.accordion
-        -#  %li.active
-        -#    .title
-        -#      %h5 Accordion Panel 1
-        -#    .content
-        -#      %p Content 01
-        -#  %li
-        -#    .title
-        -#      %h5 Accordion Panel 2
-        -#    .content
-        -#      %p Content 02
-
-
-        .row{'data-bind' => 'foreach: restOfShows()'}
-          .row.border
-            .six.columns
-              %p{'data-bind' => "text: name"}
-            .six.columns
+        %ul.accordion{'data-bind' => 'foreach: restOfShows()'}
+          %li
+            .title
+              %h6{'data-bind' => "text: name"}
               %span{'data-bind' => "text: start_time"}
               %span
                 to
               %span{'data-bind' => "text: end_time"}
+            .content
+              %p{'data-bind' => "text: description"}
+
 %script{ 'type' => 'text/javascript', 'src' => 'javascript/guide.js'}
