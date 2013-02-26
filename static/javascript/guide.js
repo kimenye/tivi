@@ -22,30 +22,26 @@ $(document).ready(function() {
                 self.channels.push(new Channel(c));
             });
 
-            self.channel_title(self.channels()[0].name);
 
 
 
             self.loading(false);
+            $('#channels').bxSlider({
+                adaptiveHeight: true,
+                mode: 'horizontal',
+                nextSelector: '.previous-slide',
+                nextText: '',
+                prevSelector: '.next-slide',
+                prevText: '',
+                pager: false,
+                onSliderLoad: function(idx) {
+                    self.channel_title(self.channels()[idx].name);
+                    self.resize();
 
-            $('#slider-id').liquidSlider({
-
-                dynamicTabs : false,
-                dynamicArrows: false,
-                responsive: true,
-//                mobileUIThreshold: 100,
-                hideArrowsWhenMobile: false,
-//                hideArrowsThreshold: 481,
-                crossLinks: true,
-                slideEaseDuration: 800,
-
-                callbackFunction: function () {
-                    // Store the instance in a variable
-                    var sliderObject = $.data( $('#slider-id')[0], 'liquidSlider');
-                    self.channel_title(self.channels()[sliderObject.currentTab].name);
-
-                    var height = $('.embedded-guide').height();
-                    window.parent.postMessage(['setHeight', height], '*');
+                },
+                onSlideAfter: function(element, oldIdx, newIdx) {
+                    self.channel_title(self.channels()[newIdx].name);
+                    self.resize();
                 }
             });
 
@@ -62,6 +58,11 @@ $(document).ready(function() {
             var height = $('.embedded-guide').height();
             window.parent.postMessage(['setHeight', height], '*');
         });
+
+        this.resize = function() {
+            var height = $('.embedded-guide').height();
+            window.parent.postMessage(['setHeight', height], '*');
+        }
 
         this.show = function() {
 

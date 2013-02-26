@@ -4,13 +4,13 @@
     %script{ 'type' => 'text/javascript', 'src' => 'javascript/jquery.1.7.2.js'}
     %script{ 'type' => 'text/javascript', 'src' => 'javascript/underscore-min.js'}
     %script{ 'type' => 'text/javascript', 'src' => 'javascript/knockout.js'}
-    %script{ 'type' => 'text/javascript', 'src' => 'javascript/jquery-ui-1.10.1.custom.min.js'}
-    %script{ 'type' => 'text/javascript', 'src' => 'javascript/jquery.liquid-slider-1.1.min.js'}
     %script{ 'type' => 'text/javascript', 'src' => '/javascript/date.js'}
-    -#%script{ 'type' => 'text/javascript', 'src' => '/javascript/foundation_javascripts/foundation.min.js'}
+    %script{ 'type' => 'text/javascript', 'src' => '/javascript/foundation_javascripts/modernizr.foundation.js'}
+    %script{ 'type' => 'text/javascript', 'src' => '/javascript/foundation_javascripts/app.js'}
+    %script{ 'type' => 'text/javascript', 'src' => '/javascript/foundation_javascripts/jquery.foundation.accordion.js'}
+    %script{ 'type' => 'text/javascript', 'src' => '/javascript/jquery.bxslider.min.js'}
     %link{'rel' => 'stylesheet', 'href' => 'css/foundation_stylesheets/foundation.min.css'}
     %link{'rel' => 'stylesheet', 'href' => 'css/embed.css'}
-    %link{'rel' => 'stylesheet', 'href' => 'css/liquid-slider-1.1.css'}
     %link{'rel' => 'stylesheet', 'href' => 'css/guide.css'}
   %body.transparent
     = yield
