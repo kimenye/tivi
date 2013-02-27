@@ -22,9 +22,6 @@ $(document).ready(function() {
                 self.channels.push(new Channel(c));
             });
 
-
-
-
             self.loading(false);
             $('#channels').bxSlider({
                 adaptiveHeight: true,
@@ -83,8 +80,9 @@ $(document).ready(function() {
         this.nextShow = ko.observable();
         this.restOfShows = ko.observableArray([]);
 
-        if(data.current) {
-            self.currentShow(new Show($.parseJSON(data.current)));
+        var current = $.parseJSON(data.current);
+        if(current) {
+            self.currentShow(new Show(current));
         }
         else {
             self.currentShow(null);
