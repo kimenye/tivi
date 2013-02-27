@@ -94,19 +94,18 @@ $(document).ready(function() {
         this.name = json.name;
         this.logo = json.logo_id;
 
-        this.currentShow = ko.observable();
-        this.nextShow = ko.observable();
+        this.currentShow = ko.observable(null);
+        this.nextShow = ko.observable(null);
         this.restOfShows = ko.observableArray([]);
 
         var current = $.parseJSON(data.current);
-        if(current) {
+        if(current)
             self.currentShow(new Show(current));
-        }
-        else {
-            self.currentShow(null);
-        }
 
-        self.nextShow(new Show($.parseJSON(data.next)));
+
+        var next = $.parseJSON(data.next);
+        if (next)
+            self.nextShow(new Show(next));
 
         var rest = $.parseJSON(data.rest);
 
