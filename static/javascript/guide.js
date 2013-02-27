@@ -91,8 +91,12 @@ $(document).ready(function() {
         var rest = $.parseJSON(data.rest);
 
         for (var i in rest) {
-            var show = new Show(rest[i]);
-            self.restOfShows.push(show);
+            if (rest[i] != null) {
+                var show = new Show(rest[i]);
+                self.restOfShows.push(show);
+            }
+            else
+                console.log("Null encountered in ", this.name);
         }
     }
 
