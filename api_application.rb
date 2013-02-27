@@ -72,6 +72,9 @@ class ApiApplication < Sinatra::Base
       timer = Rufus::Scheduler.start_new
       timer.cron '55 23 * * *' do
 
+        clear_cache('cached_channels')
+        clear_cache('cached_schedules')
+
         next_day = settings.processor.tomorrow
         puts ">> Prepare schedule for #{next_day}"
 
@@ -99,7 +102,7 @@ class ApiApplication < Sinatra::Base
   end
 
   get "/guide" do
-    channels = cache_schedule
+    channels = cache_channels
     guide = Array.new
     channels.each do |channel|
       current_and_next_schedule = get_current_and_next_schedule(channel)
@@ -115,6 +118,11 @@ class ApiApplication < Sinatra::Base
 
     status 200
     body(guide.to_json)
+  end
+
+  get "/schedule_test" do
+     schedule = cache_schedules
+     schedule.to_json
   end
 
   post "/channels/sync/:id" do
