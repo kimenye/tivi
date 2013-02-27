@@ -120,11 +120,6 @@ class ApiApplication < Sinatra::Base
     body(guide.to_json)
   end
 
-  get "/schedule_test" do
-     schedule = cache_schedules
-     schedule.to_json
-  end
-
   post "/channels/sync/:id" do
     channel_id = params[:id]
     channel = Channel.find_by_id(channel_id)
