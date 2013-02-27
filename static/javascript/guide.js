@@ -46,7 +46,6 @@ $(document).ready(function() {
                 var full_duration = Date.parse(c.currentShow().end_time) - Date.parse(c.currentShow().start_time);
                 var time_passed = new Date() - Date.parse(c.currentShow().start_time);
                 var progress = (time_passed * 100) / full_duration;
-                console.log(c.code + progress);
 
                 $( "#pb_" + c.code ).css('width', progress + '%');
 
