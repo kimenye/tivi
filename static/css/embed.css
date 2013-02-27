@@ -18,6 +18,25 @@
 
 }
 
+.channel small {
+    font-size: 90%;
+    float: right;
+    margin-right: 20px;
+    margin-top: 5px;
+}
+
+
+.channel ul.accordion  li  div.title {
+    padding: 5px 15px;
+}
+
+.channel ul.accordion  li.active  div.title {
+    border-bottom: 1px solid gray;
+}
+/*.channel .title {*/
+    /*padding: 5px 15px;*/
+/*}*/
+
 .embedded-guide {
     margin-bottom: 10px;
 }

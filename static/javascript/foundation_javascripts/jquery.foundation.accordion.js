@@ -37,6 +37,8 @@
               flyout.parent('li').addClass('active');
             });
           }
+          //console.log("Accordion clicked");
+          SHOTGUN.fire("resize", []);
         }
       }
      );

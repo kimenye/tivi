@@ -22,9 +22,6 @@ $(document).ready(function() {
                 self.channels.push(new Channel(c));
             });
 
-
-
-
             self.loading(false);
             $('#channels').bxSlider({
                 adaptiveHeight: true,
@@ -55,12 +52,15 @@ $(document).ready(function() {
 
             });
 
-            var height = $('.embedded-guide').height();
-            window.parent.postMessage(['setHeight', height], '*');
+            SHOTGUN.listen("resize", function() {
+                self.resize();
+            });
+            self.resize();
         });
 
         this.resize = function() {
-            var height = $('.embedded-guide').height();
+            var height = $('.embedded-guide').height() + 30;
+            //console.log("Height: %d", height);
             window.parent.postMessage(['setHeight', height], '*');
         }
 
@@ -80,8 +80,9 @@ $(document).ready(function() {
         this.nextShow = ko.observable();
         this.restOfShows = ko.observableArray([]);
 
-        if(data.current) {
-            self.currentShow(new Show($.parseJSON(data.current)));
+        var current = $.parseJSON(data.current);
+        if(current) {
+            self.currentShow(new Show(current));
         }
         else {
             self.currentShow(null);
@@ -92,8 +93,12 @@ $(document).ready(function() {
         var rest = $.parseJSON(data.rest);
 
         for (var i in rest) {
-            var show = new Show(rest[i]);
-            self.restOfShows.push(show);
+            if (rest[i] != null) {
+                var show = new Show(rest[i]);
+                self.restOfShows.push(show);
+            }
+            else
+                console.log("Null encountered in ", this.name);
         }
     }
 

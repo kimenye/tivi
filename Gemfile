@@ -24,8 +24,13 @@ gem "rack-gridfs"
 gem "httparty"
 #gem 'memcached'
 gem 'dalli'
+#gem 'racksh'
 #gem 'twitter'
 
+#group :test do
+#  gem 'rack-test', :git => "https://github.com/brynary/rack-test.git"
+#end
+
 group :test do
-  gem 'rack-test', :git => "https://github.com/brynary/rack-test.git"
+  gem "rack-test", require: "rack/test"
 end
