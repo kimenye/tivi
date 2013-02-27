@@ -55,11 +55,15 @@ $(document).ready(function() {
 
             });
 
+            SHOTGUN.listen("resize", function() {
+                self.resize();
+            });
             self.resize();
         });
 
         this.resize = function() {
             var height = $('.embedded-guide').height() + 30;
+            //console.log("Height: %d", height);
             window.parent.postMessage(['setHeight', height], '*');
         }
 
@@ -79,7 +83,6 @@ $(document).ready(function() {
         this.nextShow = ko.observable();
         this.restOfShows = ko.observableArray([]);
 
-        debugger;
         if(data.current) {
             self.currentShow(new Show($.parseJSON(data.current)));
         }
