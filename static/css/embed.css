@@ -68,6 +68,10 @@ h6.up-next {
     /*height: auto !important;*/
 }
 
+.promo {
+    margin: 5px auto;
+}
+
 .topbar li.title h1 {
     color: #ffffff;
     text-align: center;

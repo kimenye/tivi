@@ -18,7 +18,7 @@
                 %h6.up-next
                   NOW SHOWING:
               .six.columns{'data-bind' => 'if: logo_id != null'}
-                %img{"data-bind" => "attr: { src: logo_url }"}
+                %img.promo{"data-bind" => "attr: { src: logo_url }"}
               .six.columns
                 %h6
                   %span{'data-bind' => "text: name"}
@@ -36,7 +36,7 @@
                 %h6
                   NEXT:
               .six.columns{'data-bind' => 'if: logo_id != null'}
-                %img{"data-bind" => "attr: { src: logo_url }"}
+                %img.promo{"data-bind" => "attr: { src: logo_url }"}
               .six.columns
                 %h6
                   %span{'data-bind' => "text: name"}
