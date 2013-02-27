@@ -24,7 +24,7 @@ $(document).ready(function() {
 
             self.loading(false);
             $('#channels').bxSlider({
-                adaptiveHeight: true,
+                adaptiveHeight: false,
                 mode: 'horizontal',
                 nextSelector: '.previous-slide',
                 nextText: '',
@@ -38,6 +38,7 @@ $(document).ready(function() {
                 },
                 onSlideAfter: function(element, oldIdx, newIdx) {
                     self.channel_title(self.channels()[newIdx].name);
+                    self.slideIdx(newIdx);
                     self.resize();
                 }
             });
@@ -62,9 +63,20 @@ $(document).ready(function() {
         });
 
         this.resize = function() {
-            var height = $('.embedded-guide').height() + 30;
-            //console.log("Height: %d", height);
-            window.parent.postMessage(['setHeight', height], '*');
+            var idx = this.slideIdx();
+            var ch = this.current();
+            var bottomMargin = 30;
+            var topBarH = 50;
+            var height = $('.embedded-guide').height() + bottomMargin;
+            var featuredHeight = $('#channel-' + ch + ' .featured').height();
+            var accordionHeight = $('#channel-' + ch + ' .accordion').height();
+            var aggr = topBarH + featuredHeight + accordionHeight;
+//            console.log("Featured : %d", featuredHeight);
+//            console.log("Accordion : %d", accordionHeight);
+//            console.log("Current: ", ch);
+            console.log("Full height : %d", height);
+            console.log("Calcululated: %d", aggr);
+            window.parent.postMessage(['setHeight', aggr], '*');
         }
 
         this.show = function() {

@@ -10,33 +10,34 @@
         %li.next
           %a.next-slide{:href => "#"}
     #channels{'data-bind' => 'foreach: channels'}
-      .channel
-        .row.border{'data-bind' => 'if: currentShow()'}
-          .six.columns
-            %img{:src => "../images/tivi-logo.gif"}
-          .six.columns
-            %h6{'data-bind' => "text: currentShow().name"}
-            %p{'data-bind' => "text: currentShow().description"}
-            %div.progress.six
-              %span.meter{"data-bind" => "attr: { id: 'pb_' + code }"}
-          .six.columns
-            %span{'data-bind' => "text: currentShow().start_time"}
-            %span
-              to
-            %span{'data-bind' => "text: currentShow().end_time"}
-        .row
-          .six.columns
-            %img{:src => "../images/tivi-logo.gif"}
-          .six.columns
-            %h6{'data-bind' => "text: nextShow().name"}
-            .row.border
-              .six.columns
-                %p{'data-bind' => "text: nextShow().description"}
-              .six.columns
-                %span{'data-bind' => "text: nextShow().start_time"}
-                %span
-                  to
-                %span{'data-bind' => "text: nextShow().end_time"}
+      .channel{'data-bind' => "attr: { id: 'channel-' + code }"}
+        .featured
+          .row.border{'data-bind' => 'if: currentShow()'}
+            .six.columns
+              %img{:src => "../images/tivi-logo.gif"}
+            .six.columns
+              %h6{'data-bind' => "text: currentShow().name"}
+              %p{'data-bind' => "text: currentShow().description"}
+              %div.progress.six
+                %span.meter{"data-bind" => "attr: { id: 'pb_' + code }"}
+            .six.columns
+              %span{'data-bind' => "text: currentShow().start_time"}
+              %span
+                to
+              %span{'data-bind' => "text: currentShow().end_time"}
+          .row
+            .six.columns
+              %img{:src => "../images/tivi-logo.gif"}
+            .six.columns
+              %h6{'data-bind' => "text: nextShow().name"}
+              .row.border
+                .six.columns
+                  %p{'data-bind' => "text: nextShow().description"}
+                .six.columns
+                  %span{'data-bind' => "text: nextShow().start_time"}
+                  %span
+                    to
+                  %span{'data-bind' => "text: nextShow().end_time"}
         %ul.accordion{'data-bind' => 'foreach: restOfShows()'}
           %li
             .title

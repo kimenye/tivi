@@ -49,6 +49,10 @@
     padding: 10px 0px;
 }
 
+.bx-viewport {
+    height: 100% !important;
+}
+
 .topbar li.title h1 {
     color: #ffffff;
     text-align: center;
