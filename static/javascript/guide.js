@@ -43,12 +43,15 @@ $(document).ready(function() {
             });
 
             _.each(self.channels(), function(c) {
-                var full_duration = Date.parse(c.currentShow().end_time) - Date.parse(c.currentShow().start_time);
-                var time_passed = new Date() - Date.parse(c.currentShow().start_time);
-                var progress = (time_passed * 100) / full_duration;
-                console.log(c.code + progress);
+                //need to check if the current show is null
+                if (c.currentShow() != null) {
+                    var full_duration = Date.parse(c.currentShow().end_time) - Date.parse(c.currentShow().start_time);
+                    var time_passed = new Date() - Date.parse(c.currentShow().start_time);
+                    var progress = (time_passed * 100) / full_duration;
+//                    console.log(c.code + progress);
 
-                $( "#pb_" + c.code ).css('width', progress + '%');
+                    $( "#pb_" + c.code ).css('width', progress + '%');
+                }
 
             });
 
