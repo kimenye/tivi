@@ -24,7 +24,7 @@ $(document).ready(function() {
 
             self.loading(false);
             $('#channels').bxSlider({
-                adaptiveHeight: false,
+                adaptiveHeight: true,
                 mode: 'horizontal',
                 nextSelector: '.previous-slide',
                 nextText: '',
@@ -65,17 +65,19 @@ $(document).ready(function() {
         this.resize = function() {
             var idx = this.slideIdx();
             var ch = this.current();
-            var bottomMargin = 30;
+            var bottomMargin = 35;
             var topBarH = 50;
-            var height = $('.embedded-guide').height() + bottomMargin;
+            var fHeight = $('.embedded-guide').height() + bottomMargin;
             var featuredHeight = $('#channel-' + ch + ' .featured').height();
             var accordionHeight = $('#channel-' + ch + ' .accordion').height();
             var aggr = topBarH + featuredHeight + accordionHeight + bottomMargin;
 //            console.log("Featured : %d", featuredHeight);
 //            console.log("Accordion : %d", accordionHeight);
 //            console.log("Current: ", ch);
-            console.log("Full height : %d", height);
+            console.log("Full height : %d", fHeight);
             console.log("Calcululated: %d", aggr);
+            var height = Math.max(fHeight, aggr)
+            $('.bx-viewport').height(aggr);
             window.parent.postMessage(['setHeight', aggr], '*');
         }
 

@@ -50,7 +50,7 @@
 }
 
 .bx-viewport {
-    height: 100% !important;
+    /*height: auto !important;*/
 }
 
 .topbar li.title h1 {
