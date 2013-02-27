@@ -70,7 +70,7 @@ $(document).ready(function() {
             var height = $('.embedded-guide').height() + bottomMargin;
             var featuredHeight = $('#channel-' + ch + ' .featured').height();
             var accordionHeight = $('#channel-' + ch + ' .accordion').height();
-            var aggr = topBarH + featuredHeight + accordionHeight;
+            var aggr = topBarH + featuredHeight + accordionHeight + bottomMargin;
 //            console.log("Featured : %d", featuredHeight);
 //            console.log("Accordion : %d", accordionHeight);
 //            console.log("Current: ", ch);
