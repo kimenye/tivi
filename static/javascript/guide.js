@@ -26,9 +26,9 @@ $(document).ready(function() {
             $('#channels').bxSlider({
                 adaptiveHeight: true,
                 mode: 'horizontal',
-                nextSelector: '.previous-slide',
+                nextSelector: '.next-slide',
                 nextText: '',
-                prevSelector: '.next-slide',
+                prevSelector: '.previous-slide',
                 prevText: '',
                 //startSlide: 2,
                 pager: false,
