@@ -6,7 +6,7 @@ class MediaApp < Sinatra::Base
   configure do
     db = 'tivi'
 
-    binding.pry
+    #binding.pry
     if ENV['MONGOHQ_URL']
       uri = URI.parse(ENV['MONGOHQ_URL'])
       puts "URL : >>> #{uri}"
