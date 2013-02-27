@@ -12,32 +12,40 @@
     #channels{'data-bind' => 'foreach: channels'}
       .channel{'data-bind' => "attr: { id: 'channel-' + code }"}
         .featured
-          .row.border{'data-bind' => 'if: currentShow()'}
-            .six.columns
-              %img{:src => "../images/tivi-logo.gif"}
-            .six.columns
-              %h6{'data-bind' => "text: currentShow().name"}
-              %p{'data-bind' => "text: currentShow().description"}
-              %div.progress.six
-                %span.meter{"data-bind" => "attr: { id: 'pb_' + code }"}
-            .six.columns
-              %span{'data-bind' => "text: currentShow().start_time"}
-              %span
-                to
-              %span{'data-bind' => "text: currentShow().end_time"}
-          .row
-            .six.columns
-              %img{:src => "../images/tivi-logo.gif"}
-            .six.columns
-              %h6{'data-bind' => "text: nextShow().name"}
-              .row.border
-                .six.columns
-                  %p{'data-bind' => "text: nextShow().description"}
-                .six.columns
-                  %span{'data-bind' => "text: nextShow().start_time"}
-                  %span
-                    to
-                  %span{'data-bind' => "text: nextShow().end_time"}
+          .current{'data-bind' => 'if: currentShow()'}
+            .row{'data-bind' => "with: currentShow()"}
+              -#.six.columns
+                %h6.up-next
+                  NOW SHOWING:
+              .six.columns{'data-bind' => 'if: logo_id != null'}
+                %img{"data-bind" => "attr: { src: logo_url }"}
+              .six.columns
+                %h6
+                  %span{'data-bind' => "text: name"}
+                  %small
+                    %span{'data-bind' => "text: start_time"}
+                    %span
+                      to
+                    %span{'data-bind' => "text: end_time"}
+                %p{'data-bind' => "text: description"}
+                %div.progress.twelve
+                  %span.meter{"data-bind" => "attr: { id: 'pb_' + $parent.code }"}
+          .next{'data-bind' => 'if: nextShow()'}
+            .row{'data-bind' => "with: nextShow()"}
+              -#.six.columns
+                %h6
+                  NEXT:
+              .six.columns{'data-bind' => 'if: logo_id != null'}
+                %img{"data-bind" => "attr: { src: logo_url }"}
+              .six.columns
+                %h6
+                  %span{'data-bind' => "text: name"}
+                  %small
+                    %span{'data-bind' => "text: start_time"}
+                    %span
+                      to
+                    %span{'data-bind' => "text: end_time"}
+                %p{'data-bind' => "text: description"}
         %ul.accordion{'data-bind' => 'foreach: restOfShows()'}
           %li
             .title

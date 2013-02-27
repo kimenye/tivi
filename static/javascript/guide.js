@@ -30,6 +30,7 @@ $(document).ready(function() {
                 nextText: '',
                 prevSelector: '.next-slide',
                 prevText: '',
+                //startSlide: 2,
                 pager: false,
                 onSliderLoad: function(idx) {
                     self.channel_title(self.channels()[idx].name);
@@ -127,6 +128,7 @@ $(document).ready(function() {
         var show = $.parseJSON(data.show);
         this.name = show.name;
         this.logo_id = show.logo_id;
+        this.logo_url = "/media/images/" + this.logo_id;
         this.description = show.description;
     }
 
