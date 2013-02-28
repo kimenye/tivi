@@ -273,6 +273,20 @@ $(document).ready(function() {
             });
         }
 
+        self.refreshCache = function() {
+            bootbox.confirm("Are you sure you want to refresh what is in the cache?", function(result) {
+               if (result) {
+                   $.ajax({
+                       type: "POST",
+                       url: "/api/clear_cache",
+                       success: function(data) {
+                            bootbox.alert("The cache has been reset");
+                       }
+                   })
+               }
+            });
+        }
+
         self.syncSchedule = function(channel) {
             var btn = "#" + channel.code();
             $(btn).button('loading');

@@ -175,6 +175,13 @@ class ApiApplication < Sinatra::Base
     body({:success => true, :logoId => s.logo.id}.to_json)
   end
 
+  post "/clear_cache" do
+    memcached = Dalli::Client.new
+    memcached.set('cached_channels', nil)
+    status 200
+    body({:success => true }.to_json)
+  end
+
   get "/sms_gateway" do
     sms = settings.gateway.receive_notification(params)
     if !sms.nil?

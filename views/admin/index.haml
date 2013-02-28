@@ -83,6 +83,10 @@
               %i.icon-file
               New Channel
           %li
+            %a.home{'data-bind' => 'click: $root.refreshCache'}
+              %i.icon-refresh
+              Refresh Cache
+          %li
             %a.home{'data-bind' => 'click: $root.reset' }
               %i.icon-off
               Reset
