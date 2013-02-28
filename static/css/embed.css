@@ -1,3 +1,7 @@
+.channel div.progress .meter {
+    background-color: #a9a9a9;
+}
+
 .transparent {
     background: transparent;
 }
