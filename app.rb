@@ -21,10 +21,6 @@ class TiviApp < Sinatra::Base
     haml :embed, :layout => :embed_layout
   end
 
-  get '/test' do
-    haml :guide_frame, :layout => :guide_frame_layout
-  end
-
   configure do
     set :public_folder, Proc.new { File.join(root, "static") }
     enable :sessions
