@@ -103,8 +103,8 @@ $(document).ready(function() {
 
     function Show(data) {
 
-        this.start_time = new Date(data.start_time).toString('HH:mm');
-        this.end_time = new Date(data.end_time).toString('HH:mm');
+        this.start_time = new Date(data.start_time).toString('h:mm tt');
+        this.end_time = new Date(data.end_time).toString('h:mm tt');
         this.promo_text = data.promo_text;
         var show = $.parseJSON(data.show);
         this.name = show.name;
