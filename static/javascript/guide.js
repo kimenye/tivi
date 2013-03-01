@@ -78,6 +78,7 @@ $(document).ready(function() {
         this.currentShow = ko.observable();
         this.nextShow = ko.observable();
         this.restOfShows = ko.observableArray([]);
+        this.timeToNextShow = ko.observable();
 
         var current = $.parseJSON(data.current);
         if(current) {
@@ -87,7 +88,11 @@ $(document).ready(function() {
             self.currentShow(null);
         }
 
-        self.nextShow(new Show($.parseJSON(data.next)));
+        var next = $.parseJSON(data.next);
+        self.nextShow(new Show(next));
+        var time_to_next_show = Math.round((new Date(next.start_time) - new Date()) / 60000);
+        console.log(time_to_next_show);
+        self.timeToNextShow(time_to_next_show);
 
         var rest = $.parseJSON(data.rest);
 
