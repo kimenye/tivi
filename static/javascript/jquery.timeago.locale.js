@@ -7,7 +7,7 @@ $(document).ready(function() {
         suffixAgo: "ago",
         suffixFromNow: "",
         seconds: "now",
-        minute: "now",
+        minute: "in %d min",
         minutes: "in %d min",
         hour: "in an hour",
         hours: "in %d hours",
