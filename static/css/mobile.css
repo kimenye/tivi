@@ -42,3 +42,28 @@ body {
     height: 60px;
     width: 202px;
 }
+
+.shows {
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.current {
+    position: relative;
+}
+
+.featured {
+    background: url('/images/eye.png') no-repeat;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 51px;
+    width: 51px;
+    display: block;
+}
+
+.promo {
+    display: block;
+    margin: 0 0 0 auto;
+}
+

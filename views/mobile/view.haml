@@ -8,7 +8,13 @@
             .header
               .icon
             .shows
-
+              .current{'data-bind' => 'if: currentShow()'}
+                %div{'data-bind' => "with: currentShow()"}
+                  .featured
+                  .img{'data-bind' => 'if: logo_id == null'}
+                    %img.promo{:src => "/images/temp_show.jpg", "data-bind" => "attr: { alt: name, title: description }"}
+                  .img{'data-bind' => 'if: logo_id != null'}
+                    %img.promo{"data-bind" => "attr: { src: logo_url, alt: name, title: description }"}
 
 %script{ 'type' => 'text/javascript', 'src' => 'javascript/model.js'}
 %script{ 'type' => 'text/javascript', 'src' => 'javascript/mobile_guide.js'}
