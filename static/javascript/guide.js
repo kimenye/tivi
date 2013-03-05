@@ -1,5 +1,5 @@
 $(document).ready(function() {
-
+//    jQuery.timeago.settings.allowFuture = true;
     var startTime = 0;
     var endTime = 0;
 

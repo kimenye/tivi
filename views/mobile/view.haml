@@ -43,8 +43,10 @@
                 %p.description{'data-bind' => "text: description"}
               .starting-bar
                 .starting
-                  %span.duration
+                  %span.duration{'data-bind' => 'text: $parent.timeToNextShow'}
                     -#in 30 mins
+          .row.remaining
+            %ul.accordion{'data-bind' => 'foreach: restOfShows()'}
 
 %script{ 'type' => 'text/javascript', 'src' => 'javascript/model.js'}
 %script{ 'type' => 'text/javascript', 'src' => 'javascript/mobile_guide.js'}

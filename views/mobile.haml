@@ -12,6 +12,8 @@
       TiVi | Kenya Free Television Guide
   %body
     = yield
+    %script{ 'type' => 'text/javascript', 'src' => 'javascript/jquery.timeago.js'}
+    %script{ 'type' => 'text/javascript', 'src' => 'javascript/jquery.timeago.locale.js'}
     %script{ 'type' => 'text/javascript', 'src' => '/javascript/underscore-min.js'}
     %script{ 'type' => 'text/javascript', 'src' => '/javascript/knockout.js'}
     %script{ 'type' => 'text/javascript', 'src' => '/javascript/date.js'}

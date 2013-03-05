@@ -1,4 +1,5 @@
 $(document).ready(function() {
+//    jQuery.timeago.settings.allowFuture = true;
 
     function MobileApp() {
         this.loading = ko.observable(true);

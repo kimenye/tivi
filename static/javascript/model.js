@@ -18,9 +18,11 @@ function Channel(data) {
     var next = $.parseJSON(data.next);
     if (next) {
         self.nextShow(new Show(next));
-        var time_to_next_show = Math.round((new Date(next.start_time) - new Date()) / 60000);
-        console.log("Time : ", time_to_next_show);
+//        var time_to_next_show = Math.round((new Date(next.start_time) - new Date()) / 60000);
+        var time_to_next_show = jQuery.timeago(new Date(next.start_time));
+//        console.log("Time : ", time_to_next_show);
         this.timeToNextShow(time_to_next_show);
+
     }
 
     var rest = $.parseJSON(data.rest);
