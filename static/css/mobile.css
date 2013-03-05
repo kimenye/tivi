@@ -118,6 +118,10 @@ body {
     display: block;
     margin-top: 5px;
     font-size: 75%;
+
+}
+
+small.time {
     text-transform: lowercase;
 }
 
@@ -141,3 +145,26 @@ body {
     margin: 0 0 0 auto;
 }
 
+.show {
+    background: #ebeae9;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.show h6 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.show h6 small {
+    font-size: 90%;
+    float: right;
+    margin-top: 7px;
+    color: #3b86c4;
+}
+
+.show p.description {
+    margin-top: 5px;
+    margin-bottom: 0px;
+}

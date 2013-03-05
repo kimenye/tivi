@@ -19,7 +19,7 @@
                   .name
                     %h3.subheader
                       %span{"data-bind" => "text: name"}
-                      %small
+                      %small.time
                         %span{'data-bind' => "text: start_time"}
                         %span
                           >
@@ -30,7 +30,17 @@
               .twelve.columns.body
                 %div.progress.twelve
                   %span.meter{"data-bind" => "attr: { id: 'pb_' + $parent.code }"}
-
+          .row.next{'data-bind' => 'if: nextShow()'}
+            .twelve.columns.body{'data-bind' => "with: nextShow()"}
+              .show
+                %h6
+                  %span{'data-bind' => "text: name"}
+                  %small.time
+                    %span{'data-bind' => "text: start_time"}
+                    %span
+                      >
+                    %span{'data-bind' => "text: end_time"}
+                %p.description{'data-bind' => "text: description"}
 
 %script{ 'type' => 'text/javascript', 'src' => 'javascript/model.js'}
 %script{ 'type' => 'text/javascript', 'src' => 'javascript/mobile_guide.js'}
