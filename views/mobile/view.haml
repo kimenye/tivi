@@ -46,16 +46,16 @@
                   %span.duration{'data-bind' => 'text: $parent.timeToNextShow'}
                     -#in 30 mins
           .row.remaining
-            -#.twelve.columns.body
+            .twelve.columns.body
               %ul.accordion-group{'data-bind' => 'foreach: restOfShows()'}
-                %li
+                %li.show
                   .title
                     %h6
                       %span{'data-bind' => "text: name"}
-                      %small
+                      %small.time
                         %span{'data-bind' => "text: start_time"}
                         %span
-                          to
+                          >
                         %span{'data-bind' => "text: end_time"}
                   .content
                     %p{'data-bind' => "text: description"}
