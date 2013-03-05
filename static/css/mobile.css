@@ -102,6 +102,7 @@ body {
     font-weight: bold;
     display: block;
     margin-top: 5px;
+    text-transform: lowercase;
 }
 
 .promo {

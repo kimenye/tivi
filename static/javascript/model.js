@@ -8,6 +8,7 @@ function Channel(data) {
     this.currentShow = ko.observable(null);
     this.nextShow = ko.observable(null);
     this.restOfShows = ko.observableArray([]);
+    this.timeToNextShow = ko.observable();
 
     var current = $.parseJSON(data.current);
     if(current)
@@ -15,8 +16,11 @@ function Channel(data) {
 
 
     var next = $.parseJSON(data.next);
-    if (next)
+    if (next) {
         self.nextShow(new Show(next));
+        var time_to_next_show = Math.round((new Date(next.start_time) - new Date()) / 60000);
+        this.timeToNextShow(time_to_next_show);
+    }
 
     var rest = $.parseJSON(data.rest);
 
@@ -30,8 +34,8 @@ function Channel(data) {
 
 function Show(data) {
 
-    this.start_time = new Date(data.start_time).toString('HH:mm');
-    this.end_time = new Date(data.end_time).toString('HH:mm');
+    this.start_time = new Date(data.start_time).toString('h:mm tt');
+    this.end_time = new Date(data.end_time).toString('h:mm tt');
     this.promo_text = data.promo_text;
     var show = $.parseJSON(data.show);
     this.name = show.name;
