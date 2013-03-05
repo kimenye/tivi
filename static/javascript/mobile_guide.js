@@ -11,7 +11,18 @@ $(document).ready(function() {
 
             self.loading(false);
 
-            window.mySwipe = new Swipe(
+            _.each(self.channels(), function(c) {
+                if (c.currentShow() != null) {
+                    var full_duration = Date.parse(c.currentShow().end_time) - Date.parse(c.currentShow().start_time);
+                    var time_passed = new Date() - Date.parse(c.currentShow().start_time);
+                    var progress = (time_passed * 100) / full_duration;
+
+                    $( "#pb_" + c.code ).css('width', progress + '%');
+                }
+
+            });
+
+            self.slider = new Swipe(
                 document.getElementById('guide')
             );
         });

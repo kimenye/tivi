@@ -27,8 +27,9 @@
                   .now
                     %h1.subheader
                       NOW
-              -#%div.progress.twelve
-                %span.meter{"data-bind" => "attr: { id: 'pb_' + $parent.code }"}
+              .twelve.columns.body
+                %div.progress.twelve
+                  %span.meter{"data-bind" => "attr: { id: 'pb_' + $parent.code }"}
 
 
 %script{ 'type' => 'text/javascript', 'src' => 'javascript/model.js'}

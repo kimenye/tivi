@@ -121,6 +121,21 @@ body {
     text-transform: lowercase;
 }
 
+.body {
+    background: #ffffff;
+}
+
+.current .progress {
+    margin-top: 10px;
+    height: 18px;
+    border-radius: 4px;
+    background: #ebeae9;
+}
+
+.current .progress .meter {
+    background: url('/images/progress.jpg') repeat-x;
+}
+
 .promo {
     display: block;
     margin: 0 0 0 auto;
