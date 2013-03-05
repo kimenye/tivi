@@ -27,6 +27,8 @@ gem 'dalli'
 #gem 'racksh'
 #gem 'twitter'
 
+gem 'rack-mobile-detect'
+
 #group :test do
 #  gem 'rack-test', :git => "https://github.com/brynary/rack-test.git"
 #end

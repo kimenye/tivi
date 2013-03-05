@@ -3,6 +3,7 @@ require 'sinatra'
 require 'haml'
 require 'pry'
 require_relative 'api_application'
+#require 'rack/mobile-detect'
 
 class TiviApp < Sinatra::Base
 
@@ -10,11 +11,16 @@ class TiviApp < Sinatra::Base
 
   configure do
     use Rack::Session::Pool, :expire_after => 86400 # 1 day
+    #use Rack::MobileDetect, :redirect_to => '/m'
     set :protection, :except => :frame_options
   end
 
   get '/' do
     haml :home, :layout => :layout
+  end
+
+  get '/m' do
+    haml :'mobile/view', :layout => :mobile
   end
 
   get '/embed' do

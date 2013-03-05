@@ -1,0 +1,18 @@
+.loading {
+    background: #ebeae9;
+    min-height: 320px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.loading img {
+    /*display: block;*/
+    /*margin: auto;*/
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 130px;
+    height: 115px;
+    margin-top: -65px; /* Half the height */
+    margin-left: -57.5px; /* Half the width */
+}

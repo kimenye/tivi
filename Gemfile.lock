@@ -98,6 +98,8 @@ GEM
       mime-types
       mongo (~> 1.2)
       rack
+    rack-mobile-detect (0.4.0)
+      rack
     rack-protection (1.2.0)
       rack
     rack-test (0.6.2)
@@ -161,6 +163,7 @@ DEPENDENCIES
   pry
   pry-nav
   rack-gridfs
+  rack-mobile-detect
   rack-test
   rspec
   rufus-scheduler
