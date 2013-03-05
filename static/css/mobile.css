@@ -26,6 +26,10 @@ body {
     width: 100%;
 }
 
+.guide li {
+    padding: 0 15px;
+}
+
 .KTN .header {
     background: #074895; /* Old browsers */
     background: -moz-linear-gradient(left, #074895 0%, #e3f7f7 100%); /* FF3.6+ */
@@ -66,9 +70,13 @@ body {
     background: url('/images/featured_title.png') no-repeat right bottom;
     display: block;
     height: 55px;
-    position: relative;
-    top: -55px;
+    position: absolute;
+    bottom: 0;
     width: 100%;
+}
+
+.title-bar {
+    position: relative;
 }
 
 .current .title .name {
@@ -82,11 +90,19 @@ body {
 }
 
 .current .title .name {
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
 .current .title .now {
     margin-top: 20px;
+}
+
+.current .title .name h3.subheader {
+    font-size: 17px;
+}
+
+.current .title .now h1.subheader {
+    font-size: 22px;
 }
 
 .current .title .name h3.subheader,
@@ -94,7 +110,6 @@ body {
     color: #ffffff;
     margin-bottom: 0px;
     margin-top: 0px;
-    font-size: 22px;
 }
 
 .current .title .name small {
@@ -102,6 +117,7 @@ body {
     font-weight: bold;
     display: block;
     margin-top: 5px;
+    font-size: 75%;
     text-transform: lowercase;
 }
 

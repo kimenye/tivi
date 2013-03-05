@@ -1,33 +1,34 @@
-.row
-  .twelve.columns
-    .loading{"data-bind" => "visible: loading"}
-    .guide#guide{"data-bind" => "visible: !loading()"}
-      %ul{'data-bind' => 'foreach: channels'}
-        %li
-          .channel{"data-bind" => "css: code"}
-            .header
-              .icon
-            .shows
-              .current{'data-bind' => 'if: currentShow()'}
-                %div{'data-bind' => "with: currentShow()"}
-                  .featured
-                  .img{'data-bind' => 'if: logo_id == null'}
-                    %img.promo{:src => "/images/temp_show.jpg", "data-bind" => "attr: { alt: name, title: description }"}
-                  .img{'data-bind' => 'if: logo_id != null'}
-                    %img.promo{"data-bind" => "attr: { src: logo_url, alt: name, title: description }"}
-                  .title
-                    .name
-                      %h3.subheader
-                        %span{"data-bind" => "text: name"}
-                        %small
-                          %span{'data-bind' => "text: start_time"}
-                          %span
-                            >
-                          %span{'data-bind' => "text: end_time"}
-                    .now
-                      %h1.subheader
-                        NOW
 
+.loading{"data-bind" => "visible: loading"}
+.guide#guide{"data-bind" => "visible: !loading()"}
+  %ul{'data-bind' => 'foreach: channels'}
+    %li
+      .channel{"data-bind" => "css: code"}
+        .header
+          .icon
+        .shows
+          .current{'data-bind' => 'if: currentShow()'}
+            %div{'data-bind' => "with: currentShow()"}
+              .featured
+              .img{'data-bind' => 'if: logo_id == null'}
+                %img.promo{:src => "/images/temp_show.jpg", "data-bind" => "attr: { alt: name, title: description }"}
+              .img{'data-bind' => 'if: logo_id != null'}
+                %img.promo{"data-bind" => "attr: { src: logo_url, alt: name, title: description }"}
+              .title-bar
+                .title
+                  .name
+                    %h3.subheader
+                      %span{"data-bind" => "text: name"}
+                      %small
+                        %span{'data-bind' => "text: start_time"}
+                        %span
+                          >
+                        %span{'data-bind' => "text: end_time"}
+                  .now
+                    %h1.subheader
+                      NOW
+              -#%div.progress.twelve
+                %span.meter{"data-bind" => "attr: { id: 'pb_' + $parent.code }"}
 
 
 %script{ 'type' => 'text/javascript', 'src' => 'javascript/model.js'}
