@@ -19,6 +19,7 @@ function Channel(data) {
     if (next) {
         self.nextShow(new Show(next));
         var time_to_next_show = Math.round((new Date(next.start_time) - new Date()) / 60000);
+        console.log("Time : ", time_to_next_show);
         this.timeToNextShow(time_to_next_show);
     }
 

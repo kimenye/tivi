@@ -41,6 +41,10 @@
                       >
                     %span{'data-bind' => "text: end_time"}
                 %p.description{'data-bind' => "text: description"}
+              .starting-bar
+                .starting
+                  %span.duration
+                    -#in 30 mins
 
 %script{ 'type' => 'text/javascript', 'src' => 'javascript/model.js'}
 %script{ 'type' => 'text/javascript', 'src' => 'javascript/mobile_guide.js'}
