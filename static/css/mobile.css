@@ -192,3 +192,7 @@ small.time {
     color: white;
     font-weight: 700;
 }
+
+.remaining .accordion-group {
+    list-style-type: none;
+}

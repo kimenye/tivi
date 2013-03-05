@@ -18,6 +18,11 @@ $(document).ready(function() {
                     var time_passed = new Date() - Date.parse(c.currentShow().start_time);
                     var progress = (time_passed * 100) / full_duration;
 
+                    //TODO: Better fix if a show starts the day before
+                    if (Math.abs(time_passed) > Math.abs(full_duration)) {
+                        progress = (full_duration * 100) / time_passed;
+                    }
+
                     $( "#pb_" + c.code ).css('width', progress + '%');
                 }
 
