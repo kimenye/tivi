@@ -15,6 +15,20 @@
                     %img.promo{:src => "/images/temp_show.jpg", "data-bind" => "attr: { alt: name, title: description }"}
                   .img{'data-bind' => 'if: logo_id != null'}
                     %img.promo{"data-bind" => "attr: { src: logo_url, alt: name, title: description }"}
+                  .title
+                    .name
+                      %h3.subheader
+                        %span{"data-bind" => "text: name"}
+                        %small
+                          %span{'data-bind' => "text: start_time"}
+                          %span
+                            >
+                          %span{'data-bind' => "text: end_time"}
+                    .now
+                      %h1.subheader
+                        NOW
+
+
 
 %script{ 'type' => 'text/javascript', 'src' => 'javascript/model.js'}
 %script{ 'type' => 'text/javascript', 'src' => 'javascript/mobile_guide.js'}

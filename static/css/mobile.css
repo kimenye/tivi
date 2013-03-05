@@ -62,6 +62,48 @@ body {
     display: block;
 }
 
+.current .title {
+    background: url('/images/featured_title.png') no-repeat right bottom;
+    display: block;
+    height: 55px;
+    position: relative;
+    top: -55px;
+    width: 100%;
+}
+
+.current .title .name {
+    float: left;
+    margin-left: 5px;
+}
+
+.current .title .now {
+    float: right;
+    margin-right: 5px;
+}
+
+.current .title .name {
+    margin-top: 10px;
+}
+
+.current .title .now {
+    margin-top: 20px;
+}
+
+.current .title .name h3.subheader,
+.current .title .now h1.subheader {
+    color: #ffffff;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    font-size: 22px;
+}
+
+.current .title .name small {
+    color: #32383d;
+    font-weight: bold;
+    display: block;
+    margin-top: 5px;
+}
+
 .promo {
     display: block;
     margin: 0 0 0 auto;
