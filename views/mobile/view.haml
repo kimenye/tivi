@@ -1,7 +1,13 @@
 .row
   .twelve.columns
     .loading{"data-bind" => "visible: loading"}
-      %img{:src => "/images/tivi-logo.gif"}
+    .guide#guide{"data-bind" => "visible: !loading()"}
+      %ul{'data-bind' => 'foreach: channels'}
+        %li
+          .channel{"data-bind" => "css: code"}
+            .header
+              .icon
+            .shows
 
 
 %script{ 'type' => 'text/javascript', 'src' => 'javascript/model.js'}
