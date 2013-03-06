@@ -44,14 +44,13 @@
               .starting-bar
                 .starting
                   %span.duration{'data-bind' => 'text: $parent.timeToNextShow'}
-                    -#in 30 mins
           .row.remaining
             .twelve.columns.body
               %ul.accordion-group{'data-bind' => 'foreach: restOfShows()'}
                 %li.show
                   .title
                     %h6
-                      %span{'data-bind' => "text: name"}
+                      %span.show-name{'data-bind' => "text: name"}
                       %small.time
                         %span{'data-bind' => "text: start_time"}
                         %span

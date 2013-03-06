@@ -159,6 +159,15 @@ small.time {
 .show h6 {
     margin-top: 0px;
     margin-bottom: 0px;
+    font-size: 95%;
+}
+
+.show .show-name {
+    display: inline-block;
+    max-width: 55%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .show h6 small {
