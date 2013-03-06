@@ -9,6 +9,7 @@ $(document).ready(function() {
             self.id = data.id;
             self.code = ko.observable(data.code);
             self.name = ko.observable(data.name);
+            self.enabled = ko.observable(data.enabled);
             self.calendar_id = ko.observable(data.calendar_id);
             self.shows = ko.observableArray([]);
             self.logo_id = ko.observable(data.logo_id);
@@ -18,6 +19,7 @@ $(document).ready(function() {
             var _struct = {
                 "code" : this.code(),
                 "name" : this.name(),
+                "enabled" : this.enabled(),
                 "calendar_id" : this.calendar_id()
             };
             if (this.id != null) {
@@ -57,6 +59,7 @@ $(document).ready(function() {
         self.channels = ko.observableArray([]);
         self.code = ko.observable();
         self.name = ko.observable();
+        self.enabled = ko.observable();
         self.calendar_id = ko.observable();
         self.id = ko.observable(null);
         self.msg = ko.observable();
@@ -81,6 +84,7 @@ $(document).ready(function() {
         self.edit = function(channel) {
             self.code(channel.code());
             self.name(channel.name());
+            self.enabled(channel.enabled());
             self.calendar_id(channel.calendar_id());
             self.id(channel.id);
             self.editable(channel);
@@ -90,6 +94,7 @@ $(document).ready(function() {
         self.newChannel = function() {
             self.code(null);
             self.name(null);
+            self.enabled(false);
             self.calendar_id(null);
             self.id(null);
             self.editable(null);
@@ -209,7 +214,7 @@ $(document).ready(function() {
         };
 
         self.createOrUpdate = function() {
-            var _chan = new Channel({ code : self.code(), name: self.name(), calendar_id: self.calendar_id()});
+            var _chan = new Channel({ code : self.code(), name: self.name(), enabled: self.enabled(), calendar_id: self.calendar_id()});
             var _str = JSON.stringify(_chan.toJSON());
             if (self.id() == null) {
                 $.post('/api/channels', _str,

@@ -59,7 +59,7 @@ module SchedulerHelper
     memcached = Dalli::Client.new
     cached_channels = memcached.get('cached_channels')
     if cached_channels.nil?
-      cached_channels = Channel.all
+      cached_channels = Channel.where(:enabled => true)
       memcached.set('cached_channels', cached_channels)
     end
     cached_channels

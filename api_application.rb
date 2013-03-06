@@ -636,6 +636,7 @@ class ApiApplication < Sinatra::Base
           channel = Channel.new
           channel.name = data['name']
           channel.code = data['code']
+          channel.enabled = data['enabled']
           channel.calendar_id = data['calendar_id']
           channel.save!
           status 200
@@ -654,6 +655,7 @@ class ApiApplication < Sinatra::Base
         else
           channel.code = data['code']
           channel.name = data['name']
+          channel.enabled = data['enabled']
           channel.calendar_id = data['calendar_id']
           channel.save!
           status 200
