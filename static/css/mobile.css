@@ -202,15 +202,56 @@ small.time {
     font-weight: 700;
 }
 
+.remaining ul.accordion {
+    border-bottom: none;
+}
+
+.remaining ul.accordion>li.active .content {
+    border-left: none;
+    border-right: none;
+    padding: 5px;
+    position: relative;
+    overflow: visible !important;
+}
+
+.remaining .pointer {
+    background-image: url('/images/description_pointer.png');
+    background-repeat: no-repeat;
+    display: block;
+    width: 22px;
+    height: 11px;
+    position: absolute;
+    left: 60px;
+    top: -11px;
+}
+
+.remaining .content p {
+    margin-bottom: 0px;
+    color: #a5a5a5;
+}
+
+.remaining ul.accordion>li>div.title {
+    background: #ebeae9;
+    padding: 10px 5px;
+}
+.remaining ul.accordion > li {
+    margin-bottom: 5px;
+}
+
+.remaining ul.accordion > li > div.title:after {
+    content: none;
+}
+
+.remaining ul.accordion > li.active {
+    border-top: 1px solid #e9e9e9;
+}
+
+.remaining ul.accordion > li.active div.title {
+    border-bottom: 1px solid #e9e9e9;
+}
+
 .remaining ul.accordion-group {
     list-style-type: none;
     margin-left: 0px;
 }
 
-.remaining ul.accordion-group li.show {
-    padding: 10px 5px;
-}
-
-.remaining ul.accordion-group li .content {
-    display: none;
-}
