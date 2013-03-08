@@ -33,6 +33,14 @@ $(document).ready(function() {
                 document.getElementById('guide')
             );
         });
+
+        self.next = function() {
+            self.slider.next();
+        }
+
+        self.prev = function() {
+            self.slider.prev();
+        }
     }
 
     ko.applyBindings(new MobileApp());

@@ -5,7 +5,9 @@
     %li
       .channel{"data-bind" => "css: code"}
         .header
+          %a.previous{"data-bind" => "click: $root.prev", :href => "#"}
           .icon
+          %a.next{"data-bind" => "click: $root.next", :href => "#"}
         .shows
           .current{'data-bind' => 'if: currentShow()'}
             %div{'data-bind' => "with: currentShow()"}

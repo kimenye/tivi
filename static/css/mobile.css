@@ -79,6 +79,26 @@ body {
     height: 60px;
 }
 
+.header a {
+    display: block;
+    height: 32px;
+    width: 18px;
+}
+
+.header .previous {
+    float: left;
+    margin-left: 20px;
+    margin-top: 13px;
+    background: url(/images/nav_left.png);
+}
+
+.header .next {
+    float: right;
+    margin-right: 20px;
+    margin-top: -47px;
+    background: url(/images/nav_right.png);
+}
+
 .KTN .icon {
     background: url('/images/ktn.png') no-repeat 0px -10px;
     width: 101px;
