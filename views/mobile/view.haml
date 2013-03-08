@@ -35,7 +35,12 @@
               .twelve.columns.body.spacer
           .row.next{'data-bind' => 'if: nextShow()'}
             .twelve.columns.body{'data-bind' => "with: nextShow()"}
-              .show
+              .img{'data-bind' => 'if: logo_id == null'}
+                %img.promo{:src => "/images/temp_show_2.jpg", "data-bind" => "attr: { alt: name, title: description }"}
+              .img{'data-bind' => 'if: logo_id != null'}
+                %img.promo{"data-bind" => "attr: { src: logo_url, alt: name, title: description }"}
+
+              -#.show
                 %h6
                   %span{'data-bind' => "text: name"}
                   %small.time
@@ -47,6 +52,7 @@
               .starting-bar
                 .starting
                   %span.duration{'data-bind' => 'text: $parent.timeToNextShow'}
+            .twelve.columns.body.spacer
           .row.remaining
             .twelve.columns.body
               %ul.accordion{'data-bind' => 'foreach: restOfShows()'}
