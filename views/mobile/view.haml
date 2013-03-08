@@ -29,9 +29,10 @@
                   .now
                     %h1.subheader
                       NOW
-              .twelve.columns.body
+              .twelve.columns.pg-bar
                 %div.progress.twelve
                   %span.meter{"data-bind" => "attr: { id: 'pb_' + $parent.code }"}
+              .twelve.columns.body.spacer
           .row.next{'data-bind' => 'if: nextShow()'}
             .twelve.columns.body{'data-bind' => "with: nextShow()"}
               .show

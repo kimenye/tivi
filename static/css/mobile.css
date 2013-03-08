@@ -201,6 +201,14 @@ small.time {
     background: #ffffff;
 }
 
+.pg-bar {
+    background: #416b9b;
+}
+
+.spacer {
+    height: 10px;
+}
+
 .current .progress {
     margin-top: 10px;
     height: 18px;
