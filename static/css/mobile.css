@@ -276,10 +276,20 @@ small.time {
 
 .starting .duration {
     padding: 5px 10px 5px 5px;
-    display: block;
+    display: inline-block;
     margin-top: 6px;
     color: white;
     font-weight: 700;
+}
+
+.starting .show-name {
+    float: right;
+    display: inline-block;
+    margin-top: 10px;
+    color: #2c409a;
+    text-align: right;
+    padding-right: 5px;
+    padding-top: 2px;
 }
 
 .remaining ul.accordion {
