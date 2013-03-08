@@ -32,7 +32,6 @@ $(document).ready(function() {
             self.slider = new Swipe(
                 document.getElementById('guide')
             );
-            self.slider.next();
         });
     }
 
