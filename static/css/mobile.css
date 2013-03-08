@@ -21,7 +21,7 @@ body {
 .header {
     margin-top: 10px;
     border-radius: 5px;
-    background-color: #074895;
+    /*background-color: #074895;*/
     height: 60px;
     width: 100%;
 }
@@ -41,10 +41,41 @@ body {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#074895', endColorstr='#e3f7f7',GradientType=1 ); /* IE6-9 */
 }
 
-.KTN .icon {
-    background: url('/images/ktn.png') no-repeat 60px -10px;
+.CTZ .header {
+    background: #f4e321;
+}
+
+.KBC .header {
+    background: #be0209;
+}
+
+.NTV .header {
+    background: #0855a5;
+}
+
+.header .icon {
+    margin: auto;
     height: 60px;
-    width: 202px;
+}
+
+.KTN .icon {
+    background: url('/images/ktn.png') no-repeat 0px -10px;
+    width: 101px;
+}
+
+.CTZ .icon {
+    background: url('/images/citizen.png') no-repeat 0px 8px;
+    width: 120px;
+}
+
+.KBC .icon {
+    background: url('/images/kbc.png') no-repeat 0px -12px;
+    width: 82px;
+}
+
+.NTV .icon {
+    background: url('/images/ntv.png') no-repeat 0px -2px;
+    width: 80px;
 }
 
 .shows {
@@ -253,5 +284,9 @@ small.time {
 .remaining ul.accordion-group {
     list-style-type: none;
     margin-left: 0px;
+}
+
+.hidden {
+    display: none;
 }
 

@@ -11,6 +11,7 @@ $(document).ready(function() {
             });
 
             self.loading(false);
+            $('.hidden').toggleClass('hidden');
 
             _.each(self.channels(), function(c) {
                 if (c.currentShow() != null) {
@@ -31,6 +32,7 @@ $(document).ready(function() {
             self.slider = new Swipe(
                 document.getElementById('guide')
             );
+            self.slider.next();
         });
     }
 

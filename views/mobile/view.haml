@@ -1,6 +1,6 @@
 
 .loading{"data-bind" => "visible: loading"}
-.guide#guide{"data-bind" => "visible: !loading()"}
+.guide#guide.hidden{"data-bind" => "visible: !loading()"}
   %ul{'data-bind' => 'foreach: channels'}
     %li
       .channel{"data-bind" => "css: code"}
