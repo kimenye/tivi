@@ -30,9 +30,22 @@ $(document).ready(function() {
             });
 
             self.slider = new Swipe(
-                document.getElementById('guide')
+                document.getElementById('guide'), {
+                    callback: self.callback,
+                    continuous: true
+                }
             );
+
+            SHOTGUN.listen("resize", function() {
+                //don't do anything in case we are in the mobile client
+            });
+
+            SHOTGUN.fire("resize", []);
         });
+
+        self.callback = function(index, elem) {
+            SHOTGUN.fire("resize", []);
+        }
 
         self.next = function() {
             self.slider.next();

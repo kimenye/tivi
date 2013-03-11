@@ -1,11 +1,12 @@
 (function(d) {
-    var url = "http://www.guide.tivi.co.ke/embed"; //TODO: Make this configurable with localhost
-//    var url = "http://localhost:3000/embed"; //TODO: Make this configurable with localhost
+    var url = "http://www.guide.tivi.co.ke/m?embedded=true"; //TODO: Make this configurable with localhost
+//    var url = "http://localhost:3000/m?embedded=true"; //TODO: Make this configurable with localhost
     var a = d.createElement("iframe");
     a.setAttribute("allowTransparency","true");
     a.setAttribute("frameBorder", "0");
     a.setAttribute("id","tivi-guide-frame");
     a.setAttribute("width", "100%");
+    a.setAttribute("height", "480px");
     a.src = url;
 
     document.getElementById("tivi-guide").appendChild(a);

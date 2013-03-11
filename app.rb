@@ -20,7 +20,8 @@ class TiviApp < Sinatra::Base
   end
 
   get '/m' do
-    haml :'mobile/view', :layout => :mobile
+    type = params[:embedded] == "true" ? "embedded" : "mobile"
+    haml :'mobile/view', :layout => :mobile, :locals => { :type => type }
   end
 
   get '/embed' do
