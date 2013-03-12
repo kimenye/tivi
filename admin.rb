@@ -13,8 +13,8 @@ class AdminApp < Sinatra::Base
   register Sinatra::AssetPack
 
   assets do
-    js_compression  :jsmin
-    css_compression :simple
+    #js_compression  :jsmin
+    #css_compression :simple
 
     css :admin, '/css/admin.css', [
         '/css/bootstrap.min.css',
@@ -44,7 +44,7 @@ class AdminApp < Sinatra::Base
         '/css/jquery.mobile-1.1.1.min.css'
     ]
 
-    prebuild false
+    prebuild true
   end
 
   helpers do
