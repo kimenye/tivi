@@ -24,7 +24,6 @@ class AdminApp < Sinatra::Base
     ]
 
     js :admin, '/js/admin.js', [
-        '/js/vendor/jquery.1.7.2.js',
         '/js/vendor/bootstrap.min.js',
         '/js/vendor/bootbox.min.js',
         '/js/vendor/knockout.js',

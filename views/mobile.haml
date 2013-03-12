@@ -5,12 +5,10 @@
     %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}
     %meta{:content => "yes", :name => "apple-touch-fullscreen"}
     %link{'rel' => 'shortcut icon', 'href' => '/images/favicon.ico'}
-    = js :jquery
+    %script{:type => "application/javascript", :src => "http://code.jquery.com/jquery-1.7.2.min.js"}
     = css :mobile
     - if type == "embedded"
       = css :embed
-
-    = js :app
     %title
       TiVi | Kenya Free Television Guide
   %body

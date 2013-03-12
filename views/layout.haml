@@ -4,6 +4,7 @@
     %link{'rel' => 'shortcut icon', 'href' => '/images/favicon.ico'}
     %meta{'name' => 'viewport', 'content' => 'width=device-width, initial-scale=1'}
     = css :foundation
+    %script{:type => "application/javascript", :src => "http://code.jquery.com/jquery-1.7.2.min.js"}
     %title TiVi :: Kenya Free TV Guide
   %body
     %header
@@ -17,4 +18,4 @@
     = yield
 
     /! start of scripts
-    = js :jquery, :foundation
+    = js :foundation

@@ -13,7 +13,7 @@ class TiviApp < Sinatra::Base
 
   assets do
     #js_compression :closure
-    #js_compression :uglify
+    js_compression :uglify
 
     js :main, '/js/main.js', [
         '/js/vendor/*.js',
@@ -37,10 +37,11 @@ class TiviApp < Sinatra::Base
     ]
 
     js :jquery, '/js/jquery.js', [
-        '/js/vendor/jquery.1.7.2.js'
+        #'/js/vendor/jquery.1.7.2.js'
     ]
 
     js :mobile, '/js/mobile.js', [
+        #'/js/vendor/jquery.1.7.2.js',
         '/js/vendor/foundation_javascripts/modernizr.foundation.js',
         '/js/vendor/foundation_javascripts/jquery.foundation.accordion.js',
         '/js/vendor/foundation_javascripts/app.js',

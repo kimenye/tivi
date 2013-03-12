@@ -1,5 +1,5 @@
 source :rubygems
-source "http://rubygems.org"
+source "https://rubygems.org"
 
 gem "sinatra"
 gem "sinatra-contrib"
@@ -25,7 +25,7 @@ gem "httparty"
 gem 'dalli'
 gem 'sinatra-assetpack'
 gem 'rack-mobile-detect'
-#gem 'uglifier'
+gem 'uglifier'
 
 #group :test do
 #  gem 'rack-test', :git => "https://github.com/brynary/rack-test.git"

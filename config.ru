@@ -17,7 +17,7 @@ disable :run
 $stdout.sync = true
 
 # we're in dev mode
-#set :environment, :development
+set :environment, :production
 
 # Mount our Main class with a base url of /
 map "/" do
