@@ -1,5 +1,5 @@
 source :rubygems
-source "https://rubygems.org"
+source "http://rubygems.org"
 
 gem "sinatra"
 gem "sinatra-contrib"
@@ -26,7 +26,7 @@ gem 'dalli'
 gem 'sinatra-assetpack'
 gem 'rack-mobile-detect'
 gem 'uglifier'
-gem "therubyracer-heroku", "0.8.1.pre3", :require => false
+gem 'therubyracer-heroku', '0.8.1.pre3', :require => false
 
 #group :test do
 #  gem 'rack-test', :git => "https://github.com/brynary/rack-test.git"
