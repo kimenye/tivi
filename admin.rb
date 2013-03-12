@@ -5,8 +5,48 @@ require 'haml'
 require 'time'
 require_relative 'api_application'
 require 'sinatra/reloader' if development? or test?
+require 'sinatra/assetpack'
 
 class AdminApp < Sinatra::Base
+
+  set :root, File.dirname(__FILE__)
+  register Sinatra::AssetPack
+
+  assets do
+    #js_compression :closure
+    #js_compression :uglify
+
+    css :admin, '/css/admin.css', [
+        '/css/bootstrap.min.css',
+        '/css/style.css',
+        '/css/admin.css',
+        '/css/bootstrap-responsive.min.css'
+    ]
+
+    js :admin, '/js/admin.js', [
+        '/js/vendor/jquery.1.7.2.js',
+        '/js/vendor/bootstrap.min.js',
+        '/js/vendor/bootbox.min.js',
+        '/js/vendor/knockout.js',
+        '/js/vendor/js.class.min.js',
+        '/js/vendor/underscore-min.js',
+        '/js/vendor/sammy.js',
+        '/js/admin/channels.js',
+        '/js/admin/admins.js'
+    ]
+
+    js :admin_mobile, '/js/admin_mobile.js', [
+        '/js/vendor/jquery.1.7.2.js',
+        '/js/vendor/jquery.mobile-1.1.1.min.js',
+        '/js/mobile.js'
+    ]
+
+    css :jqm, '/css/jqm.css', [
+        '/css/jquery.mobile-1.1.1.min.css'
+    ]
+
+    prebuild false
+  end
 
   helpers do
 

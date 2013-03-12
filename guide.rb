@@ -8,10 +8,25 @@ require "httparty"
 require 'sinatra/reloader' if development? or test?
 require 'yaml'
 YAML::ENGINE.yamler = 'syck'
+require 'sinatra/assetpack'
 
 class GuideApp < Sinatra::Base
-
+  register Sinatra::AssetPack
   helpers SchedulerHelper
+
+  assets do
+    css :jqm, '/css/jqm.css', [
+        '/css/jquery.mobile-1.1.1.min.css'
+    ]
+
+    js :jqm, 'js/jqm.js', [
+        '/js/vendor/jquery.1.7.2.js',
+        '/js/vendor/jquery.mobile-1.1.1.min.js',
+        '/js/mobile.js'
+    ]
+
+
+  end
  
   post '/blogs' do
     

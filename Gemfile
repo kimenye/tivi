@@ -22,12 +22,10 @@ gem "url_shortener"
 gem "joint"
 gem "rack-gridfs"
 gem "httparty"
-#gem 'memcached'
 gem 'dalli'
-#gem 'racksh'
-#gem 'twitter'
-
+gem 'sinatra-assetpack'
 gem 'rack-mobile-detect'
+#gem 'uglifier'
 
 #group :test do
 #  gem 'rack-test', :git => "https://github.com/brynary/rack-test.git"

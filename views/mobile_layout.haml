@@ -3,7 +3,7 @@
   %head
     %meta{'name' => 'viewport', 'content' => 'width=device-width, initial-scale=1'}
     %link{'rel' => 'shortcut icon', 'href' => '/images/favicon.ico'}
-    %link{'rel' => 'stylesheet', 'href' => '/css/jquery.mobile-1.1.1.min.css'}
+    = css :jqm
 
     %title TiVi
   %body
@@ -13,6 +13,4 @@
     /! end the main body
 
     /! start of scripts
-    %script{ 'type' => 'text/javascript', 'src' => '/javascript/jquery.1.7.2.js'}
-    %script{ 'type' => 'text/javascript', 'src' => '/javascript/jquery.mobile-1.1.1.min.js'}
-    %script{ 'type' => 'text/javascript', 'src' => '/javascript/mobile.js'}
+    = js :admin_mobile

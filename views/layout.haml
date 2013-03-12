@@ -1,11 +1,9 @@
 !!! 5
 %html
   %head
-    %link{'rel' => 'shortcut icon', 'href' => '../images/favicon.ico'}
+    %link{'rel' => 'shortcut icon', 'href' => '/images/favicon.ico'}
     %meta{'name' => 'viewport', 'content' => 'width=device-width, initial-scale=1'}
-    -#%link{'rel' => 'stylesheet', 'href' => '../css/bootstrap.min.css'}
-    -#%link{'rel' => 'stylesheet', 'href' => '../css/style.css'}
-    %link{'rel' => 'stylesheet', 'href' => '../css/foundation_stylesheets/foundation.min.css'}
+    = css :foundation
     %title TiVi :: Kenya Free TV Guide
   %body
     %header
@@ -13,62 +11,10 @@
         .twelve.columns
           %h3
             %a{:href => '/'}
-              %img{ 'src' => '../images/tivi-logo.gif' }
+              = img '/images/tivi-logo.gif'
             %small
               Your Free TV Guide
-    -#.container
-      .page-header.logo
-        %h1
-          %a{ 'href' => '/guide' }
-            %img{ 'src' => '../images/logo.png' }
-          %small
-            Your Free TV Guide
-
-    -#/! start of top navbar
-    -#.navbar.navbar-fixed-top
-    -#  .navbar-inner
-    -#    .container
-    -#      %a.brand TiVi
-    -#      %ul.nav.pull-right
-    -#        %li
-    -#          %a{ 'href' =>'/channels'} Channels
-    -#        %li
-    -#          %a{ 'href' =>'/login'} Log-in
-
-    /! end of top navbar
-
-    /! start the main body
     = yield
-    /! end the main body
-
-
-    /! start the footer
-
-    -#.container
-      %br
-      %hr
-      .row
-        .span4
-          %h6 ABOUT US
-          -#%ul.nav.nav-list
-          -#  %li
-          -#    %a{'href' => '/admin'} Administration
-          %p TiVi&reg; is a product of Sprout Consulting Kenya.
-          %p Copyright &copy; 2012.
-          %a{:href=>"http://www.sprout.co.ke"} Sprout Consulting
-        .span4
-          %h6 CONTACT US
-          %ul.nav.nav-list
-            %li
-              %a{'href' => 'mailto:guide@tivi.co.ke'} Email us
-              %a{'href' => '/admin'} Admin
-        .span4
-          %h6 TERMS OF USE
-          %p While we do our best to ensure that the listing information presented here is accurate, schedule changes may mean this information is out of date.
-
-
-    /! end the footer
 
     /! start of scripts
-    %script{ 'type' => 'text/javascript', 'src' => 'javascript/jquery.1.7.2.js'}
-    -#%script{ 'type' => 'text/javascript', 'src' => 'javascript/bootstrap.min.js'}
+    = js :jquery, :foundation

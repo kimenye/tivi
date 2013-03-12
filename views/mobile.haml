@@ -4,25 +4,17 @@
     %meta{:content => "width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no", :name => "viewport"}
     %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}
     %meta{:content => "yes", :name => "apple-touch-fullscreen"}
-    %script{ 'type' => 'text/javascript', 'src' => '/javascript/jquery.1.7.2.js'}
-    %link{'rel' => 'stylesheet', 'href' => '/css/foundation_stylesheets/foundation.min.css'}
-    %link{'rel' => 'stylesheet', 'href' => '/css/mobile.css'}
+    %link{'rel' => 'shortcut icon', 'href' => '/images/favicon.ico'}
+    = js :jquery
+    = css :mobile
     - if type == "embedded"
-      %link{'rel' => 'stylesheet', 'href' => '/css/embedded.css'}
-    %link{'rel' => 'shortcut icon', 'href' => '../images/favicon.ico'}
+      = css :embed
+
+    = js :app
     %title
       TiVi | Kenya Free Television Guide
   %body
     = yield
-    %script{ 'type' => 'text/javascript', 'src' => 'javascript/jquery.timeago.js'}
-    %script{ 'type' => 'text/javascript', 'src' => 'javascript/jquery.timeago.locale.js'}
-    %script{ 'type' => 'text/javascript', 'src' => '/javascript/underscore-min.js'}
-    %script{ 'type' => 'text/javascript', 'src' => '/javascript/knockout.js'}
-    %script{ 'type' => 'text/javascript', 'src' => '/javascript/date.js'}
-    %script{ 'type' => 'text/javascript', 'src' => '/javascript/shotgun.js'}
-    %script{ 'type' => 'text/javascript', 'src' => '/javascript/swipe.min.js'}
-    %script{ 'type' => 'text/javascript', 'src' => '/javascript/foundation_javascripts/modernizr.foundation.js'}
-    %script{ 'type' => 'text/javascript', 'src' => '/javascript/foundation_javascripts/jquery.foundation.accordion.js'}
-    %script{ 'type' => 'text/javascript', 'src' => '/javascript/foundation_javascripts/app.js'}
+    = js :mobile
     - if type == "embedded"
-      %script{ 'type' => 'text/javascript', 'src' => '/javascript/seamless_iframe.js'}
+      = js :iframe
