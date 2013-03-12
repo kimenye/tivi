@@ -14,7 +14,7 @@ class AdminApp < Sinatra::Base
 
   assets do
     #js_compression  :jsmin
-    #css_compression :simple
+    css_compression :simple
 
     css :admin, '/css/admin.css', [
         '/css/bootstrap.min.css',
