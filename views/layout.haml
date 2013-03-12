@@ -2,16 +2,24 @@
 %html
   %head
     %link{'rel' => 'shortcut icon', 'href' => '../images/favicon.ico'}
-    %link{'rel' => 'stylesheet', 'href' => '../css/bootstrap.min.css'}
-    %link{'rel' => 'stylesheet', 'href' => '../css/style.css'}
-    %link{'rel' => 'stylesheet', 'href' => '../css/bootstrap-responsive.min.css'}
-
+    %meta{'name' => 'viewport', 'content' => 'width=device-width, initial-scale=1'}
+    -#%link{'rel' => 'stylesheet', 'href' => '../css/bootstrap.min.css'}
+    -#%link{'rel' => 'stylesheet', 'href' => '../css/style.css'}
+    %link{'rel' => 'stylesheet', 'href' => '../css/foundation_stylesheets/foundation.min.css'}
     %title TiVi :: Kenya Free TV Guide
   %body
-    .container
+    %header
+      .row
+        .twelve.columns
+          %h3
+            %a{:href => '/'}
+              %img{ 'src' => '../images/tivi-logo.gif' }
+            %small
+              Your Free TV Guide
+    -#.container
       .page-header.logo
         %h1
-          %a{ 'href' => '/' }
+          %a{ 'href' => '/guide' }
             %img{ 'src' => '../images/logo.png' }
           %small
             Your Free TV Guide
@@ -36,7 +44,7 @@
 
     /! start the footer
 
-    .container
+    -#.container
       %br
       %hr
       .row
@@ -63,4 +71,4 @@
 
     /! start of scripts
     %script{ 'type' => 'text/javascript', 'src' => 'javascript/jquery.1.7.2.js'}
-    %script{ 'type' => 'text/javascript', 'src' => 'javascript/bootstrap.min.js'}
+    -#%script{ 'type' => 'text/javascript', 'src' => 'javascript/bootstrap.min.js'}

@@ -45,6 +45,30 @@
       .modal-footer
         %a.btn{'data-dismiss' => 'modal', 'href' => '#close'} Close
         %input.btn.btn-success{'type' => 'submit', 'value' => 'Save'}
+  #channel-image-upload-modal.modal.hide
+    .modal-header
+      %button.close{'type' => 'button', 'data-dismiss' => 'modal'}
+        x
+      %h3 Upload Image
+    %form.modal-form.form-horizontal{'method' => 'post', 'enctype' => 'multipart/form-data', 'action' => '/api/upload_channel_logo', 'id' => 'channel-logo'}
+      .modal-body
+        #logo-div
+          %img{'data-bind' => "attr: { src: get_logo_id }" }
+      .modal-footer
+        %input{'type' => 'file', 'name' => 'logo', 'size' => '35%'}
+        %input.btn.btn-success{ 'type' => 'submit', 'value' => 'Update'}
+  #show-image-upload-modal.modal.hide
+    .modal-header
+      %button.close{'type' => 'button', 'data-dismiss' => 'modal'}
+        x
+      %h3 Upload Image
+    %form.modal-form.form-horizontal{'method' => 'post', 'enctype' => 'multipart/form-data', 'action' => '/api/upload_show_logo', 'id' => 'show-logo'}
+      .modal-body
+        #logo-div
+          %img{ 'data-bind' => "attr: { src: get_show_logo_id }" }
+      .modal-footer
+        %input{'type' => 'file', 'name' => 'logo', 'size' => '35%'}
+        %input.btn.btn-success{ 'type' => 'submit', 'value' => 'Update'}
   .row{ 'data-bind' => 'visible: selected() == null'}
     .span3
       %h1 Channels
@@ -58,6 +82,10 @@
             %a.home{'data-bind' => 'click: $root.newChannel' }
               %i.icon-file
               New Channel
+          %li
+            %a.home{'data-bind' => 'click: $root.refreshCache'}
+              %i.icon-refresh
+              Refresh Cache
           %li
             %a.home{'data-bind' => 'click: $root.reset' }
               %i.icon-off
@@ -85,24 +113,28 @@
                 Sync
               %a.btn{'data-bind' => "attr: { href: '/admin/channel/' + id }" }
                 %i.icon-th-list
+              %button.btn{ 'data-bind' => 'click: $parent.changeChannelLogo' }
+                %i.icon-picture
+                Logo
   %section{'data-bind' => 'if: selected() != null'}
     .row{'data-bind' => 'with: selected'}
       .span3
-        %h2{ 'data-bind' => 'text: name' }
-    .row{'data-bind' => 'with: selected'}
-      .span3.sidebar
-        .well{'role' => 'navigation'}
-          %ul.nav.nav-list
-            %li.nav-header
-              Options
-            %li
-              %a.home{'data-bind' => 'click: $root.backHome' }
-                %i.icon-arrow-left
-                Back
-            %li
-              %a.home{'data-bind' => 'click: $root.newShow' }
-                %i.icon-file
-                New Show
+        %h3{ 'data-bind' => 'text: name' }
+        %img{"data-bind" => "attr: { src: '/media/images/' + logo_id() }"}
+
+        .sidebar
+          .well{'role' => 'navigation'}
+            %ul.nav.nav-list
+              %li.nav-header
+                Options
+              %li
+                %a.home{'data-bind' => 'click: $root.backHome' }
+                  %i.icon-arrow-left
+                  Back
+              %li
+                %a.home{'data-bind' => 'click: $root.newShow' }
+                  %i.icon-file
+                  New Show
       .span9.container
         .row
           .span9
@@ -124,3 +156,6 @@
                       %i.icon-edit
                     %button.btn{ 'data-bind' => 'click: $root.subscribeToShow'}
                       %i.icon-tag
+                    %button.btn{ 'data-bind' => 'click: $root.changeShowLogo' }
+                      %i.icon-picture
+                      Logo

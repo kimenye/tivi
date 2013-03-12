@@ -1,13 +1,17 @@
 require 'mongo_mapper'
+require 'joint'
 
 class Channel
   include MongoMapper::Document
+  plugin Joint
 
   key :name, String, :required => true
   key :code, String, :required => true
   key :calendar_id, String
   key :created_at, Time, :default => Time.now
+
   many :shows
+  attachment :logo
 
   def safe_delete
     Show.find_all_by_channel_id(id).each { |s| s.safe_delete }
@@ -17,11 +21,13 @@ end
 
 class Show
   include MongoMapper::Document
+  plugin Joint
 
   key :name, String
   key :description, String
   key :created_at, Time, :default => Time.now
   belongs_to :channel
+  attachment :logo
 
   def safe_delete
     Schedule.find_all_by_show_id(id).each { |s| s.destroy }
@@ -35,7 +41,18 @@ class Schedule
   key :start_time, Time
   key :end_time, Time
   key :promo_text, String
+  key :correct, Boolean, :default => true
   belongs_to :show
+
+  def as_json options={}
+    {
+        :start_time => self.start_time,
+        :end_time => self.end_time,
+        :promo_text => self.promo_text,
+        :correct => self.correct,
+        :show => self.show.to_json
+    }
+  end
 end
 
 class Subscription

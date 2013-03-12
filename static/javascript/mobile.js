@@ -19,4 +19,24 @@ function resolveSubscription(misspelt) {
         	alert("Subscription has already been resolved");
         	window.location.reload();
         });
-};
+}
+
+function subscribe(show_id, show_name) {
+
+    var phone_number = prompt('Enter your phone number for reminders', 'Format: 254722123456');
+
+    if(phone_number != null && phone_number.length == 12) {
+        var str = JSON.stringify({phone_number: phone_number});
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/shows/subscribers/' + show_id,
+            data:   str})
+            .success(function (data) {
+                alert("Successfully subscribed " + phone_number + " to " + show_name);
+            })
+            .error(function(data) {
+                alert("Error. The technical team has been notified");
+            });
+    }
+}

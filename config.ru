@@ -8,6 +8,7 @@ require File.join(File.dirname(__FILE__), 'app.rb')
 require File.join(File.dirname(__FILE__), 'api_application.rb')
 require File.join(File.dirname(__FILE__), 'admin.rb')
 require File.join(File.dirname(__FILE__), 'guide.rb')
+require File.join(File.dirname(__FILE__), 'media.rb')
 
 # disable sinatra's auto-application starting
 disable :run
@@ -30,6 +31,10 @@ end
 
 map "/admin" do
   run AdminApp
+end
+
+map "/media" do
+  run MediaApp
 end
 
 # Mount our Guide class with a base url of /guide

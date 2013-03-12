@@ -1,80 +1,97 @@
-glow.ready(function() {
-    console.log("Glow is ready");
+$(document).ready(function() {
+//    jQuery.timeago.settings.allowFuture = true;
+    var startTime = 0;
+    var endTime = 0;
 
-    var channelId = $('#channel-id').val();
-
-    var startOfWeek = Date.parse("last sunday");
-    var endOfWeek = Date.parse("next saturday");
-
-
-    function Week() {
+    function EmbeddedApp() {
         var self = this;
-
-        self.startDate = Date.parse("last sunday"); //week starts on sunday
-        self.today = new Date();
-        self.days = [];
-        self.days.push(self.startDate);
-        _.each(_.range(1, 7), function(d) {
-            dt = new Date(self.startDate).addDays(d);
-            self.days.push(dt);
+        this.channels = ko.observableArray([]);
+        this.loading = ko.observable(true);
+        this.slideIdx = ko.observable(0);
+        this.current = ko.computed(function() {
+            if (self.channels().length > 0)
+                return self.channels()[self.slideIdx()].code;
+            else
+                return "";
         });
+
+        this.channel_title = ko.observable();
+
+        $.getJSON("/api/guide", function(data) {
+            _.each(data, function(c) {
+                self.channels.push(new Channel(c));
+            });
+
+            self.loading(false);
+            $('#channels').bxSlider({
+                adaptiveHeight: true,
+                mode: 'horizontal',
+                nextSelector: '.next-slide',
+                nextText: '',
+                prevSelector: '.previous-slide',
+                prevText: '',
+                //startSlide: 2,
+                pager: false,
+                onSliderLoad: function(idx) {
+                    self.channel_title(self.channels()[idx].name);
+                    self.resize();
+
+                },
+                onSlideAfter: function(element, oldIdx, newIdx) {
+                    self.channel_title(self.channels()[newIdx].name);
+                    self.slideIdx(newIdx);
+                    self.resize();
+                }
+            });
+
+            _.each(self.channels(), function(c) {
+                //need to check if the current show is null
+                if (c.currentShow() != null) {
+                    var full_duration = Date.parse(c.currentShow().end_time) - Date.parse(c.currentShow().start_time);
+                    var time_passed = new Date() - Date.parse(c.currentShow().start_time);
+                    var progress = (time_passed * 100) / full_duration;
+//                    console.log(c.code + progress);
+
+                    $( "#pb_" + c.code ).css('width', progress + '%');
+                }
+
+            });
+
+            SHOTGUN.listen("resize", function() {
+                self.resize();
+            });
+            self.resize();
+        });
+
+        this.resize = function() {
+            var idx = this.slideIdx();
+            var ch = this.current();
+            var bottomMargin = 35;
+            var topBarH = 50;
+            var fHeight = $('.embedded-guide').height() + bottomMargin;
+            var featuredHeight = $('#channel-' + ch + ' .featured').height();
+            var accordionHeight = $('#channel-' + ch + ' .accordion').height();
+            var aggr = topBarH + featuredHeight + accordionHeight + bottomMargin;
+//            console.log("Featured : %d", featuredHeight);
+//            console.log("Accordion : %d", accordionHeight);
+//            console.log("Current: ", ch);
+            console.log("Full height : %d", fHeight);
+            console.log("Calcululated: %d", aggr);
+            var height = Math.max(fHeight, aggr)
+            $('.bx-viewport').height(aggr);
+            window.parent.postMessage(['setHeight', aggr], '*');
+        }
+
+        this.show = function() {
+
+        }
     }
 
-    var wk = new Week();
-//    var dt = new Date();
+    function show() {
+        $('body').toggleClass("transparent");
+        $('.loading').hide();
+    }
 
+    ko.applyBindings(new EmbeddedApp());
 
-//    console.log("Channel id is ", channelId);
-
-
-//    function _dFormat(d) {
-//        return (d.getHours()   / 100).toFixed(2).split('.')[1] +
-//            ":" +
-//            (d.getMinutes() / 100).toFixed(2).split('.')[1];
-//    }
-//
-//    function scaleMe(data) {
-//        var start = data.start,
-//            hours = Math.floor(data.start.valueOf() / 3600000) % 24,
-//            ampm = ["am", "pm"][Math.floor(hours / 12)],
-//            hh = ((hours - 24) % 12) + 12;
-//
-//        return hh + ampm;
-//    }
-//
-//    var tt = new glow.widgets.Timetable(
-//        "#timetable",
-//        "1 January 2009 00:00", "1 January 2009 11:00",
-//        "1 January 2009 00:30", "1 January 2009 02:30",
-//        {
-//            keepItemContentInView: true,
-//            vertical: false,
-//            size: 600,
-//            itemTemplate: function(item) {
-//                return glow.lang.interpolate(
-//                    "<" + "strong>{trackTitle}, {title}</" + "strong><" + "br/>{start} to {end}",
-//                    {
-//                        trackTitle: item.track.title,
-//                        title: item.title,
-//                        start: _dFormat(item.start),
-//                        end: _dFormat(item.end),
-//                        id: item.id.substring(glow.UID.length + 14)
-//                    }
-//                );
-//            },
-//            trackHeader: "<" + "h2>{title}<" + "/h2>",
-//            collapseTrackBorders: false,
-////            trackFooter: "<" + "p>{title} footer<" + "/p>",
-//            tracks: [
-//                ["Monday", 50, {items: [["Item 1", "1 January 2009 00:00", "1 January 2009 01:00"], ["Item 2", "1 January 2009 01:00", "1 January 2009 07:00"], ["Item 3", "1 January 2009 07:00", "1 January 2009 09:00"], ["Item 4", "1 January 2009 09:00", "1 January 2009 10:45"]]}],
-//                ["Tuesday", 50, {items: [["Item 1", "1 January 2009 00:00", "1 January 2009 03:00"], ["Item 2", "1 January 2009 03:00", "1 January 2009 06:00"], ["Item 3", "1 January 2009 06:00", "1 January 2009 08:00"], ["Item 4", "1 January 2009 08:00", "1 January 2009 10:45"]]}],
-//                ["Wednesday", 50, {items: [["Item 1", "1 January 2009 00:00", "1 January 2009 03:00"], ["Item 2", "1 January 2009 03:00", "1 January 2009 06:00"], ["Item 3", "1 January 2009 06:00", "1 January 2009 08:00"], ["Item 4", "1 January 2009 08:00", "1 January 2009 10:45"]]}],
-//                ["Thursday", 50, {items: [["Item 1", "1 January 2009 00:00", "1 January 2009 03:00"], ["Item 2", "1 January 2009 03:00", "1 January 2009 06:00"], ["Item 3", "1 January 2009 06:00", "1 January 2009 08:00"], ["Item 4", "1 January 2009 08:00", "1 January 2009 10:45"]]}],
-//                ["Friday", 50, {items: [["Item 1", "1 January 2009 00:00", "1 January 2009 03:00"], ["Item 2", "1 January 2009 03:00", "1 January 2009 06:00"], ["Item 3", "1 January 2009 06:00", "1 January 2009 08:00"], ["Item 4", "1 January 2009 08:00", "1 January 2009 10:45"]]}]
-//            ]
-//        }
-//    ).setBanding("hour")
-//        .addScale("hour", "left", 30, {template: scaleMe})
-////        .addScrollbar("hour", "right", 15, {template: scaleMe})
-//        .draw();
 });

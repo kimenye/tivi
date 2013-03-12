@@ -4,6 +4,7 @@ require 'pry'
 require 'json'
 require_relative 'helpers_spec'
 require_relative 'spec_helper'
+require_relative '../guide'
 
 set :environment, :test
 
@@ -16,7 +17,12 @@ describe 'The Tivi Guide App' do
   include TestHelpers
 
   let(:helpers) { TestHelper.new }
+  let(:guide) { GuideApp.new }
 
+  def app
+    GuideApp
+  end
+  
   before(:each) do
     common_delete
   end
@@ -93,6 +99,15 @@ describe 'The Tivi Guide App' do
     
     test_show = helpers.get_current_show_in_schedule(tst, helpers.today_at_time(11,30))
     test_show.should_not be_nil
+    
+  end
+  
+  it "Searches for blog posts for a particular show" do
+    c = Channel.create(:code => "NTV", :name=> "Nation TV")
+    Show.create(:name => "Nairobi Half Life", :channel=> c)
+    post "/blogs"
+    last_response.should be_ok
+    last_response.body.should_not be_nil
     
   end
   

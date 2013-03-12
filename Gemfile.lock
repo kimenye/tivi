@@ -1,10 +1,3 @@
-GIT
-  remote: https://github.com/brynary/rack-test.git
-  revision: 8153c07db7a96889ad22e2fb543c64548dfde2e5
-  specs:
-    rack-test (0.6.1)
-      rack (>= 1.0)
-
 GEM
   remote: http://rubygems.org/
   remote: http://rubygems.org/
@@ -26,6 +19,7 @@ GEM
     crack (0.1.6)
     curb (0.8.1)
     daemons (1.1.9)
+    dalli (2.5.0)
     data_mapper (1.2.0)
       dm-aggregates (~> 1.2.0)
       dm-constraints (~> 1.2.0)
@@ -75,9 +69,14 @@ GEM
     httparty (0.5.2)
       crack (= 0.1.6)
     i18n (0.6.1)
+    joint (0.6.2)
+      mime-types
+      mongo_mapper (~> 0.9)
+      wand (~> 0.4)
     json (1.7.5)
     json_pure (1.7.5)
     method_source (0.8)
+    mime-types (1.19)
     mongo (1.7.0)
       bson (~> 1.7.0)
     mongo_mapper (0.12.0)
@@ -95,8 +94,16 @@ GEM
     pry-nav (0.2.2)
       pry (~> 0.9.10)
     rack (1.4.1)
+    rack-gridfs (0.4.1)
+      mime-types
+      mongo (~> 1.2)
+      rack
+    rack-mobile-detect (0.4.0)
+      rack
     rack-protection (1.2.0)
       rack
+    rack-test (0.6.2)
+      rack (>= 1.0)
     rspec (2.11.0)
       rspec-core (~> 2.11.0)
       rspec-expectations (~> 2.11.0)
@@ -107,6 +114,7 @@ GEM
     rspec-mocks (2.11.2)
     rufus-scheduler (2.0.17)
       tzinfo (>= 0.3.23)
+    safe_shell (1.0.2)
     sinatra (1.3.3)
       rack (~> 1.3, >= 1.3.6)
       rack-protection (~> 1.2)
@@ -132,6 +140,9 @@ GEM
       hashie (~> 0.4.0)
       httparty (~> 0.5.0)
     uuidtools (2.1.3)
+    wand (0.4)
+      mime-types
+      safe_shell (~> 1.0.0)
 
 PLATFORMS
   ruby
@@ -139,16 +150,21 @@ PLATFORMS
 DEPENDENCIES
   bson_ext
   curb
+  dalli
   data_mapper
   gcal4ruby
   haml
+  httparty
+  joint
   json
   mongo
   mongo_mapper
   newrelic_rpm
   pry
   pry-nav
-  rack-test!
+  rack-gridfs
+  rack-mobile-detect
+  rack-test
   rspec
   rufus-scheduler
   sinatra

@@ -3,11 +3,22 @@ require 'sinatra'
 require 'pry'
 require 'haml'
 require 'time'
+require "xmlrpc/client"
+require "httparty"
 require 'sinatra/reloader' if development? or test?
+require 'yaml'
+YAML::ENGINE.yamler = 'syck'
 
 class GuideApp < Sinatra::Base
 
   helpers SchedulerHelper
+ 
+  post '/blogs' do
+    
+    data = cache_data
+    data.to_json
+    
+  end
 
   get '/' do
 
@@ -26,7 +37,6 @@ class GuideApp < Sinatra::Base
       temp_hash2["shows"] = schedule_for_rest_of_day
       channel_complete.push(temp_hash2)
     end
-    # binding.pry
 
     haml :"guide/mobile", :layout => :guide_layout, :locals => {:channel_summary => channel_summary, :channel_complete => channel_complete }
 

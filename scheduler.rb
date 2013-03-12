@@ -1,8 +1,70 @@
 require_relative 'models'
 require 'url_shortener'
 require 'pry'
+#require 'memcached'
+#require 'twitter'
+require 'dalli'
+
 
 module SchedulerHelper
+  #Change these to be specific to sprout's account
+  CONSUMER_KEY = 'NNlqNkPQjkTFThT0mjnzxg'
+  CONSUMER_SECRET = 'FSc90KN9VxahZDGz8LnB1S5c7w2slNea49t1kEvhc3k'
+  OAUTH_TOKEN = '46093973-iyJ4XDQS76kcsVX4nr7JTvHrU87cfb4p8t50OvXk'
+  OAUTH_TOKEN_SECRET = 'ce85FRpPFrdILD7WkF6uxQGCBmdevCYTRy3iQT9Uk'
+
+  def cache_data
+
+    shows = Show.all
+    #memcached = Memcached.new("localhost:11211")
+    #set :cache, Dalli::Client.new
+    memcached = Dalli::Client.new
+    begin
+      cached_shows = memcached.get('cached_shows')
+    rescue
+      connection = XMLRPC::Client.new2('http://tivi.co.ke/xmlrpc.php')
+      categories = connection.call('wp.getTerms',1,'admin','h3@ventivi', 'category')
+      res_data = Array.new
+      blogs = Array.new
+
+      for category in categories do
+        res = HTTParty.get("http://tivi.co.ke/?cat=#{category['term_id']}&json=1")
+        res_data.push(res)
+      end
+
+      for show in shows do
+        temp_hash = Hash.new
+        for res in res_data do
+          if res['category']['title'] == show.name
+
+            posts = res['posts']
+
+            for post in posts do
+              temp_hash["show_id"] = show.id
+              temp_hash["blog_title"] = post['title']
+              temp_hash["blog_url"] = post['url']
+              blogs.push(temp_hash)
+            end
+
+          end
+        end
+      end
+      memcached.set('cached_shows', blogs, 86400)
+
+    end
+    cached_shows
+  end
+
+  def cache_schedule
+    memcached = Dalli::Client.new
+    cached_channels = memcached.get('cached_channels')
+    if cached_channels.nil?
+      cached_channels = Channel.all
+      memcached.set('cached_channels', cached_channels)
+    end
+    cached_channels
+  end
+  
   def get_seconds_from_min min
     return min * 60
   end
@@ -73,6 +135,17 @@ module SchedulerHelper
     schedule_for_rest_of_day = Array.new
     schedule_for_rest_of_day.push(get_current_show_in_schedule(channel, time))
     schedule_for_rest_of_day.concat(schedule)
+  end
+
+  def get_schedule_for_rest_of_day_excluding_now_and_next(channel, time=Time.now)
+    end_of_day = _get_end_of_day(time)
+    schedule = Schedule.all(:start_time => {'$gte' => time.utc},
+                            :end_time => {'$lte' => end_of_day.utc},
+                            :show_id => {'$in' => Show.all(:channel_id => channel.id).collect { |s| s.id }},
+                            :order => :start_time)
+    schedule_for_rest_of_day_excluding_now_and_next = Array.new
+    schedule.slice!(0)
+    schedule_for_rest_of_day_excluding_now_and_next.concat(schedule)
   end
 
   def get_current_and_next_schedule(channel, time=Time.now)
@@ -185,6 +258,8 @@ module SchedulerHelper
       puts ">> Sent #{real} msg to #{reminder[:to]} - ID: #{msg.external_id}"
     }
     puts "Finished sending messages"
+
+    #tweet_show_reminders(duration,from)
   end
 
   def get_reminders (duration=5, from=Time.now)
@@ -258,6 +333,24 @@ module SchedulerHelper
 
     result.result['nodeKeyVal']['shortUrl']
   end
+
+  #def tweet_show_reminders (duration=5, from=Time.now)
+  #  shows = get_shows_starting_in_duration(duration,round_down(from))
+  #
+  #  Twitter.configure do |config|
+  #
+  #    config.consumer_key = CONSUMER_KEY
+  #    config.consumer_secret = CONSUMER_SECRET
+  #    config.oauth_token = OAUTH_TOKEN
+  #    config.oauth_token_secret = OAUTH_TOKEN_SECRET
+  #  end
+  #
+  #  shows.each { |show|
+  #    Twitter.update('#{show.show.name} will start shortly')
+  #  }
+  #
+  #end
+
 end
 
 class Scheduler

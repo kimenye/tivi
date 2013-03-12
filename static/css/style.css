@@ -44,3 +44,11 @@ h1 small {
 .centered {
     text-align: center;
 }
+
+.carousel-control {
+    top: 25px !important;
+}
+
+#guide-channel-name {
+    text-align: center;
+}

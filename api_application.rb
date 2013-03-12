@@ -98,6 +98,25 @@ class ApiApplication < Sinatra::Base
     content_type :json
   end
 
+  get "/guide" do
+    channels = cache_schedule
+    guide = Array.new
+    channels.each do |channel|
+      current_and_next_schedule = get_current_and_next_schedule(channel)
+      schedule_for_rest_of_day = get_schedule_for_rest_of_day_excluding_now_and_next(channel)
+
+      guide.push({
+          :channel => channel.to_json,
+          :current => current_and_next_schedule.first.to_json,
+          :next => current_and_next_schedule.last.to_json,
+          :rest => schedule_for_rest_of_day.to_json
+                 })
+    end
+
+    status 200
+    body(guide.to_json)
+  end
+
   post "/channels/sync/:id" do
     channel_id = params[:id]
     channel = Channel.find_by_id(channel_id)
@@ -134,6 +153,33 @@ class ApiApplication < Sinatra::Base
       body({:success => false}.to_json)
     end
 
+  end
+
+  post "/upload_channel_logo" do
+    id = params[:id]
+    c = Channel.find_by_id(id)
+    logo = File.open(params['logo'][:tempfile])
+    c.logo = logo
+    c.save!
+    status 200
+    body({:success => true, :logoId => c.logo.id}.to_json)
+  end
+
+  post "/upload_show_logo" do
+    id = params[:id]
+    s = Show.find_by_id(id)
+    logo = File.open(params['logo'][:tempfile])
+    s.logo = logo
+    s.save!
+    status 200
+    body({:success => true, :logoId => s.logo.id}.to_json)
+  end
+
+  post "/clear_cache" do
+    memcached = Dalli::Client.new
+    memcached.set('cached_channels', nil)
+    status 200
+    body({:success => true }.to_json)
   end
 
   get "/sms_gateway" do
@@ -257,18 +303,11 @@ class ApiApplication < Sinatra::Base
           AdminLog.delete_all
 
           if create == "true"
-            ktn = Channel.create!(:code => "KTN", :name => "Kenya Television Network", :calendar_id => "tivi.co.ke_1aku43rv679bbnj9r02coema98@group.calendar.google.com")
-            ntv = Channel.create!(:code => "NTV", :name => "Nation Television Network", :calendar_id => "guide@tivi.co.ke")
-            ctz = Channel.create!(:code => "CTZ", :name => "Citizen TV", :calendar_id => "tivi.co.ke_m6htn7v99d9vfsp874cm4g6bi0@group.calendar.google.com")
-            # Will remove. Need them for testing
-            subscriber01 = Subscriber.create(:phone_number => "254722654321")
-            subscriber02 = Subscriber.create(:phone_number => "254722098765")
-            show01 = Show.create(:name => "The Night Show", :description => "News and latest happenings", :channel => ktn)
-            show01 = Show.create(:name => "Another Show", :description => "whatever", :channel => ntv)
-            show01 = Show.create(:name => "Yet Another Show", :description => "blah blah", :channel => ctz)
-            subscription01 = Subscription.create(:show_name => "The Night Show", :active => true, :subscriber => subscriber01, :show => show01)
-            subscription02 = Subscription.create(:show_name => "The Nihgt Show", :active => false, :misspelt => true, :subscriber => subscriber02)
-            subscription03 = Subscription.create(:show_name => "Anthr Show", :active => false, :misspelt => true, :subscriber => subscriber02)
+            base_dir = Dir.pwd + "/static/images/channels/"
+
+            ktn = Channel.create!(:code => "KTN",:name => "Kenya Television Network",:calendar_id => "tivi.co.ke_1aku43rv679bbnj9r02coema98@group.calendar.google.com",:logo => File.open("#{base_dir}ktn.png"))
+            ntv = Channel.create!(:code => "NTV", :name => "Nation Television Network", :calendar_id => "guide@tivi.co.ke",:logo => File.open("#{base_dir}ntv.png"))
+            ctz = Channel.create!(:code => "CTZ", :name => "Citizen TV", :calendar_id => "tivi.co.ke_m6htn7v99d9vfsp874cm4g6bi0@group.calendar.google.com",:logo => File.open("#{base_dir}citizen.png"))
           end
 
           body({:success => true }.to_json)

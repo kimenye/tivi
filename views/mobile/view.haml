@@ -1,0 +1,63 @@
+
+.loading{"data-bind" => "visible: loading"}
+.guide#guide.hidden{"data-bind" => "visible: !loading()"}
+  %ul{'data-bind' => 'foreach: channels'}
+    %li
+      .channel{"data-bind" => "css: code"}
+        .header
+          %a.previous{"data-bind" => "click: $root.prev", :href => "#"}
+          .icon
+          %a.next{"data-bind" => "click: $root.next", :href => "#"}
+        .shows
+          .current{'data-bind' => 'if: currentShow()'}
+            %div{'data-bind' => "with: currentShow()"}
+              .featured
+              .img{'data-bind' => 'if: logo_id == null'}
+                %img.promo{:src => "/images/temp_show.jpg", "data-bind" => "attr: { alt: name, title: description }"}
+              .img{'data-bind' => 'if: logo_id != null'}
+                %img.promo{"data-bind" => "attr: { src: logo_url, alt: name, title: description }"}
+              .title-bar
+                .title
+                  .name
+                    %h3.subheader
+                      %span{"data-bind" => "text: name"}
+                      %small.time
+                        %span{'data-bind' => "text: start_time"}
+                        %span
+                          >
+                        %span{'data-bind' => "text: end_time"}
+                  .now
+                    %h1.subheader
+                      NOW
+              .twelve.columns.pg-bar
+                %div.progress.twelve
+                  %span.meter{"data-bind" => "attr: { id: 'pb_' + $parent.code }"}
+              .twelve.columns.body.spacer
+          .row.next{'data-bind' => 'if: nextShow()'}
+            .twelve.columns.body{'data-bind' => "with: nextShow()"}
+              .img{'data-bind' => 'if: logo_id == null'}
+                %img.promo{:src => "/images/temp_show_2.jpg", "data-bind" => "attr: { alt: name, title: description }"}
+              .img{'data-bind' => 'if: logo_id != null'}
+                %img.promo{"data-bind" => "attr: { src: logo_url, alt: name, title: description }"}
+              .starting-bar
+                .starting
+                  %span.duration{'data-bind' => 'text: $parent.timeToNextShow'}
+                  %span.show-name{'data-bind' => 'text: name'}
+            .twelve.columns.body.spacer
+          .row.remaining
+            .twelve.columns.body
+              %ul.accordion{'data-bind' => 'foreach: restOfShows()'}
+                %li.show
+                  .title
+                    %h6
+                      %span.show-name{'data-bind' => "text: name"}
+                      %small.time
+                        %span{'data-bind' => "text: start_time"}
+                        %span
+                          >
+                        %span{'data-bind' => "text: end_time"}
+                  .content
+                    .pointer
+                    %p{'data-bind' => "text: description"}
+%script{ 'type' => 'text/javascript', 'src' => 'javascript/model.js'}
+%script{ 'type' => 'text/javascript', 'src' => 'javascript/mobile_guide.js'}

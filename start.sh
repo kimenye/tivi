@@ -1,0 +1,2 @@
+startMongo.sh &
+memcached &
