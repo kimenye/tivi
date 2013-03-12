@@ -71,7 +71,7 @@ class TiviApp < Sinatra::Base
         '/css/foundation_stylesheets/foundation.min.css'
     ]
 
-    prebuild true
+    prebuild false
   end
 
 
