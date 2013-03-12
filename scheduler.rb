@@ -64,6 +64,34 @@ module SchedulerHelper
     end
     cached_channels
   end
+
+  def cache_schedules
+    memcached = Dalli::Client.new
+    cached_schedules = memcached.get('cached_schedules')
+    if cached_schedules.nil?
+      channels = Channel.all
+      start_of_day = _get_start_of_day(Time.now)
+      end_of_day = _get_end_of_day(Time.now)
+      cached_schedules = Hash.new
+
+      channels.each do |channel|
+
+        schedule = Schedule.all(:start_time => {'$gte' => start_of_day.utc},
+                                 :end_time => {'$lte' => end_of_day.utc},
+                                 :show_id => {'$in' => Show.all(:channel_id => channel.id).collect { |s| s.id }},
+                                 :order => :start_time)
+        cached_schedules[channel.id] = schedule
+      end
+
+      memcached.set('cached_schedules', cached_schedules)
+    end
+    cached_schedules
+  end
+
+  def clear_cache(cache)
+    memcached = Dalli::Client.new
+    memcached.delete(cache)
+  end
   
   def get_seconds_from_min min
     return min * 60
@@ -127,34 +155,46 @@ module SchedulerHelper
   end
 
   def get_schedule_for_rest_of_day(channel, time=Time.now)
-    end_of_day = _get_end_of_day(time)
-    schedule = Schedule.all(:start_time => {'$gte' => time.utc},
-                 :end_time => {'$lte' => end_of_day.utc},
-                 :show_id => {'$in' => Show.all(:channel_id => channel.id).collect { |s| s.id }},
-                 :order => :start_time)
+    cached_schedules = cache_schedules
+    channel_schedule_for_day = cached_schedules[channel.id]
+    schedule = Array.new
+
+    channel_schedule_for_day.each do |s|
+      if(s.start_time >= time.utc)
+        schedule.push(s)
+      end
+    end
     schedule_for_rest_of_day = Array.new
     schedule_for_rest_of_day.push(get_current_show_in_schedule(channel, time))
     schedule_for_rest_of_day.concat(schedule)
   end
 
   def get_schedule_for_rest_of_day_excluding_now_and_next(channel, time=Time.now)
-    end_of_day = _get_end_of_day(time)
-    schedule = Schedule.all(:start_time => {'$gte' => time.utc},
-                            :end_time => {'$lte' => end_of_day.utc},
-                            :show_id => {'$in' => Show.all(:channel_id => channel.id).collect { |s| s.id }},
-                            :order => :start_time)
+    cached_schedules = cache_schedules
+    channel_schedule_for_day = cached_schedules[channel.id]
+    schedule = Array.new
+
+    channel_schedule_for_day.each do |s|
+      if(s.start_time >= time.utc)
+        schedule.push(s)
+      end
+    end
     schedule_for_rest_of_day_excluding_now_and_next = Array.new
     schedule.slice!(0)
     schedule_for_rest_of_day_excluding_now_and_next.concat(schedule)
   end
 
   def get_current_and_next_schedule(channel, time=Time.now)
-    end_of_day = _get_end_of_day(time)
-    schedule = Schedule.all(:start_time => {'$gte' => time.utc},
-                 :end_time => {'$lte' => end_of_day.utc},
-                 :show_id => {'$in' => Show.all(:channel_id => channel.id).collect { |s| s.id }},
-                 :order => :start_time,
-                 :limit => 1)
+    cached_schedules = cache_schedules
+    channel_schedule_for_day = cached_schedules[channel.id]
+    schedule = Array.new
+
+    channel_schedule_for_day.each do |s|
+      if(s.start_time >= time.utc)
+        schedule.push(s)
+        break
+      end
+    end
     current_and_next_schedule = Array.new
     current_and_next_schedule.push(get_current_show_in_schedule(channel, time))
     current_and_next_schedule.concat(schedule)

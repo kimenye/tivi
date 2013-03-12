@@ -14,11 +14,15 @@
           .control-group
             %label.control-label{ 'for' => 'name' } Name
             .controls
-              %input.input-medium#code{'name' => 'name', 'type' => 'text', 'data-bind' => 'value: name', 'required' => 'required'}
+              %input.input-medium#name{'name' => 'name', 'type' => 'text', 'data-bind' => 'value: name', 'required' => 'required'}
           .control-group
             %label.control-label{:for => 'calendarId' } Calendar Id
             .controls
               %input.input-large#calendarId{:name => 'calendarId', :type => 'text','data-bind' => 'value: calendar_id', 'required' => 'required'}
+          .control-group
+            %label.control-label{ 'for' => 'enabled' } Enabled
+            .controls
+              %input#enabled{'name' => 'enabled', 'type' => 'checkbox', 'data-bind' => 'checked: enabled'}
       .modal-footer
         %a.btn{'data-dismiss' => 'modal', 'href' => '#'} Close
         %input.btn.btn-success{ 'type' => 'submit', 'value' => 'Save'}
