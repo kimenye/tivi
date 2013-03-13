@@ -27,6 +27,7 @@ gem 'sinatra-assetpack'
 gem 'rack-mobile-detect'
 gem 'uglifier'
 gem 'therubyracer-heroku', '0.8.1.pre3', :require => false
+gem "heroku-forward"
 
 #group :test do
 #  gem 'rack-test', :git => "https://github.com/brynary/rack-test.git"
