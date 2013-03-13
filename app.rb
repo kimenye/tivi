@@ -13,7 +13,7 @@ class TiviApp < Sinatra::Base
 
   assets do
     #js_compression :closure
-    #js_compression :uglify
+    js_compression :uglify
 
     js :main, '/js/main.js', [
         '/js/vendor/*.js',
