@@ -1,43 +1,19 @@
-#To use with thin
-# thin start -p PORT -R config.ru
+require 'rubygems'
+require 'bundler'
 
-require 'sinatra'
-
-# include our Application code
-require File.join(File.dirname(__FILE__), 'app.rb')
-require File.join(File.dirname(__FILE__), 'api_application.rb')
-require File.join(File.dirname(__FILE__), 'admin.rb')
-require File.join(File.dirname(__FILE__), 'guide.rb')
-require File.join(File.dirname(__FILE__), 'media.rb')
-
-# disable sinatra's auto-application starting
-disable :run
-
-#sync logs
 $stdout.sync = true
+Bundler.require(:rack)
 
-# we're in dev mode
-#set :environment, :development
+port = (ARGV.first || ENV['PORT'] || 3000).to_i
+env = ENV['RACK_ENV'] || 'development'
 
-# Mount our Main class with a base url of /
-map "/" do
-  run TiviApp
-end
+require 'em-proxy'
+require 'logger'
+require 'heroku-forward'
+require 'heroku/forward/backends/thin'
 
-# Mount our Blog class with a base url of /blog
-map "/api" do
-  run ApiApplication
-end
-
-map "/admin" do
-  run AdminApp
-end
-
-map "/media" do
-  run MediaApp
-end
-
-# Mount our Guide class with a base url of /guide
-map "/guide" do
-  run GuideApp
-end
+application = File.expand_path('../app.ru', __FILE__)
+backend = Heroku::Forward::Backends::Thin.new(application: application, env: env)
+proxy = Heroku::Forward::Proxy::Server.new(backend, host: '0.0.0.0', port: port)
+proxy.logger = Logger.new(STDOUT)
+proxy.forward!

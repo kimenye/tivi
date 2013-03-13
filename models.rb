@@ -7,6 +7,7 @@ class Channel
 
   key :name, String, :required => true
   key :code, String, :required => true
+  key :enabled, Boolean, :default => true
   key :calendar_id, String
   key :created_at, Time, :default => Time.now
 

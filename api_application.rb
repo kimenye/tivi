@@ -72,6 +72,7 @@ class ApiApplication < Sinatra::Base
       timer = Rufus::Scheduler.start_new
       timer.cron '55 23 * * *' do
 
+        clear_cache('cached_schedules')
         next_day = settings.processor.tomorrow
         puts ">> Prepare schedule for #{next_day}"
 
@@ -99,7 +100,7 @@ class ApiApplication < Sinatra::Base
   end
 
   get "/guide" do
-    channels = cache_schedule
+    channels = Channel.where(:enabled => true)
     guide = Array.new
     channels.each do |channel|
       current_and_next_schedule = get_current_and_next_schedule(channel)
@@ -176,8 +177,7 @@ class ApiApplication < Sinatra::Base
   end
 
   post "/clear_cache" do
-    memcached = Dalli::Client.new
-    memcached.set('cached_channels', nil)
+    clear_cache('cached_schedules')
     status 200
     body({:success => true }.to_json)
   end
@@ -640,6 +640,7 @@ class ApiApplication < Sinatra::Base
           channel = Channel.new
           channel.name = data['name']
           channel.code = data['code']
+          channel.enabled = data['enabled']
           channel.calendar_id = data['calendar_id']
           channel.save!
           status 200
@@ -658,6 +659,7 @@ class ApiApplication < Sinatra::Base
         else
           channel.code = data['code']
           channel.name = data['name']
+          channel.enabled = data['enabled']
           channel.calendar_id = data['calendar_id']
           channel.save!
           status 200
