@@ -16,23 +16,22 @@ class AdminApp < Sinatra::Base
     #js_compression  :jsmin
     css_compression :simple
 
-    css :admin, '/css/admin_site.css', [
-        '/css/bootstrap.min.css',
-        '/css/style.css',
-        #'/css/admin.css',
-        '/css/bootstrap-responsive.min.css'
-    ]
-
-    js :admin, '/js/admin.js', [
-        '/js/vendor/bootstrap.min.js',
-        '/js/vendor/bootbox.min.js',
-        '/js/vendor/knockout.js',
-        '/js/vendor/js.class.min.js',
-        '/js/vendor/underscore-min.js',
-        '/js/vendor/sammy.js',
-        '/js/admin/channels.js',
-        '/js/admin/admins.js'
-    ]
+    #css :admin, '/css/admin_site.css', [
+    #    '/css/bootstrap.min.css',
+    #    '/css/style.css',
+    #    '/css/bootstrap-responsive.min.css'
+    #]
+    #
+    #js :admin, '/js/admin.js', [
+    #    '/js/vendor/bootstrap.min.js',
+    #    '/js/vendor/bootbox.min.js',
+    #    '/js/vendor/knockout.js',
+    #    '/js/vendor/js.class.min.js',
+    #    '/js/vendor/underscore-min.js',
+    #    '/js/vendor/sammy.js',
+    #    '/js/admin/channels.js',
+    #    '/js/admin/admins.js'
+    #]
 
     js :admin_mobile, '/js/admin_mobile.js', [
         '/js/vendor/jquery.1.7.2.js',
