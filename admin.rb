@@ -16,7 +16,7 @@ class AdminApp < Sinatra::Base
     #js_compression  :jsmin
     css_compression :simple
 
-    css :admin, '/css/admin.css', [
+    css :admin, '/css/admin_site.css', [
         '/css/bootstrap.min.css',
         '/css/style.css',
         #'/css/admin.css',
