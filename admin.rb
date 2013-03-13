@@ -19,7 +19,7 @@ class AdminApp < Sinatra::Base
     css :admin, '/css/admin.css', [
         '/css/bootstrap.min.css',
         '/css/style.css',
-        '/css/admin.css',
+        #'/css/admin.css',
         '/css/bootstrap-responsive.min.css'
     ]
 
